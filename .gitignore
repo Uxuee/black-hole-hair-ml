@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Generated data and downloaded public posteriors
+data/raw/
+data/processed/
+data/real/**/*.h5
+data/real/**/*.hdf5
+data/real/**/*.npz
+data/real/**/*.part
+data/real/**/*_metadata.json
+
+# Fitted models and generated arrays
+models/
+*.joblib
+*.pkl
+*.pt
+*.pth
+
+# Generated report bulk and build products
+reports/tables/
+reports/figures/
+reports/tmp/
+reports/cache/
+reports/*.html
+reports/*.aux
+reports/*.log
+reports/*.out
+reports/manuscript_first_page.png
+
+# Keep only curated public-facing report artifacts
+reports/*
+!reports/manuscript.tex
+!reports/manuscript.pdf
+!reports/poster_summary.md
+!reports/realdata_interface_readme.md
+!reports/geodesic_shooting_csv_schema.md
+
+# Local tools and temporary files
+tools/
+*.tmp
+*.temp
+*.part
+*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

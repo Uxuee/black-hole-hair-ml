@@ -1,0 +1,306 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\figorplaceholder}[3]{%
+\begin{figure}[htbp]
+\centering
+\IfFileExists{#1}{\includegraphics[width=0.94\linewidth]{#1}}{%
+\fbox{\parbox[c][2.25in][c]{0.88\linewidth}{\centering
+Figure placeholder: #2\\[0.5em]\texttt{\detokenize{#1}}}}}
+\caption{#3}
+\label{#2}
+\end{figure}}
+
+\title{Leakage-aware inverse identifiability of black-hole hair from
+leading-eikonal observables}
+\author{Preliminary AI-for-science study}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study inverse identifiability of analytic black-hole hair parameters from
+leading-eikonal ringdown and geodesic observables.  Unlike a forward calculation,
+the inverse problem asks whether distinct parameter values remain distinguishable
+after compression, noise, and physically disjoint validation.  We therefore use
+grouped physical splits, fit principal-component models only on clean training
+folds, and compare machine-learning error with a numerical Jacobian analysis.
+Across 1,577 valid dense Kiselev systems and five grouped folds, interpolation gives
+$R^2(k)=0.992\pm0.001$ and $R^2(w_q)=0.994\pm0.002$, while analytic sensitivity
+reveals a local rank loss near $k\simeq0$.  Smooth synthetic geodesic proxies reduce
+the mean absolute $w_q$ error from 0.0225 to 0.0143, increase the median minimum
+singular value near $k=0$ by approximately $12\times$, and improve the median
+condition number by approximately $2.13\times$.  These proxies are not physical
+ray-tracing results.  Finally, 3,337 samples from the preferred GW150914
+\texttt{C01:Mixed} posterior are propagated through an approximate Kerr
+$(2,2,0)$ fitting formula to provide an observational-scale toy tolerance, not a
+hair detection or modified-gravity posterior.  The study remains limited to static
+leading-eikonal formulas, synthetic observables, and a GR posterior-scale
+comparison without detector covariance or a non-GR likelihood.
+\end{abstract}
+
+\section{Introduction}
+
+Analytic forward formulas specify how black-hole parameters modify photon-orbit
+quantities and eikonal quasinormal-mode (QNM) frequencies.  Forward predictability,
+however, does not guarantee inverse identifiability.  A parameter may be globally
+learnable by interpolation yet locally degenerate, or may appear recoverable only
+because repeated observations of the same physical system cross a random-row
+train/test split.  Observational relevance is a third question: even an identifiable
+synthetic parameter may produce shifts smaller than current posterior uncertainty.
+
+This work separates these questions.  First, leakage-aware grouped validation tests
+synthetic inverse recovery.  Second, a Jacobian singular-value analysis locates
+analytic degeneracy.  Third, replaceable synthetic geodesic proxies test whether
+radially distinct observables improve conditioning without adding ML complexity.
+Finally, a public GW150914 remnant posterior provides a real posterior-scale
+comparison.  It is not reanalyzed with a non-GR waveform.
+
+\figorplaceholder{figures/pipeline_schematic.pdf}{fig:pipeline}
+{Study design.  Analytic leading-eikonal simulation is followed by physical-group
+validation and Jacobian sensitivity; a replaceable synthetic-geodesic branch tests
+additional information, while the GW150914 branch supplies only a GR
+posterior-scale toy tolerance.}
+
+\section{Physics setup}
+
+We use geometrized units $G=c=1$, with $M=1$ unless mass is varied explicitly.
+The Schwarzschild reference quantities are
+\begin{equation}
+ r_0=3M,\qquad
+ \Omega_0=\lambda_0=\frac{1}{3\sqrt{3}M}.
+\end{equation}
+The leading-eikonal QNM relation and illustrative damped curve are
+\begin{equation}
+ \omega_{\rm QNM}=\ell\Omega-i(n+\tfrac12)\lambda,\qquad
+ \Psi(t)=e^{-(n+1/2)\lambda t}\cos(\ell\Omega t).
+\end{equation}
+For Bardeen,
+\begin{equation}
+\frac{\Omega}{\Omega_0}=1+\frac{q^2}{6M^2},\quad
+\frac{\lambda}{\lambda_0}=1-\frac{q^2}{9M^2},\quad
+\delta r=-\frac{5q^2}{6M}.
+\end{equation}
+For Hayward,
+\begin{equation}
+\frac{\Omega}{\Omega_0}=1+\frac{q^3}{27M^3},\quad
+\frac{\lambda}{\lambda_0}=1-\frac{2q^3}{27M^3},\quad
+\delta r=-\frac{2q^3}{9M^2}.
+\end{equation}
+For Kiselev,
+\begin{align}
+\frac{\Omega}{\Omega_0}
+ &=1-\frac{3k}{2(3M)^{1+3w_q}},\\
+\frac{\lambda}{\lambda_0}
+ &=1+\frac{[3w_q(1+w_q)-2]k}
+ {4\,3^{3w_q}M^{1+3w_q}},\\
+\delta r&=\frac{3k(1+w_q)}{2(3M)^{3w_q}}.
+\end{align}
+These are static, leading-order expressions rather than dedicated gravitational
+perturbation or low-$\ell$ QNM calculations.  The synthetic data test inference
+only within the assumed formula families.
+
+\section{Machine learning and leakage-aware methodology}
+
+Each non-Schwarzschild physical parameter point is expanded over all configured
+$(\ell,n)$ combinations.  Physical groups exclude $\ell$ and $n$: Bardeen and
+Hayward use $(\mathrm{family},M,q)$, and Kiselev uses
+$(\mathrm{family},M,k,w_q)$.  All repeated modes from a physical system remain in
+one train, validation, or test partition.
+
+A random-row audit demonstrated that correlated repetitions can substantially
+inflate sparse Kiselev recovery.  Subsequent analyses use five-fold grouped
+validation.  Principal component analysis (PCA), whenever used, is fitted only on
+clean training curves inside each fold; validation and test curves are transformed
+without refitting.  The repeated grouped study reports fold means and standard
+deviations rather than a single favorable split.
+
+\section{Kiselev identifiability and analytic degeneracy}
+
+The dense study contains 1,577 valid physical Kiselev systems after rejecting
+non-positive or non-finite leading-order points.  Five grouped folds give
+\begin{equation}
+ R^2(k)=0.992\pm0.001,\qquad
+ R^2(w_q)=0.994\pm0.002.
+\end{equation}
+Thus, with dense coverage, the parameters are globally learnable by interpolation.
+This does not imply uniform local identifiability.
+
+For the observable vector
+\begin{equation}
+\mathbf O=(\Omega,\lambda,\omega_R,\gamma,\delta r),
+\end{equation}
+we compute the numerical Jacobian
+\begin{equation}
+J_{ij}=\frac{\partial O_i}{\partial\theta_j},\qquad
+\boldsymbol\theta=(k,w_q).
+\end{equation}
+Large condition number and small minimum singular value identify locally
+ill-conditioned regions.  The strongest degeneracy lies near $k\simeq0$, where all
+Kiselev corrections vanish with $k$.  Dense grouped-CV $w_q$ error is moderately
+correlated with the Jacobian condition number, so analytic sensitivity explains a
+meaningful part of the spatial ML error pattern.
+
+\figorplaceholder{figures/kiselev_jacobian_condition_map.pdf}
+{fig:kiselev-condition}
+{Dense Kiselev Jacobian condition number.  Large values mark local
+ill-conditioning; absolute values depend on observable scaling.}
+
+\figorplaceholder{figures/kiselev_error_vs_sensitivity.pdf}
+{fig:error-sensitivity}
+{Dense grouped-CV $w_q$ error compared with analytic Jacobian sensitivity.  Their
+spatial association supports a local identifiability interpretation rather than a
+pure estimator-failure interpretation.}
+
+\section{Feature realism}
+
+The illustrative waveform contains no information independent of $\Omega$ and
+$\lambda$ once $\ell$ and $n$ are specified:
+$\omega_R=\ell\Omega$ and $\gamma=(n+1/2)\lambda$.  PCA coefficients therefore
+compress a deterministic re-expression of those quantities.  PCA-only recovery is
+weaker, and adding PCA to $\Omega/\lambda$ does not improve grouped performance.
+All current scalar observables perform best because $\delta r$ supplies additional
+geometric information not contained in the damped waveform.
+
+\figorplaceholder{figures/kiselev_feature_set_cv.pdf}
+{fig:feature-realism}
+{Five-fold grouped feature comparison for dense Kiselev inference.  PCA waveform
+features do not create independent physics information beyond the quantities used
+to generate the waveform.}
+
+\section{Independent geodesic-observable extension}
+
+We next add an impact-parameter proxy, apparent screen-coordinate proxy,
+propagation-time-delay proxy, and redshift-curve proxy.  They are smooth,
+metric-based placeholders designed for later replacement by direct/secondary
+null-geodesic shooting outputs.  \textbf{They are synthetic geodesic proxies, not
+physical ray-tracing predictions.}
+
+\begin{table}[htbp]
+\centering
+\caption{Five-fold grouped-CV results.  The geodesic values are synthetic proxies,
+not physical ray-tracing observables.}
+\label{tab:geodesic}
+\begin{tabular}{lcc}
+\toprule
+Feature set & $R^2(k)$ & $R^2(w_q)$\\
+\midrule
+$\Omega/\lambda$ only & 0.9393 & 0.9680\\
+All current scalars & 0.9957 & 0.9974\\
+Geodesic proxies only & 0.9953 & 0.9979\\
+Current scalars + proxies & \textbf{0.9972} & \textbf{0.9985}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The mean absolute $w_q$ error decreases from 0.0225 to 0.0143.  Near $k=0$, the
+median minimum singular value of the enlarged observable Jacobian improves by
+approximately $12\times$, and the median condition number improves by approximately
+$2.13\times$.  Different radial functions therefore reduce the near-degeneracy for
+small nonzero $k$.  The exact $k=0$ rank loss remains fundamental: if the
+perturbation amplitude vanishes, the metric has no $w_q$ dependence.
+
+\figorplaceholder{figures/old_vs_new_condition_number_maps.pdf}
+{fig:old-new-condition}
+{Old versus enlarged-observable condition-number maps.  Improvements use synthetic
+geodesic proxies and are not ray-tracing forecasts.}
+
+\figorplaceholder{figures/old_vs_new_wq_error_maps.pdf}
+{fig:old-new-error}
+{Old versus enlarged-observable grouped-CV $w_q$ error.  The right panel uses
+synthetic geodesic proxies, not physical observations.}
+
+\section{Public GW150914 posterior-scale comparison}
+
+We use 3,337 samples from the preferred GW150914 \texttt{C01:Mixed} public
+posterior.  Detected fields include source- and detector-frame final mass, final
+spin, redshift, luminosity distance, component masses, and mass ratio.  Because a
+usable \texttt{qnm} backend was not available, the dominant Kerr $(2,2,0)$ mode is
+computed with a clearly labeled approximate fitting formula.  With
+$GM_\odot/c^3=4.925490947\times10^{-6}\,\mathrm{s}$,
+\begin{equation}
+ f_{\rm RD}=\frac{M\omega_R}{2\pi M_z},\qquad
+ \tau_{\rm RD}=\frac{M_z}{|M\omega_I|}.
+\end{equation}
+The propagated posterior has median $f_{\rm RD}=252.52$ Hz with 90\% interval
+$245.01$--$260.66$ Hz, and median $\tau_{\rm RD}=4.065$ ms with interval
+$3.809$--$4.380$ ms.  The dimensionless medians are
+$M\omega_R=0.5285$ and $M\omega_I=-0.0820$.
+
+Treating the posterior half-widths only as a toy tolerance, the complete configured
+Bardeen range $q/M\leq0.25$, the complete Hayward range $q/M\leq0.35$, and
+approximately 60.9\% of the valid configured Kiselev grid are allowed under the toy
+tolerance.  These are not LIGO exclusions, a hair detection, a modified-gravity
+posterior bound, or a strain-level analysis.  They propagate uncertainty from a GR
+remnant posterior and place the synthetic shifts on an observational scale.
+
+\figorplaceholder{figures/realdata_kerr_qnm_posterior.pdf}
+{fig:gw-qnm}
+{GW150914 remnant-posterior propagation through the approximate Kerr $(2,2,0)$
+baseline.  This is a posterior-scale comparison, not a non-Kerr inference.}
+
+\figorplaceholder{figures/realdata_frequency_damping_posterior.pdf}
+{fig:gw-frequency-damping}
+{Joint GW150914 frequency--damping posterior implied by the GR remnant posterior
+and approximate Kerr fit; no strain-level ringdown refit is performed.}
+
+\figorplaceholder{figures/realdata_allowed_kiselev_region.pdf}
+{fig:gw-kiselev-tolerance}
+{Kiselev region allowed under the toy leading-eikonal tolerance defined by the
+GW150914 posterior half-widths.  It is not an observational modified-gravity bound.}
+
+\section{Discussion}
+
+Machine learning establishes whether the assumed analytic inverse map can be
+interpolated under physically disjoint validation.  Analytic sensitivity explains
+where that map becomes locally ill-conditioned and why dense average scores can
+coexist with a rank-deficient limit.  The feature audit shows that deterministic
+waveform compression cannot manufacture independent information.  The synthetic
+geodesic extension suggests that observables probing different radial structure
+can reduce near-degeneracy, but this conclusion must be retested with real shooting
+calculations.  GW150914 currently contributes an uncertainty scale only; it does
+not supply a likelihood for the hair parameters.
+
+\section{Limitations}
+
+\begin{itemize}
+\item The physics uses static, leading-eikonal toy hair formulas rather than
+dedicated gravitational perturbation calculations.
+\item The independent geodesic quantities are synthetic proxies, not physical
+ray-tracing or null-geodesic-shooting results.
+\item The Kerr baseline uses an approximate dominant-mode fit because a usable
+\texttt{qnm} backend was unavailable.
+\item No detector covariance, calibration uncertainty, selection effect, or
+ringdown-start-time uncertainty is propagated.
+\item No non-GR likelihood, strain-level inference, or dedicated QNM validation is
+performed.
+\end{itemize}
+
+\section{Next steps}
+
+The immediate priority is to replace the proxy table with converged direct and
+secondary null-geodesic-shooting outputs, then rerun the enlarged Jacobian and
+grouped-CV audit with an observational covariance model.  Subsequent work should
+install and validate the \texttt{qnm} package or trusted QNM tables, analyze multiple
+public events, calibrate predictive uncertainty, include detector-informed
+covariance, and eventually construct a consistent non-GR likelihood.
+
+\section{Conclusion}
+
+Dense grouped validation shows that Kiselev $(k,w_q)$ is globally learnable by
+interpolation within the analytic leading-eikonal family, while Jacobian sensitivity
+reveals a local degeneracy near $k=0$.  Synthetic geodesic proxies reduce the local
+error and improve conditioning, suggesting that genuinely independent geodesic
+observables are a promising next diagnostic; these proxy gains are not physical
+ray-tracing results.  The exact $k=0$ rank loss remains fundamental because the
+metric has no $w_q$ dependence when the perturbation vanishes.  The GW150914
+exercise places the shifts on a real posterior scale but remains a toy-tolerance
+comparison, not a hair detection.
+
+\end{document}

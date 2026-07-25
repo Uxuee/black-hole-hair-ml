@@ -1,0 +1,4 @@
+enabled: false
+note: "Second-stage equatorial leading-eikonal branch only; not used by the static MVP."
+a_over_M: [0.0, 0.8]
+epsilon: [-1, 1]

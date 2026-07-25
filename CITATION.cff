@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this research prototype, please cite the repository and the associated black-hole ringdown work."
+title: "Machine-learning inference of black-hole hair from leading-eikonal observables"
+type: software
+authors:
+  - given-names: "Ariadna Uxue"
+    family-names: "Palomino Ylla"
+version: 0.1.0
+date-released: 2026-07-26
+repository-code: "https://github.com/Uxuee/black-hole-hair-ml"
+license: MIT

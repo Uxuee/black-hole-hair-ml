@@ -1,0 +1,1 @@
+"""Automated report generation."""

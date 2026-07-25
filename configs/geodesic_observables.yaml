@@ -1,0 +1,9 @@
+source: proxy
+csv_path: null
+branch: direct
+merge_tolerance: 1.0e-10
+time_delay_outer_radius_M: 20.0
+time_delay_grid_points: 256
+redshift_emitter_radius_M: 6.0
+redshift_observer_radius_M: 20.0
+output_root: reports

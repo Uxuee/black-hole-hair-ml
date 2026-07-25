@@ -1,0 +1,18 @@
+seed: 42
+sampling: grid
+n_k: 40
+n_wq: 40
+n_lhs: 1600
+k_range: [-0.04, 0.04]
+wq_range: [-1.4, 1.4]
+mass_range: [0.8, 1.2]
+ell_values: [4, 5, 10, 20]
+n_values: [0, 1]
+sensitivity_ell: 10
+sensitivity_n: 0
+T_max: 100.0
+N_t: 512
+pca_components: 16
+n_group_folds: 5
+noise_floor: 1.0e-12
+output_root: reports

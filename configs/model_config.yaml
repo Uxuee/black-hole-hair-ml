@@ -1,0 +1,6 @@
+seed: 42
+test_size: 0.2
+validation_size: 0.2
+pca_components: [4, 8, 16, 32]
+primary_pca_components: 16
+curve_kind: both

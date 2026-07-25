@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bhhairml"
+version = "0.1.0"
+description = "Leading-eikonal black-hole hair inference pilot"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pandas", "scikit-learn", "matplotlib", "joblib", "pyyaml", "tqdm"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+realdata = ["h5py"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

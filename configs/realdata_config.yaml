@@ -1,0 +1,28 @@
+# Optional interface for locally downloaded public GWOSC/LVK posterior samples.
+event_name: "GW150914"
+credible_level: 0.90
+ell: 2
+m: 2
+n: 0
+q_grid_points: 500
+k_grid_points: 160
+wq_grid_points: 160
+k_range: [-0.04, 0.04]
+wq_range: [-1.4, 1.4]
+output_root: reports
+
+# Each canonical field may map to one name or an ordered list of aliases.
+# Built-in aliases are tried after these user-supplied names.
+columns:
+  final_mass_source: [final_mass_source, remnant_mass_source, final_mass]
+  final_mass_detector: [final_mass_detector, remnant_mass_detector, final_mass_det, final_mass]
+  final_spin: [final_spin, remnant_spin, final_a, af]
+  redshift: [redshift, z]
+  luminosity_distance: [luminosity_distance, luminosity_distance_mpc, distance]
+  mass_1_source: [mass_1_source, mass_1_source_frame, m1_source]
+  mass_2_source: [mass_2_source, mass_2_source_frame, m2_source]
+  mass_ratio: [mass_ratio, q]
+
+# HDF5 files vary considerably. If pandas cannot read the file directly,
+# set a dataset/group path containing a structured table or sample columns.
+hdf_key: "C01:Mixed/posterior_samples"
