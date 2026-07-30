@@ -154,6 +154,12 @@ noise level. PCA never sees held-out test data. This follows the general
 train-transform-test discipline implemented with scikit-learn
 \cite{pedregosa2011scikit}.
 
+After validity filtering, 1,419 physical points remain, where one physical
+point is the sampled pair $(k,\wq)$. All feature sets use this common cohort for
+a fair comparison and are evaluated with three-fold grouped cross-validation;
+all realizations of one pair remain in the same fold. Waveform PCA retains 16
+components and is fitted separately within each training fold.
+
 Regression candidates are Ridge, random forest, histogram gradient boosting,
 and a multilayer perceptron. Classification candidates are logistic regression,
 random forest, histogram gradient boosting, and a multilayer perceptron.
@@ -177,8 +183,20 @@ Finite differences give the Jacobian
 \begin{equation}
  J=\frac{\partial{\bf y}}{\partial(k,\wq)} .
 \end{equation}
-Under independent one-percent relative errors, with a small absolute floor for
-zero-valued shifts, we whiten the Jacobian as
+Under independent one-percent relative errors, each observable uncertainty is
+\begin{equation}
+ \begin{aligned}
+ s_y&=\max\!\left[{\rm median}(|{\bf y}_{1:4}|),10^{-8}\right],\\
+ \sigma_{\rm floor}&=10^{-5}s_y,\\
+ \sigma_i&=\max\!\left(0.01|y_i|,\sigma_{\rm floor}\right).
+ \end{aligned}
+ \label{eq:observable-error}
+\end{equation}
+The floor is common to all five components at a given physical point. It
+prevents a near-zero observable from being treated as infinitely precise; in
+this vector it is principally relevant to the radius shift $\Delta r$, while
+the scale is set by $(\Omega,\lambda,\omega_R,\gamma)$. With
+$C_y={\rm diag}(\sigma_i^2)$, we whiten the Jacobian as
 \begin{equation}
  \widetilde J=C_y^{-1/2}J=U\,{\rm diag}(s_i)\,V^{\mathsf T}.
 \label{eq:fisher}
@@ -208,7 +226,9 @@ We call this practical weak identifiability, labeling a point weak when
 \end{equation}
 This criterion labels 57.6\% of proxy-valid physical points as weakly
 identifiable. It is a simulator-specific, precision-dependent phase diagram,
-not an observational posterior.
+not an observational posterior. We use 0.3 as a fixed benchmark-scale
+uncertainty threshold specified before classifier fitting and evaluation,
+rather than selected to optimize classification performance.
 
 \subsection{Reproducibility and audit trail}
 The experiment is implemented in the open research prototype
@@ -293,7 +313,7 @@ start-time selection, and waveform systematics.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.88\textwidth]{learning_when_hair_is_observable_rank_aware.pdf}
-\caption{True Fisher/Jacobian identifiability class (left) and grouped-CV
+\caption{Reference Fisher/Jacobian identifiability class (left) and grouped-CV
 prediction (right). Weak identifiability means $\sigw>0.3$ under 1\% relative
 observable precision. The all-feature random-forest classifier reaches macro
 F1 $=0.9928$. The independently verified $k=0$ limit is Schwarzschild; the
@@ -302,7 +322,8 @@ nonzero $|k|$.}
 \label{fig:observable}
 \end{figure*}
 
-Figure~\ref{fig:observable} compares the analytic class with predictions from
+Figure~\ref{fig:observable} compares the Fisher/Jacobian reference class with
+predictions from
 the best all-feature random-forest classifier. Its macro F1 is 0.9928. The
 model captures both the broad transition in $\wq$ and the narrow structure
 around small $|k|$. This is the central result: the classifier recovers where
@@ -364,7 +385,10 @@ performance of physical ray tracing or a proposed observing program.
 leakage but primarily measures interpolation across the sampled family. Blocked
 parameter tests, repeated sampling designs, calibrated predictive uncertainty,
 and simulator-mismatch studies are required before making claims about
-extrapolation.
+extrapolation. Because candidate models are selected and evaluated on the same
+grouped folds, the reported best-model scores may contain modest
+model-selection optimism; nested grouped validation is left for an expanded
+study.
 
 The next physics step is to replace proxies with converged direct and secondary
 geodesic-shooting outputs and recompute the enlarged Jacobian. The next waveform

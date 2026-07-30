@@ -3,7 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from bhhairml.experiments.waveform_to_hair import fisher_identifiability
+from bhhairml.experiments.waveform_to_hair import (
+    FEATURE_DISPLAY_LABELS,
+    FEATURE_SETS,
+    fisher_identifiability,
+)
 from bhhairml.results.claims import validate_claims
 
 
@@ -44,3 +48,20 @@ def test_tracked_headline_claims_have_sources_and_tolerances():
         assert claim["source"].startswith("tables/")
         assert claim["selector"]
         assert claim["tolerance"] >= 0
+
+
+def test_feature_comparison_has_declared_logical_order():
+    assert FEATURE_SETS == [
+        "waveform_only",
+        "waveform_PCA",
+        "waveform_plus_scalars",
+        "waveform_plus_geodesics",
+        "all_features",
+    ]
+    assert [FEATURE_DISPLAY_LABELS[key] for key in FEATURE_SETS] == [
+        "Waveform only",
+        "Waveform PCA",
+        "Waveform + scalars",
+        "Waveform + proxies",
+        "All features",
+    ]

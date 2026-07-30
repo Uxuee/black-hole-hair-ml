@@ -34,6 +34,13 @@ from bhhairml.utils.io import load_yaml
 
 FEATURE_SETS = ["waveform_only", "waveform_PCA", "waveform_plus_scalars",
                 "waveform_plus_geodesics", "all_features"]
+FEATURE_DISPLAY_LABELS = {
+    "waveform_only": "Waveform only",
+    "waveform_PCA": "Waveform PCA",
+    "waveform_plus_scalars": "Waveform + scalars",
+    "waveform_plus_geodesics": "Waveform + proxies",
+    "all_features": "All features",
+}
 SCALARS = ["Omega", "lambda", "omega_R", "gamma", "delta_r"]
 
 
@@ -98,8 +105,10 @@ def fisher_identifiability(k, wq, relative_precision, *,
                 return (base - _observable_vector(*minus)) / step
     dk, dw = derivative(0, hk), derivative(1, hw)
     jac = np.column_stack([dk, dw])
-    # A small absolute floor prevents a zero-valued shift from being treated as
-    # infinitely precise while retaining the requested relative-noise model.
+    # One common per-point floor prevents a near-zero component (principally
+    # delta_r) from being treated as infinitely precise. At 1% relative
+    # precision this is 1e-5 times the median scale of the first four
+    # observables, with a 1e-8 lower guard on that median scale.
     scale_floor = relative_precision * max(np.median(np.abs(base[:4])), 1e-8) * 1e-3
     sigma_obs = np.maximum(relative_precision*np.abs(base), scale_floor)
     whitened = jac / sigma_obs[:, None]
@@ -344,13 +353,11 @@ def _figures(metrics, class_metrics, predictions, class_predictions, noise, meta
     summary = (metrics[(metrics.noise == 0) & (metrics.metric == "R2")]
                .groupby(["feature_set", "model", "target"]).value.mean()
                .groupby(["feature_set", "target"]).max().unstack())
-    summary = summary.rename(index={
-        "waveform_only": "Waveform only",
-        "waveform_PCA": "Waveform PCA",
-        "waveform_plus_scalars": "Waveform + scalars",
-        "waveform_plus_geodesics": "Waveform + proxies",
-        "all_features": "All features",
-    })
+    missing = set(FEATURE_SETS) - set(summary.index)
+    if missing:
+        raise ValueError(f"Missing feature sets in comparison: {sorted(missing)}")
+    summary = summary.reindex(FEATURE_SETS).rename(
+        index=FEATURE_DISPLAY_LABELS)
     fig, ax = plt.subplots(figsize=(10, 5.5))
     summary.plot.bar(ax=ax, color=["#4361ee", "#f72585"])
     ax.set(ylabel=r"best mean grouped-CV $R^2$", xlabel="",
@@ -383,8 +390,10 @@ def _figures(metrics, class_metrics, predictions, class_predictions, noise, meta
         true_class=("true_class", "first"),
         predicted_class=("predicted_class", lambda x: x.mode().iloc[0]))
     fig, axes = plt.subplots(1, 2, figsize=(12, 5), constrained_layout=True)
-    for ax, column, title in zip(axes, ("true_class", "predicted_class"),
-                                 ("Fisher/Jacobian class", "Learned identifiability class")):
+    for ax, column, title in zip(
+            axes, ("true_class", "predicted_class"),
+            ("Fisher/Jacobian reference class",
+             "Learned identifiability class")):
         values = (cp[column] == "weakly_identifiable").astype(int)
         sc = ax.scatter(cp.k, cp.wq, c=values, cmap="coolwarm", vmin=0, vmax=1, s=15)
         ax.axvline(0, color="white", ls="--"); ax.set(xlabel="k", ylabel=r"$w_q$", title=title)
