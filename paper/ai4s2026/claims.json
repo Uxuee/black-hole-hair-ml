@@ -2,6 +2,7 @@
   "schema_version": 1,
   "output_root": "artifacts/ai4s2026/<timestamp>",
   "claims": {
+    "supported_rank_rtol": {"value": 1e-08, "source": "tables/rank_deficiency_summary.csv", "selector": "fisher_rank_rtol used to regenerate identifiability labels", "tolerance": 0.0},
     "waveform_only_r2_k": {"value": 0.8959840891778823, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_only; model=RandomForestRegressor; target=k; metric=R2; mean over folds", "tolerance": 0.005},
     "waveform_only_r2_wq": {"value": 0.9586520380090987, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_only; model=RandomForestRegressor; target=wq; metric=R2; mean over folds", "tolerance": 0.005},
     "waveform_proxy_r2_k": {"value": 0.9792724899377677, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_plus_geodesics; model=HistGradientBoostingRegressor; target=k; metric=R2; mean over folds", "tolerance": 0.005},

@@ -26,6 +26,8 @@ from bhhairml.utils.io import load_yaml
 
 DEFAULT_TOLERANCES = (1e-12, 1e-10, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4)
 DEFAULT_STEP_SCALES = (0.25, 0.5, 1.0, 2.0, 4.0)
+SUPPORTED_RANK_RTOL = 1e-8
+FORMER_RANK_RTOL = 1e-6
 
 
 def _physical_dataset(config):
@@ -151,9 +153,9 @@ def _representative_five_point_rows(meta, precision, threshold):
     rows = []
     for point in positive.iloc[np.unique(indices)].itertuples(index=False):
         three = fisher_identifiability(
-            point.k, point.wq, precision, rank_rtol=1e-6)
+            point.k, point.wq, precision, rank_rtol=SUPPORTED_RANK_RTOL)
         five = fisher_identifiability(
-            point.k, point.wq, precision, rank_rtol=1e-6,
+            point.k, point.wq, precision, rank_rtol=SUPPORTED_RANK_RTOL,
             finite_difference_stencil="five-point")
         jacobian_noise = np.linalg.norm(
             five["whitened_jacobian"] - three["whitened_jacobian"], ord=2)
@@ -214,7 +216,9 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
     diagnostics = _diagnostic_rows(
         meta, DEFAULT_TOLERANCES, precision, threshold)
     baseline = diagnostics[
-        diagnostics.rank_rtol == 1e-6].set_index("physical_id")
+        diagnostics.rank_rtol == SUPPORTED_RANK_RTOL].set_index("physical_id")
+    former_baseline = diagnostics[
+        diagnostics.rank_rtol == FORMER_RANK_RTOL].set_index("physical_id")
     labels_by_tolerance, summary_rows = {}, []
     for tolerance, frame in diagnostics.groupby("rank_rtol", sort=True):
         frame = frame.set_index("physical_id").loc[meta.physical_id]
@@ -224,6 +228,8 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
     for tolerance, frame in diagnostics.groupby("rank_rtol", sort=True):
         indexed = frame.set_index("physical_id")
         changed = indexed.rank_aware_label != baseline.rank_aware_label
+        changed_from_former = (
+            indexed.rank_aware_label != former_baseline.rank_aware_label)
         locations = [
             {"physical_id": int(index), "k": float(row.k), "wq": float(row.wq)}
             for index, row in indexed[changed].iterrows()
@@ -234,7 +240,9 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
                 indexed.rank_aware_label == "weakly_identifiable").mean(),
             "explicitly_rank_deficient_points":
                 int((indexed.numerical_rank < 2).sum()),
-            "labels_differing_from_rank_rtol_1e-6": int(changed.sum()),
+            "labels_differing_from_supported_1e-8": int(changed.sum()),
+            "labels_differing_from_former_1e-6":
+                int(changed_from_former.sum()),
             "classifier_macro_f1_mean": f1[tolerance][0],
             "classifier_macro_f1_std": f1[tolerance][1],
             "changed_locations_json": json.dumps(locations),
@@ -252,7 +260,8 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
     step_frames = []
     for scale in DEFAULT_STEP_SCALES:
         frame = _diagnostic_rows(
-            meta, (1e-6,), precision, threshold, step_scale=scale)
+            meta, (SUPPORTED_RANK_RTOL,), precision, threshold,
+            step_scale=scale)
         frame["analysis_kind"] = "step_sensitivity"
         frame["label_differs_from_scale_1"] = False
         step_frames.append(frame)
@@ -274,7 +283,9 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
     ax.semilogx(
         summary.rank_rtol, summary.weakly_identifiable_fraction,
         marker="o", lw=2)
-    ax.axvline(1e-6, color="black", ls="--", label=r"current $10^{-6}$")
+    ax.axvline(
+        SUPPORTED_RANK_RTOL, color="black", ls="--",
+        label=r"supported $10^{-8}$")
     ax.set(
         xlabel="relative numerical-rank tolerance",
         ylabel="weakly identifiable fraction",
@@ -298,10 +309,10 @@ def run(config_path="configs/waveform_to_hair.yaml", *,
     plt.close(fig)
 
     changed_rows = diagnostics[
-        (diagnostics.rank_rtol == 1e-6)
+        (diagnostics.rank_rtol == SUPPORTED_RANK_RTOL)
         & diagnostics.physical_id.isin(baseline_changed)]
     unchanged_rows = diagnostics[
-        (diagnostics.rank_rtol == 1e-6)
+        (diagnostics.rank_rtol == SUPPORTED_RANK_RTOL)
         & ~diagnostics.physical_id.isin(baseline_changed)]
     positive_unchanged = unchanged_rows[unchanged_rows.wq > 0]
     negative_unchanged = unchanged_rows[unchanged_rows.wq < 0]
@@ -313,7 +324,7 @@ This audit varies numerical-rank tolerance and finite-difference resolution
 without changing the observable formulas or manuscript headline values.
 
 - Physical points after the established proxy-valid filter: {len(meta)}
-- Points changed by explicit null-space handling at `rank_rtol=1e-6`:
+- Points changed relative to the former bare-pseudoinverse semantics:
   {len(baseline_changed)}
 - Changed-point median unwhitened `||d observables/dwq||`:
   {changed_rows.dwq_norm.median():.6g}

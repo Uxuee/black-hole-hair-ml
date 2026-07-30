@@ -45,7 +45,7 @@ def _observable_vector(k, wq, ell=10, n=0):
 
 
 def fisher_identifiability(k, wq, relative_precision, *,
-                           rank_rtol=1e-6, rank_atol=0.0,
+                           rank_rtol=1e-8, rank_atol=0.0,
                            finite_difference_scale=1.0,
                            finite_difference_stencil="three-point"):
     """Return local Fisher diagnostics for ``(k, wq)``.
@@ -139,7 +139,7 @@ def fisher_identifiability(k, wq, relative_precision, *,
     }
 
 
-def _sigma_wq(k, wq, relative_precision, *, rank_rtol=1e-6,
+def _sigma_wq(k, wq, relative_precision, *, rank_rtol=1e-8,
               rank_atol=0.0):
     return fisher_identifiability(
         k, wq, relative_precision, rank_rtol=rank_rtol,
@@ -156,7 +156,7 @@ def _legacy_sigma_wq_for_audit(k, wq, relative_precision):
 
 
 def _attach_identifiability(meta, precision, threshold, *,
-                            rank_rtol=1e-6, rank_atol=0.0):
+                            rank_rtol=1e-8, rank_atol=0.0):
     unique = meta[["physical_id", "k", "wq"]].drop_duplicates().copy()
     unique["sigma_wq"] = [_sigma_wq(
         k, wq, precision, rank_rtol=rank_rtol, rank_atol=rank_atol)

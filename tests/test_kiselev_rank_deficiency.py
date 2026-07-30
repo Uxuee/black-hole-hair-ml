@@ -20,7 +20,7 @@ def test_k_zero_observables_are_schwarzschild_and_wq_independent():
 
 def test_k_zero_has_rank_one_and_infinite_wq_uncertainty():
     result = fisher_identifiability(
-        0.0, -0.5, 0.01, rank_rtol=1e-6, rank_atol=0.0)
+        0.0, -0.5, 0.01, rank_rtol=1e-8, rank_atol=0.0)
     assert np.allclose(result["jacobian"][:, 1], 0.0, rtol=0.0, atol=1e-14)
     assert result["rank"] == 1
     assert np.isclose(result["singular_values"][-1], 0.0, rtol=0.0, atol=1e-14)
@@ -31,7 +31,7 @@ def test_k_zero_has_rank_one_and_infinite_wq_uncertainty():
 
 def test_nonzero_k_point_has_finite_wq_uncertainty():
     result = fisher_identifiability(
-        0.02, -0.5, 0.01, rank_rtol=1e-6, rank_atol=0.0)
+        0.02, -0.5, 0.01, rank_rtol=1e-8, rank_atol=0.0)
     assert result["rank"] == 2
     assert result["wq_identifiable"]
     assert np.isfinite(result["sigma_wq"])
@@ -40,10 +40,20 @@ def test_nonzero_k_point_has_finite_wq_uncertainty():
 
 def test_five_point_derivatives_agree_at_regular_point():
     three = fisher_identifiability(
-        0.02, -0.5, 0.01, rank_rtol=1e-6,
+        0.02, -0.5, 0.01, rank_rtol=1e-8,
         finite_difference_stencil="three-point")
     five = fisher_identifiability(
-        0.02, -0.5, 0.01, rank_rtol=1e-6,
+        0.02, -0.5, 0.01, rank_rtol=1e-8,
         finite_difference_stencil="five-point")
     assert np.allclose(
         three["jacobian"], five["jacobian"], rtol=5e-5, atol=1e-10)
+
+
+def test_formerly_truncated_point_is_full_rank_but_weak():
+    result = fisher_identifiability(
+        -0.0010256410256410248, 0.2512820512820513, 0.01,
+        rank_rtol=1e-8, rank_atol=0.0)
+    assert result["rank"] == 2
+    assert result["wq_identifiable"]
+    assert np.isfinite(result["sigma_wq"])
+    assert result["sigma_wq"] > 0.3

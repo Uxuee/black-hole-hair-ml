@@ -39,6 +39,7 @@ def collect_ai4s2026_claims(output_root):
     noise_path = tables / "waveform_to_hair_noise_metrics.csv"
     proxy_prediction_path = tables / "geodesic_observable_cv_predictions.csv"
     improvement_path = tables / "geodesic_degeneracy_improvement_summary.csv"
+    rank_summary_path = tables / "rank_deficiency_summary.csv"
 
     regression = pd.read_csv(regression_path)
     classification = pd.read_csv(classification_path)
@@ -46,6 +47,7 @@ def collect_ai4s2026_claims(output_root):
     noise = pd.read_csv(noise_path)
     proxy_predictions = pd.read_csv(proxy_prediction_path)
     improvement = pd.read_csv(improvement_path).iloc[0]
+    rank_summary = pd.read_csv(rank_summary_path).iloc[0]
 
     selected = class_predictions[
         (class_predictions.feature_set == "all_features")
@@ -74,6 +76,11 @@ def collect_ai4s2026_claims(output_root):
         proxy_predictions.feature_set == extended_name].abs_error_wq.mean()
 
     claims = {
+        "supported_rank_rtol": _claim(
+            rank_summary.fisher_rank_rtol,
+            rank_summary_path.relative_to(root),
+            "fisher_rank_rtol used to regenerate identifiability labels",
+            0.0),
         "waveform_only_r2_k": _claim(
             _mean_metric(
                 regression, feature_set="waveform_only",
