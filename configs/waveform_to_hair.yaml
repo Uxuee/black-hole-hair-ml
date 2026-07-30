@@ -1,0 +1,17 @@
+identifiability_config: configs/third_pass_identifiability.yaml
+geodesic_config: configs/geodesic_observables.yaml
+output_root: reports
+seed: 42
+n_group_folds: 3
+pca_components: 16
+relative_observable_precision: 0.01
+sigma_wq_threshold: 0.3
+# Equivalent to the former pinv(rcond=1e-12) cutoff on J^T J because
+# singular values are squared in the Fisher matrix.
+fisher_rank_rtol: 1.0e-6
+fisher_rank_atol: 0.0
+noise_levels: [0.0, 0.005, 0.01, 0.03, 0.05]
+regression_models: [Ridge, RandomForestRegressor, HistGradientBoostingRegressor, MLPRegressor]
+classification_models: [LogisticRegression, RandomForestClassifier, HistGradientBoostingClassifier, MLPClassifier]
+random_forest_trees: 30
+mlp_max_iter: 80

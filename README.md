@@ -74,6 +74,19 @@ Python 3.10 or newer is recommended.
 
 ```bash
 python -m pip install -e .
+python -m bhhairml.workflows.reproduce_ai4s2026 --config configs/ai4s2026.yaml
+```
+
+The second command is the paper workflow: it regenerates the identifiability,
+geodesic-proxy, and waveform experiments in a new timestamped
+`artifacts/ai4s2026/` directory, validates every headline number against
+`paper/ai4s2026/claims.json`, prepares the paper workspace, and compiles it
+when `pdflatex` and `bibtex` are available. Existing report outputs are not
+overwritten.
+
+Individual experiment entry points remain available:
+
+```bash
 python -m bhhairml.experiments.run_all_experiments
 python -m bhhairml.experiments.scientific_audit
 python -m bhhairml.experiments.geodesic_extension \
@@ -117,6 +130,18 @@ This command may download public GWOSC/LVK posterior data. Large posterior files
 - [Project summary](docs/project_summary.md)
 - [Detailed poster text](reports/poster_summary.md)
 - [Preliminary manuscript](reports/manuscript.pdf)
+
+### Poster-grade physics figures
+
+```bash
+python -m bhhairml.plots.poster_physics_figures
+```
+
+This creates paired PNG/PDF illustrations in
+`reports/figures/Illustrations/` and web-ready PNG copies in
+[`docs/images/Illustrations/`](docs/images/Illustrations/). The ray paths are
+analytic static-metric illustrations, and the geodesic improvement uses
+synthetic proxies—not full physical ray tracing or detector-level inference.
 
 Poster-ready research prototype. **Not yet a journal-ready observational analysis.**
 

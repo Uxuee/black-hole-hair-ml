@@ -187,9 +187,11 @@ def _mass_cv(config, variable_mass, dimensionless, label):
     return rows
 
 
-def run(config_path="configs/third_pass_identifiability.yaml"):
+def run(config_path="configs/third_pass_identifiability.yaml", *,
+        output_root=None):
     config = load_yaml(config_path)
-    root = Path(config["output_root"]); tables = root / "tables"; figures = root / "figures"
+    root = Path(output_root or config["output_root"])
+    tables = root / "tables"; figures = root / "figures"
     tables.mkdir(parents=True, exist_ok=True); figures.mkdir(parents=True, exist_ok=True)
     meta, psi, log_abs, _ = generate_dense_kiselev(config)
     curves = curve_features(psi, log_abs, "both")
@@ -227,8 +229,9 @@ def run(config_path="configs/third_pass_identifiability.yaml"):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/third_pass_identifiability.yaml")
+    parser.add_argument("--output-root")
     args = parser.parse_args()
-    result = run(args.config)
+    result = run(args.config, output_root=args.output_root)
     repeated = result["repeated"]
     for target in ("k", "wq"):
         view = repeated[(repeated.task == "inverse_regression") &

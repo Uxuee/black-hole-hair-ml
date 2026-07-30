@@ -1,0 +1,7 @@
+identifiability_config: configs/third_pass_identifiability.yaml
+geodesic_config: configs/geodesic_observables.yaml
+waveform_config: configs/waveform_to_hair.yaml
+artifact_root: artifacts/ai4s2026
+paper_source: paper/ai4s2026
+claims_manifest: paper/ai4s2026/claims.json
+build_paper: true

@@ -67,3 +67,12 @@ observational detectability.
 Replace the proxies with converged direct/secondary null-geodesic-shooting outputs,
 then repeat the enlarged Jacobian and grouped-CV audit with uncertainty calibration
 and detector-informed covariance.
+
+## Result D — Waveform-to-hair prediction
+
+A model trained on synthetic leading-eikonal ringdown waves predicts Kiselev
+parameters under grouped physical validation. Performance degrades near weakly
+identifiable regions, and adding independent geodesic observables improves
+recovery. This reframes the task as learning when hair is observable, not simply
+fitting known formulas. The waves and geodesic proxies are synthetic—not detector
+strain or physical ray-tracing results.

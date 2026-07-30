@@ -1,17 +1,25 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools==68.2.2", "wheel==0.41.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "bhhairml"
 version = "0.1.0"
 description = "Leading-eikonal black-hole hair inference pilot"
-requires-python = ">=3.10"
-dependencies = ["numpy", "pandas", "scikit-learn", "matplotlib", "joblib", "pyyaml", "tqdm"]
+requires-python = ">=3.10,<3.11"
+dependencies = [
+  "numpy==1.26.4",
+  "pandas==2.1.4",
+  "scikit-learn==1.2.1",
+  "matplotlib==3.7.0",
+  "joblib==1.1.1",
+  "pyyaml==6.0",
+  "tqdm==4.64.1",
+]
 
 [project.optional-dependencies]
-dev = ["pytest"]
-realdata = ["h5py"]
+dev = ["pytest==7.1.2"]
+realdata = ["h5py==3.13.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -19,3 +27,6 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+markers = [
+  "smoke: lightweight end-to-end component smoke tests",
+]
