@@ -36,3 +36,14 @@ def test_nonzero_k_point_has_finite_wq_uncertainty():
     assert result["wq_identifiable"]
     assert np.isfinite(result["sigma_wq"])
     assert result["sigma_wq"] >= 0.0
+
+
+def test_five_point_derivatives_agree_at_regular_point():
+    three = fisher_identifiability(
+        0.02, -0.5, 0.01, rank_rtol=1e-6,
+        finite_difference_stencil="three-point")
+    five = fisher_identifiability(
+        0.02, -0.5, 0.01, rank_rtol=1e-6,
+        finite_difference_stencil="five-point")
+    assert np.allclose(
+        three["jacobian"], five["jacobian"], rtol=5e-5, atol=1e-10)
