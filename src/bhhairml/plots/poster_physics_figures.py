@@ -154,7 +154,14 @@ def kiselev_identifiability_figure(tables=TABLES):
                            shading="auto", cmap=cmap)
         ax.axvspan(-.002, .002, color="white", alpha=.18)
         ax.set(title=title, xlabel="k", ylabel=r"$w_q$")
-        fig.colorbar(im, ax=ax, label=rf"$\log_{{10}}$ {value.replace('_', ' ')}")
+        ax.title.set_size(16)
+        ax.xaxis.label.set_size(14); ax.yaxis.label.set_size(14)
+        ax.tick_params(labelsize=12)
+        colorbar = fig.colorbar(
+            im, ax=ax,
+            label=rf"$\log_{{10}}$ {value.replace('_', ' ')}")
+        colorbar.ax.tick_params(labelsize=11)
+        colorbar.set_label(colorbar.ax.get_ylabel(), size=13)
     ax = axes[2]
     predictions = tables / "geodesic_observable_cv_predictions.csv"
     if predictions.exists():
@@ -167,16 +174,26 @@ def kiselev_identifiability_figure(tables=TABLES):
         k, wq, z = _pivot(comp, "reduction")
         vmax = np.nanmax(abs(z)) or 1
         im = ax.pcolormesh(k, wq, z, shading="auto", cmap="RdBu_r", vmin=-vmax, vmax=vmax)
-        fig.colorbar(im, ax=ax, label=r"$|\Delta w_q|_{\rm scalar}-|\Delta w_q|_{\rm extended}$")
+        colorbar = fig.colorbar(
+            im, ax=ax,
+            label=r"$|\Delta w_q|_{\rm scalar}-|\Delta w_q|_{\rm extended}$")
+        colorbar.ax.tick_params(labelsize=11)
+        colorbar.set_label(colorbar.ax.get_ylabel(), size=13)
         ax.text(.04, .96,
                 rf"mean MAE: ${old_mean:.4f}\rightarrow{new_mean:.4f}$",
                 transform=ax.transAxes,
-                va="top", color="white", bbox={"facecolor": "black", "alpha": .5, "edgecolor": "none"})
+                va="top", color="white", fontsize=12,
+                bbox={"facecolor": "black", "alpha": .5, "edgecolor": "none"})
     else:
         ax.text(.5, .5, "Geodesic-extension predictions unavailable",
                 ha="center", va="center", transform=ax.transAxes)
     ax.axvline(0, color="white", ls="--", lw=1)
-    ax.set(title="Independent geodesic observables reduce error", xlabel="k", ylabel=r"$w_q$")
+    ax.set(
+        title="Synthetic geodesic proxies reduce error",
+        xlabel="k", ylabel=r"$w_q$")
+    ax.title.set_size(16)
+    ax.xaxis.label.set_size(14); ax.yaxis.label.set_size(14)
+    ax.tick_params(labelsize=12)
     return fig, None
 
 

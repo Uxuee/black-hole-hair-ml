@@ -36,7 +36,8 @@ $0.9793$ and $0.9891$ with histogram gradient boosting. More importantly, an
 all-feature random-forest classifier reproduces a Fisher/Jacobian
 observability boundary with macro F1 $=0.9928$, using
 $\sigw>0.3$ at one-percent relative observable precision as the weak-
-identifiability criterion. Proxy augmentation reduces mean absolute $\wq$
+identifiability criterion. In a companion scalar/proxy identifiability
+experiment, adding synthetic geodesic features reduces mean absolute $\wq$
 error from $0.0225$ to $0.0143$ and improves local conditioning near $k=0$.
 The study is intended as a controlled scientific-ML benchmark rather than an
 observational analysis: the signals are synthetic leading-eikonal curves, and
@@ -106,6 +107,9 @@ parameters \cite{kiselev2003quintessence}; the present implementation uses
 analytic leading-order expressions for the photon-orbit radius shift
 $\Delta r$, orbital frequency $\Omega$, and Lyapunov exponent $\lambda$.
 Non-finite or non-positive leading-order points are excluded.
+The broad $\wq$ interval is used as a controlled benchmark of inverse-map
+geometry and is not intended to identify every sampled point with the standard
+quintessence regime.
 
 For each retained physical point, the eikonal mapping is
 \begin{equation}
@@ -121,7 +125,9 @@ We use $\ell\in\{4,5,10,20\}$, $n\in\{0,1\}$, and 512 uniformly spaced time
 samples. The eight mode curves are averaged into one 512-sample multi-mode
 morphology per physical point for the waveform-to-hair experiment. This
 aggregation prevents repeated modes from being treated as independent target
-samples while retaining their combined morphology.
+samples while retaining their combined morphology. The equal-weight average is
+a benchmark feature construction rather than an astrophysical multimode
+waveform with physically inferred amplitudes and phases.
 
 \subsection{Feature families}
 Five representations are evaluated: (A) the raw waveform; (B) waveform PCA;
@@ -141,8 +147,10 @@ interpreted as geodesic-shooting or ray-tracing predictions.
 The grouping variable is the physical pair $(k,\wq)$; neither $\ell$ nor $n$
 defines a new physical system. Grouped cross-validation therefore assigns all
 mode realizations of one physical point to exactly one fold. This is the central
-leakage control. PCA is separately fitted on the clean training waveforms of
-each fold and then applied to held-out curves, following the general
+leakage control. For the zero-noise headline experiment, PCA is fitted on clean
+training curves. In the noise study, independent noise is added to training
+and test curves, and PCA is fitted only on the noisy training fold at each
+noise level. PCA never sees held-out test data. This follows the general
 train-transform-test discipline implemented with scikit-learn
 \cite{pedregosa2011scikit}.
 
@@ -158,7 +166,7 @@ Regression is measured using $R^2$, mean absolute error (MAE), and root mean
 squared error for each target. Classification is measured with accuracy, macro
 F1, and a confusion matrix. Gaussian waveform noise at 0, 0.5, 1, 3, and 5
 percent of the per-waveform standard deviation is injected before PCA or direct
-waveform input. PCA is never refitted on held-out noisy data.
+waveform input.
 
 \subsection{Practical-identifiability label}
 Let the local observable vector be
@@ -249,8 +257,8 @@ Waveform + proxies, HistGB & 0.9793 & 0.9891\\
 \centering
 \includegraphics[width=\columnwidth]{waveform_to_hair_feature_comparison.pdf}
 \caption{Grouped-CV feature comparison using the best model for each
-feature-set/target pair. ``Geodesics'' denotes synthetic proxies rather than
-physical shooting or ray tracing.}
+feature-set/target pair. ``Proxies'' denotes synthetic geodesic features rather
+than physical shooting or ray tracing.}
 \label{fig:features}
 \end{figure}
 
@@ -269,9 +277,9 @@ complete scientific result.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{waveform_to_hair_true_vs_pred.pdf}
-\caption{True versus grouped-CV predicted $k$ and $\wq$ for the best
-all-feature model, including waveform PCA, scalars, and synthetic geodesic
-proxies.}
+\caption{True versus grouped-CV predicted $k$ and $\wq$ for the all-feature
+histogram-gradient-boosting model, including waveform PCA, scalars, and
+synthetic geodesic proxies.}
 \label{fig:truepred}
 \end{figure}
 
@@ -288,8 +296,9 @@ start-time selection, and waveform systematics.
 \caption{True Fisher/Jacobian identifiability class (left) and grouped-CV
 prediction (right). Weak identifiability means $\sigw>0.3$ under 1\% relative
 observable precision. The all-feature random-forest classifier reaches macro
-F1 $=0.9928$. Exact $k=0$ is trivially Schwarzschild; the nontrivial result is
-the learned finite-precision boundary around it.}
+F1 $=0.9928$. The independently verified $k=0$ limit is Schwarzschild; the
+nontrivial result shown here is the learned finite-precision boundary at small
+nonzero $|k|$.}
 \label{fig:observable}
 \end{figure*}
 
@@ -300,10 +309,10 @@ around small $|k|$. This is the central result: the classifier recovers where
 the inverse problem is informative and where finite-precision uncertainty is
 strongly amplified, rather than merely returning a parameter estimate.
 
-The exact $k=0$ line is a sanity check: the metric reduces to Schwarzschild and
-$\wq$ disappears, so derivatives with respect to $\wq$ vanish. The nontrivial
-result is the finite-width region around small nonzero $|k|$ where
-finite-precision inference is already unreliable.
+An independently evaluated $k=0$ limit provides a structural sanity check: the
+metric reduces to Schwarzschild and $\wq$ becomes unobservable. The nontrivial
+result shown by the sampled grid is the finite-width weak-identifiability
+region at small nonzero $|k|$.
 
 \begin{figure*}[t]
 \centering
@@ -315,14 +324,15 @@ shooting outputs.}
 \label{fig:lens}
 \end{figure*}
 
-Figure~\ref{fig:lens} connects this boundary to singular-value diagnostics.
-Large condition number marks amplification of observable perturbations in the
-inverse problem, while the minimum singular value measures the weakest local
-parameter direction. Proxy augmentation reduces mean absolute $\wq$ error from
-0.0225 to 0.0143. In a near-$k=0$ band, the median minimum singular value
+A companion proxy-identifiability experiment provides a complementary view of
+this boundary in Fig.~\ref{fig:lens}. Large condition number marks amplification
+of observable perturbations in the inverse problem, while the minimum singular
+value measures the weakest local parameter direction. In that companion
+scalar/proxy experiment, proxy augmentation reduces mean absolute $\wq$ error
+from 0.0225 to 0.0143. In a near-$k=0$ band, the median minimum singular value
 increases by approximately $12\times$, and the median condition number
 improves by approximately $2.13\times$. Improvement at small nonzero $k$ does
-not remove the exact $k=0$ rank loss.
+not remove the independently verified exact-$k=0$ rank loss.
 
 The agreement between learned classification and analytic sensitivity is more
 scientifically informative than the regression score alone. It distinguishes
@@ -336,7 +346,9 @@ spectrum would move the practical boundary.
 Eq.~\eqref{eq:ringdown}, not measured strain. Detector response, colored noise,
 calibration error, mode mixing, and ringdown start-time uncertainty are absent,
 so the noise experiment is a robustness test rather than an observational
-sensitivity forecast.
+sensitivity forecast. The mode-averaged morphology is an equal-weight feature
+construction rather than an astrophysical multimode waveform with physically
+inferred amplitudes and phases.
 
 \textbf{Leading-eikonal/QNM scope.} The geodesic--QNM correspondence is a
 leading-order approximation \cite{cardoso2009geodesic}. Dedicated perturbative
@@ -369,12 +381,12 @@ recovers $(k,\wq)$ well inside the assumed simulator, while synthetic
 geodesic-proxy augmentation further improves regression. More importantly, an
 observability classifier learns a Fisher/Jacobian phase boundary with macro F1
 0.9928, linking machine-learning errors to the local geometry of the inverse
-problem. The exact $k=0$ line serves as a sanity check; the substantive result
-is learning the finite-precision boundary around it. This suggests a general
+problem. The independently evaluated $k=0$ limit establishes structural
+non-identifiability, while the sampled small-nonzero-$|k|$ region reveals
+full-rank but practically weak identifiability. This suggests a general
 AI-for-science principle: inverse models should learn when parameters are
 observable, not merely fit them.
 
-\clearpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 

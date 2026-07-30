@@ -47,17 +47,21 @@ def _git_sha():
 def _compile_paper(paper_dir, required=False):
     pdflatex = shutil.which("pdflatex")
     bibtex = shutil.which("bibtex")
-    if not pdflatex or not bibtex:
+    tectonic = shutil.which("tectonic")
+    if pdflatex and bibtex:
+        commands = [
+            [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
+            [bibtex, "main"],
+            [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
+            [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
+        ]
+    elif tectonic:
+        commands = [[tectonic, "--keep-logs", "main.tex"]]
+    else:
         message = "LaTeX unavailable; source workspace generated without PDF"
         if required:
             raise RuntimeError(message)
         return {"built": False, "message": message}
-    commands = [
-        [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
-        [bibtex, "main"],
-        [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
-        [pdflatex, "-interaction=nonstopmode", "-halt-on-error", "main.tex"],
-    ]
     logs = []
     for command in commands:
         result = subprocess.run(

@@ -35,6 +35,12 @@ Or, with `latexmk`:
 latexmk -pdf main.tex
 ```
 
+Or with the portable Tectonic compiler:
+
+```bash
+tectonic main.tex
+```
+
 Clean auxiliary files with:
 
 ```bash
@@ -56,7 +62,6 @@ latexmk -c
 
 ## Local build status
 
-The source and copied figure PDFs were verified on 2026-07-31. A LaTeX engine
-was not installed or discoverable on the development machine, so the draft
-could not be compiled locally. Pagination is therefore a careful target rather
-than a verified final count until the command above is run.
+The source and copied figure PDFs were compiled with Tectonic 0.16.9 on
+2026-07-31. The resulting draft is five pages. The conclusion and references
+flow together on page 5 without a forced bibliography page break.
