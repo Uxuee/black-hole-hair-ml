@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "output_root": "artifacts/ai4s2026/<timestamp>",
+  "claims": {
+    "waveform_only_r2_k": {"value": 0.8959840891778823, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_only; model=RandomForestRegressor; target=k; metric=R2; mean over folds", "tolerance": 0.005},
+    "waveform_only_r2_wq": {"value": 0.9586520380090987, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_only; model=RandomForestRegressor; target=wq; metric=R2; mean over folds", "tolerance": 0.005},
+    "waveform_proxy_r2_k": {"value": 0.9792724899377677, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_plus_geodesics; model=HistGradientBoostingRegressor; target=k; metric=R2; mean over folds", "tolerance": 0.005},
+    "waveform_proxy_r2_wq": {"value": 0.9890640602848116, "source": "tables/waveform_to_hair_metrics.csv", "selector": "feature_set=waveform_plus_geodesics; model=HistGradientBoostingRegressor; target=wq; metric=R2; mean over folds", "tolerance": 0.005},
+    "identifiability_macro_f1": {"value": 0.9927762474328815, "source": "tables/waveform_identifiability_metrics.csv", "selector": "feature_set=all_features; model=RandomForestClassifier; metric=macro_F1; mean over folds", "tolerance": 0.005},
+    "weakly_identifiable_fraction": {"value": 0.5757575757575758, "source": "tables/waveform_identifiability_predictions.csv", "selector": "all_features RandomForestClassifier; unique physical_id; fraction true_class=weakly_identifiable", "tolerance": 0.002},
+    "waveform_noise_break_fraction": {"value": 0.005, "source": "tables/waveform_to_hair_noise_metrics.csv", "selector": "waveform_only wq MAE; first noise level above 1.25x clean MAE", "tolerance": 1e-12},
+    "scalar_wq_mae": {"value": 0.022482397770188484, "source": "tables/geodesic_observable_cv_predictions.csv", "selector": "feature_set=all current scalar observables; mean abs_error_wq", "tolerance": 0.002},
+    "extended_wq_mae": {"value": 0.014310149798521958, "source": "tables/geodesic_observable_cv_predictions.csv", "selector": "feature_set=current scalars + independent geodesic observables; mean abs_error_wq", "tolerance": 0.002},
+    "near_zero_min_singular_improvement": {"value": 11.992183832597918, "source": "tables/geodesic_degeneracy_improvement_summary.csv", "selector": "region=nearest sampled band to k=0; median", "tolerance": 0.5},
+    "near_zero_condition_improvement": {"value": 2.127492633660492, "source": "tables/geodesic_degeneracy_improvement_summary.csv", "selector": "region=nearest sampled band to k=0; median", "tolerance": 0.1}
+  }
+}

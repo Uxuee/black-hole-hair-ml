@@ -29,6 +29,7 @@ reports/tables/
 reports/figures/
 reports/tmp/
 reports/cache/
+artifacts/
 reports/*.html
 reports/*.aux
 reports/*.log

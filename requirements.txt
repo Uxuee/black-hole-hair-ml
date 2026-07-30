@@ -1,8 +1,8 @@
-numpy
-pandas
-scikit-learn
-matplotlib
-joblib
-pyyaml
-tqdm
-pytest
+numpy==1.26.4
+pandas==2.1.4
+scikit-learn==1.2.1
+matplotlib==3.7.0
+joblib==1.1.1
+pyyaml==6.0
+tqdm==4.64.1
+pytest==7.1.2

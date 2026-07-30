@@ -136,9 +136,11 @@ def _feature_plot(metrics, path):
 
 
 def run(ident_config_path="configs/third_pass_identifiability.yaml",
-        geodesic_config_path="configs/geodesic_observables.yaml"):
+        geodesic_config_path="configs/geodesic_observables.yaml", *,
+        output_root=None):
     config = load_yaml(ident_config_path); gconfig = load_yaml(geodesic_config_path)
-    root = Path(gconfig["output_root"]); tables = root / "tables"; figures = root / "figures"
+    root = Path(output_root or gconfig["output_root"])
+    tables = root / "tables"; figures = root / "figures"
     tables.mkdir(parents=True, exist_ok=True); figures.mkdir(parents=True, exist_ok=True)
     meta, _, _, _ = generate_dense_kiselev(config)
     augmented = attach_geodesic_observables(meta, gconfig)
@@ -179,8 +181,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--identifiability-config", default="configs/third_pass_identifiability.yaml")
     parser.add_argument("--geodesic-config", default="configs/geodesic_observables.yaml")
+    parser.add_argument("--output-root")
     args = parser.parse_args()
-    result = run(args.identifiability_config, args.geodesic_config)
+    result = run(args.identifiability_config, args.geodesic_config,
+                 output_root=args.output_root)
     print("Independent-observable extension complete.")
     print(result["summary"].to_string(index=False))
     print(f"Observable source: {result['source']} (proxy values are not physical results).")
