@@ -327,8 +327,15 @@ def _figures(metrics, class_metrics, predictions, class_predictions, noise, meta
     for ax, target in zip(axes, ("k", "wq")):
         ax.scatter(p[f"true_{target}"], p[f"predicted_{target}"], s=9, alpha=.45, c=p.true_k, cmap="coolwarm")
         lo, hi = p[f"true_{target}"].min(), p[f"true_{target}"].max()
-        ax.plot([lo, hi], [lo, hi], "k--"); ax.set(xlabel=f"true {target}", ylabel=f"predicted {target}", title=target)
-    fig.suptitle(f"Waveform-to-hair grouped predictions ({model})"); fig.tight_layout()
+        ax.plot([lo, hi], [lo, hi], "k--")
+        ax.set(
+            xlabel=f"true {target}", ylabel=f"predicted {target}",
+            title=target)
+        ax.xaxis.label.set_size(13)
+        ax.yaxis.label.set_size(13)
+        ax.title.set_size(14)
+        ax.tick_params(labelsize=11)
+    fig.tight_layout()
     save_figure(fig, poster/"waveform_to_hair_true_vs_pred"); plt.close(fig)
 
     # Compare representations using the best clean grouped-CV model for each
@@ -348,7 +355,15 @@ def _figures(metrics, class_metrics, predictions, class_predictions, noise, meta
     summary.plot.bar(ax=ax, color=["#4361ee", "#f72585"])
     ax.set(ylabel=r"best mean grouped-CV $R^2$", xlabel="",
            title="Best model per feature set")
-    ax.axhline(0, color="black", lw=.7); ax.legend(title="target"); fig.tight_layout()
+    ax.axhline(0, color="black", lw=.7)
+    ax.tick_params(axis="y", labelsize=11)
+    ax.tick_params(axis="x", labelsize=10, rotation=18)
+    for label in ax.get_xticklabels():
+        label.set_horizontalalignment("right")
+    ax.yaxis.label.set_size(13)
+    ax.title.set_size(14)
+    ax.legend(title="target", fontsize=11, title_fontsize=11)
+    fig.tight_layout()
     save_figure(fig, poster/"waveform_to_hair_feature_comparison"); plt.close(fig)
 
     nr = noise[(noise.target == "wq") & (noise.metric == "MAE")].groupby(

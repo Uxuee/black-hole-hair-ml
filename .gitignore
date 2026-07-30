@@ -35,6 +35,10 @@ reports/*.aux
 reports/*.log
 reports/*.out
 reports/manuscript_first_page.png
+paper/**/*.aux
+paper/**/*.bbl
+paper/**/*.blg
+paper/**/*.out
 
 # Keep only curated public-facing report artifacts
 reports/*
