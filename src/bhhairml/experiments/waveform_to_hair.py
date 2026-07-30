@@ -45,7 +45,9 @@ def _observable_vector(k, wq, ell=10, n=0):
 
 
 def fisher_identifiability(k, wq, relative_precision, *,
-                           rank_rtol=1e-6, rank_atol=0.0):
+                           rank_rtol=1e-8, rank_atol=0.0,
+                           finite_difference_scale=1.0,
+                           finite_difference_stencil="three-point"):
     """Return local Fisher diagnostics for ``(k, wq)``.
 
     The observable Jacobian is whitened by the assumed measurement standard
@@ -63,9 +65,28 @@ def fisher_identifiability(k, wq, relative_precision, *,
         raise ValueError("relative_precision must be positive")
     if rank_rtol < 0 or rank_atol < 0:
         raise ValueError("rank tolerances must be non-negative")
-    hk, hw = 2e-5, 7e-4
+    if finite_difference_scale <= 0:
+        raise ValueError("finite_difference_scale must be positive")
+    if finite_difference_stencil not in {"three-point", "five-point"}:
+        raise ValueError("unsupported finite-difference stencil")
+    hk, hw = 2e-5 * finite_difference_scale, 7e-4 * finite_difference_scale
     base = _observable_vector(k, wq)
     def derivative(axis, step):
+        def point(offset):
+            return ((k + offset, wq) if axis == 0
+                    else (k, wq + offset))
+        if finite_difference_stencil == "five-point":
+            try:
+                return (
+                    -_observable_vector(*point(2*step))
+                    + 8*_observable_vector(*point(step))
+                    - 8*_observable_vector(*point(-step))
+                    + _observable_vector(*point(-2*step))
+                ) / (12*step)
+            except ValueError:
+                # Boundary points retain the established three-point/one-sided
+                # fallback rather than extrapolating outside the model domain.
+                pass
         plus = (k + step, wq) if axis == 0 else (k, wq + step)
         minus = (k - step, wq) if axis == 0 else (k, wq - step)
         try:
@@ -118,7 +139,7 @@ def fisher_identifiability(k, wq, relative_precision, *,
     }
 
 
-def _sigma_wq(k, wq, relative_precision, *, rank_rtol=1e-6,
+def _sigma_wq(k, wq, relative_precision, *, rank_rtol=1e-8,
               rank_atol=0.0):
     return fisher_identifiability(
         k, wq, relative_precision, rank_rtol=rank_rtol,
@@ -135,7 +156,7 @@ def _legacy_sigma_wq_for_audit(k, wq, relative_precision):
 
 
 def _attach_identifiability(meta, precision, threshold, *,
-                            rank_rtol=1e-6, rank_atol=0.0):
+                            rank_rtol=1e-8, rank_atol=0.0):
     unique = meta[["physical_id", "k", "wq"]].drop_duplicates().copy()
     unique["sigma_wq"] = [_sigma_wq(
         k, wq, precision, rank_rtol=rank_rtol, rank_atol=rank_atol)

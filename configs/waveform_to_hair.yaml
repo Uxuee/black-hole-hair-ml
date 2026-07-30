@@ -6,9 +6,9 @@ n_group_folds: 3
 pca_components: 16
 relative_observable_precision: 0.01
 sigma_wq_threshold: 0.3
-# Equivalent to the former pinv(rcond=1e-12) cutoff on J^T J because
-# singular values are squared in the Fisher matrix.
-fisher_rank_rtol: 1.0e-6
+# Supported by three-point/five-point and step-scaling convergence checks.
+# See docs/rank_sensitivity_validation.md.
+fisher_rank_rtol: 1.0e-8
 fisher_rank_atol: 0.0
 noise_levels: [0.0, 0.005, 0.01, 0.03, 0.05]
 regression_models: [Ridge, RandomForestRegressor, HistGradientBoostingRegressor, MLPRegressor]

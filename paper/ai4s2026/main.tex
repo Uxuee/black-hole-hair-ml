@@ -18,7 +18,7 @@ from Synthetic Ringdown Waves}
 \IEEEauthorblockN{Ariadna Uxue Palomino Ylla}
 \IEEEauthorblockA{Nagoya University\\
 Nagoya, Japan\\
-[email address]}
+ariadnaepy@gmail.com}
 }
 
 \begin{document}
@@ -53,7 +53,7 @@ This paper studies a specific inverse problem: recovering the Kiselev
 parameters $(k,\wq)$ from the frequency and damping morphology of synthetic
 ringdown curves. In the eikonal limit, quasinormal frequencies are related to
 the orbital frequency and instability exponent of an unstable circular null
-geodesic \cite{cardoso2009geodesic}. The relation gives a transparent
+geodesic \cite{cardoso2009geodesic,palominoylla2026ringdown}. The relation gives a transparent
 simulator in which machine-learning behavior can be compared directly with the
 local derivatives of the observable map.
 
@@ -177,13 +177,23 @@ zero-valued shifts, we whiten the Jacobian as
 \end{equation}
 Singular values below
 $\max(\epsilon_{\rm abs},\epsilon_{\rm rel}s_{\max})$, with
-$\epsilon_{\rm rel}=10^{-6}$ and $\epsilon_{\rm abs}=0$, define the numerical
-null space. If the explicit $\wq$ direction overlaps that null space, we set
-$\sigw=\infty$ and mark the parameter non-identifiable. Otherwise the
-covariance is assembled only from retained singular directions,
+$\epsilon_{\rm rel}=10^{-8}$ and $\epsilon_{\rm abs}=0$, define the numerical
+null space. This tolerance is supported by derivative convergence: five-point
+and three-point whitened Jacobians differ relatively by at most
+$9.31\times10^{-9}$ at representative near-degenerate points, and scaling both
+finite-difference steps from $0.25$ to $4$ leaves all labels unchanged. If the
+explicit $\wq$ direction overlaps the numerical null space, we set
+$\sigw=\infty$ and mark the parameter structurally or numerically
+non-identifiable. Otherwise the covariance is assembled from retained
+singular directions,
 $\Sigma_\theta=V_r{\rm diag}(s_r^{-2})V_r^{\mathsf T}$. This avoids the
 incorrect finite zero uncertainty that a bare pseudoinverse assigns to a
-discarded parameter direction. We label a point weakly identifiable when
+discarded parameter direction.
+
+At exactly $k=0$, the observables have no $\wq$ dependence, the Jacobian has
+rank one, and $\sigw=\infty$. At small nonzero $|k|$, by contrast, the
+Jacobian can remain full rank while producing a large but finite uncertainty.
+We call this practical weak identifiability, labeling a point weak when
 \begin{equation}
  \sigw=\sqrt{(\Sigma_\theta)_{\wq\wq}}>0.3 .
  \label{eq:weak}
