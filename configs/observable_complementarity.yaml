@@ -1,0 +1,14 @@
+seed: 42
+n_axis: 41
+k_range: [-0.04, 0.04]
+wq_range: [-1.4, 1.4]
+spatial_bins: [5, 5]
+n_folds: 5
+finite_difference_fraction: 0.0025
+rank_tolerance: 1.0e-10
+near_zero_threshold: 0.01
+extra_trees:
+  n_estimators: 200
+  min_samples_leaf: 2
+geodesic_config: configs/geodesic_observables.yaml
+output_root: artifacts/observable_complementarity
