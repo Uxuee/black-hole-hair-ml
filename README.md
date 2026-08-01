@@ -94,6 +94,18 @@ python -m bhhairml.experiments.geodesic_extension \
   --geodesic-config configs/geodesic_observables.yaml
 ```
 
+The first identifiability-paper milestone uses genuinely contiguous
+parameter-space blocks and a Jacobian standardized only with training-domain
+scales:
+
+```bash
+python -m bhhairml.experiments.identifiability_milestone
+```
+
+It writes validation tables, out-of-fold predictions, the standardized
+Jacobian grid, and a composite Kiselev diagnostic to
+`artifacts/identifiability_milestone/`.
+
 Windows PowerShell:
 
 ```powershell
