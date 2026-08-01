@@ -106,6 +106,23 @@ It writes validation tables, out-of-fold predictions, the standardized
 Jacobian grid, and a composite Kiselev diagnostic to
 `artifacts/identifiability_milestone/`.
 
+The next controlled experiment separates sparse sampling from physical
+ill-conditioning using matched random and spatially blocked cross-validation
+on nested coarse, medium, and dense Kiselev grids:
+
+```bash
+python -m bhhairml.experiments.sampling_density_study
+```
+
+It records the nearest-training-point distance for every out-of-fold
+prediction and fits a descriptive joint error model using conditioning,
+training coverage, and grid spacing.
+
+![Sampling density versus physical identifiability](reports/figures/sampling_density_study/sampling_density_identifiability.png)
+
+See the [sampling-density study report](reports/sampling_density_study.md) for
+the matched validation results and interpretation.
+
 Windows PowerShell:
 
 ```powershell

@@ -15,18 +15,27 @@ def _observable_vector(k: float, wq: float, feature_names) -> np.ndarray:
 def _derivative(k, wq, axis, step, domain, feature_names):
     lower, upper = domain
     coordinate = k if axis == 0 else wq
-    if coordinate - step >= lower and coordinate + step <= upper:
-        left = (k - step, wq) if axis == 0 else (k, wq - step)
-        right = (k + step, wq) if axis == 0 else (k, wq + step)
-        return (_observable_vector(*right, feature_names)
-                - _observable_vector(*left, feature_names)) / (2.0 * step)
-    if coordinate + step <= upper:
-        base = _observable_vector(k, wq, feature_names)
-        right = (k + step, wq) if axis == 0 else (k, wq + step)
-        return (_observable_vector(*right, feature_names) - base) / step
     base = _observable_vector(k, wq, feature_names)
-    left = (k - step, wq) if axis == 0 else (k, wq - step)
-    return (base - _observable_vector(*left, feature_names)) / step
+    left_value = right_value = None
+    if coordinate - step >= lower:
+        left = (k - step, wq) if axis == 0 else (k, wq - step)
+        try:
+            left_value = _observable_vector(*left, feature_names)
+        except ValueError:
+            pass
+    if coordinate + step <= upper:
+        right = (k + step, wq) if axis == 0 else (k, wq + step)
+        try:
+            right_value = _observable_vector(*right, feature_names)
+        except ValueError:
+            pass
+    if left_value is not None and right_value is not None:
+        return (right_value - left_value) / (2.0 * step)
+    if right_value is not None:
+        return (right_value - base) / step
+    if left_value is not None:
+        return (base - left_value) / step
+    raise ValueError("No physical finite-difference neighbor is available")
 
 
 def standardized_kiselev_jacobian_grid(points: pd.DataFrame,
