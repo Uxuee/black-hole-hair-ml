@@ -67,3 +67,52 @@ def grouped_split_summary(metadata: pd.DataFrame, split_indices_tuple, group_ids
                          "n_rows": int(mask.sum()),
                          "n_physical_groups": int(len(np.unique(group_ids[indices][mask])))})
     return pd.DataFrame(rows)
+
+
+def spatial_block_ids(metadata: pd.DataFrame, parameter_columns=("k", "wq"),
+                      bins=(5, 5)) -> np.ndarray:
+    """Assign contiguous parameter-space cells without using row order.
+
+    The bin edges are inferred from the supplied physical domain.  Repeated
+    observations at the same parameter point therefore receive the same ID.
+    """
+    if len(parameter_columns) != len(bins):
+        raise ValueError("parameter_columns and bins must have the same length")
+    coordinates = []
+    for column, n_bins in zip(parameter_columns, bins):
+        if column not in metadata:
+            raise KeyError(f"Missing parameter column: {column}")
+        if int(n_bins) < 2:
+            raise ValueError("Each parameter axis needs at least two bins")
+        values = metadata[column].to_numpy(float)
+        if not np.all(np.isfinite(values)) or np.ptp(values) == 0:
+            raise ValueError(f"Parameter column {column} must have a finite range")
+        edges = np.linspace(values.min(), values.max(), int(n_bins) + 1)
+        # digitize against interior edges includes the rightmost endpoint in
+        # the final cell and produces labels 0, ..., n_bins - 1.
+        coordinates.append(np.digitize(values, edges[1:-1], right=False))
+    return np.ravel_multi_index(tuple(coordinates), tuple(map(int, bins)))
+
+
+def spatial_block_split_indices(metadata: pd.DataFrame, *,
+                                parameter_columns=("k", "wq"), bins=(5, 5),
+                                seed: int = 42, test_size: float = 0.2,
+                                validation_size: float = 0.2):
+    """Split whole contiguous cells into train, validation, and test sets."""
+    if test_size <= 0 or validation_size <= 0 or test_size + validation_size >= 1:
+        raise ValueError("test_size and validation_size must be positive and sum to < 1")
+    groups = spatial_block_ids(metadata, parameter_columns, bins)
+    unique = np.unique(groups)
+    if len(unique) < 3:
+        raise ValueError("At least three occupied spatial blocks are required")
+    shuffled = np.random.default_rng(seed).permutation(unique)
+    n_test = max(1, int(round(test_size * len(unique))))
+    n_validation = max(1, int(round(validation_size * len(unique))))
+    if n_test + n_validation >= len(unique):
+        n_validation = len(unique) - n_test - 1
+    test_groups = shuffled[:n_test]
+    validation_groups = shuffled[n_test:n_test + n_validation]
+    test = np.flatnonzero(np.isin(groups, test_groups))
+    validation = np.flatnonzero(np.isin(groups, validation_groups))
+    train = np.flatnonzero(~np.isin(groups, np.concatenate([test_groups, validation_groups])))
+    return train, validation, test, groups
