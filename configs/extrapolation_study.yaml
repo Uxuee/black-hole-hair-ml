@@ -1,0 +1,20 @@
+seed: 42
+n_seeds: 5
+n_axis: 41
+k_range: [-0.04, 0.04]
+wq_range: [-1.4, 1.4]
+heldout_fractions: [0.2, 0.3, 0.4]
+features: [Omega, lambda, delta_r]
+finite_difference_fraction: 0.01
+rank_tolerance: 1.0e-10
+hgb:
+  max_iter: 200
+  learning_rate: 0.08
+  l2_regularization: 1.0e-5
+mlp:
+  hidden_layer_sizes: [32, 32]
+  alpha: 1.0e-4
+  max_iter: 1000
+  early_stopping: true
+  n_iter_no_change: 30
+output_root: artifacts/extrapolation_study
