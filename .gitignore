@@ -47,6 +47,12 @@ reports/*
 !reports/poster_summary.md
 !reports/realdata_interface_readme.md
 !reports/geodesic_shooting_csv_schema.md
+!reports/sampling_density_study.md
+!reports/figures/
+reports/figures/*
+!reports/figures/sampling_density_study/
+!reports/figures/sampling_density_study/sampling_density_identifiability.png
+!reports/figures/sampling_density_study/sampling_density_identifiability.pdf
 
 # Local tools and temporary files
 tools/
