@@ -139,6 +139,18 @@ the nearest-training-boundary baseline.
 See the [directional extrapolation report](reports/extrapolation_study.md) for
 the protocol, numerical results, and limitations.
 
+Observable complementarity near the exact `k=0` degeneracy is tested with
+matched spatial-block folds:
+
+```bash
+python -m bhhairml.experiments.observable_complementarity
+```
+
+![Observable complementarity](reports/figures/observable_complementarity/observable_complementarity.png)
+
+See the [observable-complementarity report](reports/observable_complementarity.md)
+for the feature ranking and the exact structural rank-loss result.
+
 Windows PowerShell:
 
 ```powershell

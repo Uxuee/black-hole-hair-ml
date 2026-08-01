@@ -49,6 +49,7 @@ reports/*
 !reports/geodesic_shooting_csv_schema.md
 !reports/sampling_density_study.md
 !reports/extrapolation_study.md
+!reports/observable_complementarity.md
 !reports/figures/
 reports/figures/*
 !reports/figures/sampling_density_study/
@@ -57,6 +58,9 @@ reports/figures/*
 !reports/figures/extrapolation_study/
 !reports/figures/extrapolation_study/directional_extrapolation.png
 !reports/figures/extrapolation_study/directional_extrapolation.pdf
+!reports/figures/observable_complementarity/
+!reports/figures/observable_complementarity/observable_complementarity.png
+!reports/figures/observable_complementarity/observable_complementarity.pdf
 
 # Local tools and temporary files
 tools/
