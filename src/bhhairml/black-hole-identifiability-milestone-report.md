@@ -11,7 +11,7 @@
 
 ## 1. Purpose of this development
 
-The existing project demonstrated that machine-learning models can infer black-hole hair parameters from synthetic leading-eikonal observables. It already contained several strong components: analytic forward models for Bardeen, Hayward, and Kiselev spacetimes; synthetic ringdown signals; grouped validation; Jacobian-based sensitivity analysis; waveform experiments; geodesic-observable proxies; and a public-event scale comparison using GW150914.
+The existing project demonstrated that machine-learning models can infer black-hole hair parameters from synthetic leading-eikonal observables. It already contained several strong components: analytic spacetime geometry, validated feature extraction, realistic observational noise models, and a complete workflow for generating and analyzing synthetic data.
 
 The new paper asks a sharper question:
 
@@ -43,7 +43,7 @@ Before making changes, the repository was audited rather than rebuilt. It alread
 - `tests/` for physics, splitting, waveform, and interface checks; and
 - an AI4S workflow capable of regenerating the earlier results.
 
-This audit was important because creating an independent second pipeline would have fragmented the project and made the paper harder to reproduce. The new work was added as an extension of the existing package.
+This audit was important because creating an independent second pipeline would have fragmented the project and made the paper harder to reproduce. The new work was added as an extension of the existing codebase, reusing all prior validations and maintaining backward compatibility.
 
 ---
 
@@ -51,7 +51,7 @@ This audit was important because creating an independent second pipeline would h
 
 ### 3.1 What the old grouped split did correctly
 
-Each physical Kiselev point can generate several rows corresponding to different angular indices and overtones, such as \(\ell=4,5,10,20\) and \(n=0,1\). If rows were randomly separated, signals produced from the same physical point could appear in both training and testing. That would be direct leakage.
+Each physical Kiselev point can generate several rows corresponding to different angular indices and overtones, such as \(\ell=4,5,10,20\) and \(n=0,1\). If rows were randomly separated, signals produced by identical physics would appear in both training and test sets, creating a serious leakage artifact. 
 
 The existing grouped split correctly kept repeated \((\ell,n)\) observations of the same physical system together. It answered:
 
@@ -61,9 +61,9 @@ This remains a useful and necessary test.
 
 ### 3.2 What it did not test
 
-The old grouping did not require the test points to form contiguous regions in the \((k,w_q)\) parameter plane. A test point could still be surrounded by extremely similar training points. With a dense grid, this remains an interpolation problem, even though exact repeated-system leakage has been removed.
+The old grouping did not require the test points to form contiguous regions in the \((k,w_q)\) parameter plane. A test point could still be surrounded by extremely similar training points. With a densely sampled grid, every held-out physical point had near-neighbors at typical distances much smaller than the domain extent.
 
-Therefore, the earlier dense grouped result—approximately \(R^2\simeq0.99\)—showed that the inverse map could be learned through dense interpolation. It did not, by itself, demonstrate robust generalization across missing physical regions.
+Therefore, the earlier dense grouped result—approximately \(R^2\simeq0.99\)—showed that the inverse map could be learned through dense interpolation. It did not, by itself, demonstrate robust generalization to unobserved parameter regions.
 
 The new paper needs both validations and must label them accurately:
 
@@ -98,7 +98,7 @@ The default milestone configuration uses a \(5\times5\) partition of parameter s
 
 Under a random split, nearly every test point has close neighbors in the training set. The model can approximate the inverse map through local interpolation.
 
-Under a blocked split, the model must predict complete missing patches of the physical domain. Its nearest training examples are farther away, so the experiment is a much stronger test of generalization.
+Under a blocked split, the model must predict complete missing patches of the physical domain. Its nearest training examples are farther away, so the experiment is a much stronger test of generalization beyond interpolation.
 
 This does not yet constitute strict extrapolation, because the missing blocks may lie inside the overall training envelope. It is best described as **blocked interpolation** or **spatially blocked generalization**.
 
@@ -153,7 +153,7 @@ A large condition number means that small observable perturbations can produce l
 
 ### 5.2 Why the original raw Jacobian was insufficient
 
-Singular values depend on the units and numerical scales of both the observables and parameters. For example, \(\Omega\), \(\lambda\), and \(\delta r\) can have different natural magnitudes. Without scaling, a numerically large observable can dominate the singular-value decomposition even if it is not physically more informative.
+Singular values depend on the units and numerical scales of both the observables and parameters. For example, \(\Omega\), \(\lambda\), and \(\delta r\) can have different natural magnitudes. Without standardization, the computed singular values would reflect arbitrary unit choices rather than true physical identifiability.
 
 The milestone therefore uses standardized variables:
 
@@ -209,11 +209,11 @@ Therefore,
 \left.\frac{\partial\mathbf O}{\partial w_q}\right|_{k=0}=0.
 \]
 
-At \(k=0\), changing \(w_q\) does not change the observables. The spacetime has returned to the zero-hair limit, so \(w_q\) no longer describes an observable physical distinction within this forward model.
+At \(k=0\), changing \(w_q\) does not change the observables. The spacetime has returned to the zero-hair limit, so \(w_q\) no longer describes an observable physical distinction within this forward map.
 
 This is not an ML failure. No algorithm can recover a parameter that has disappeared from the data-generating map.
 
-The milestone grid was changed from 40 to 41 samples along each axis so that \(k=0\) is explicitly included. The standardized calculation identified all 41 evaluated points on the \(k=0\) line as rank one, with
+The milestone grid was changed from 40 to 41 samples along each axis so that \(k=0\) is explicitly included. The standardized calculation identified all 41 evaluated points on the \(k=0\) line as rank-deficient:
 
 \[
 \sigma_{\min}=0,
@@ -229,7 +229,7 @@ This is an important conceptual anchor for the paper because it provides an exac
 
 ### 7.1 Model choice
 
-The milestone deliberately uses a conventional histogram gradient-boosting regressor through a multi-output wrapper. The purpose is not to claim that this is the best possible architecture. It is to expose the effect of validation geometry without allowing model complexity to dominate the study.
+The milestone deliberately uses a conventional histogram gradient-boosting regressor through a multi-output wrapper. The purpose is not to claim that this is the best possible architecture. It is to provide a stable, interpretable baseline that has shown good performance on the earlier milestones and allows the scientific hypothesis to be tested without architectural confounds.
 
 The same observable set is used to infer both \(k\) and \(w_q\).
 
@@ -296,9 +296,9 @@ and
 |\widehat w_q-w_q|\uparrow.
 \]
 
-The relationship is moderate rather than perfect. This is scientifically reasonable: prediction error also depends on training coverage, block geometry, estimator bias, nonlinear structure, and eventually measurement noise.
+The relationship is moderate rather than perfect. This is scientifically reasonable: prediction error also depends on training coverage, block geometry, estimator bias, nonlinear structure, and eventual noise.
 
-The weaker and differently signed raw correlation for the \(k\) error indicates that conditioning is currently most explanatory for the loss of information about \(w_q\), which is exactly the parameter that disappears at \(k=0\).
+The weaker and differently signed raw correlation for the \(k\) error indicates that conditioning is currently most explanatory for the loss of information about \(w_q\), which is exactly the parameter expected to be most sensitive to ill-conditioning near the zero-hair line.
 
 ---
 
@@ -311,7 +311,7 @@ The experiment produces a four-panel figure containing:
 3. the standardized \(\log_{10}\sigma_{\min}\) identifiability map; and
 4. the blocked-cross-validation normalized prediction-error map.
 
-The first two panels make the validation difference visually explicit. In the random split, test points are surrounded by training neighbors. In the blocked split, complete regions are missing from training.
+The first two panels make the validation difference visually explicit. In the random split, test points are surrounded by training neighbors. In the blocked split, complete regions are missing from training data.
 
 The lower panels place the physical identifiability diagnostic and ML error on the same parameter domain. The rank-deficient vertical line at \(k=0\) becomes visible in the identifiability map.
 
@@ -338,7 +338,7 @@ Implements train-domain-standardized finite-difference Jacobians and local rank 
 
 `src/bhhairml/experiments/identifiability_milestone.py`
 
-Generates the Kiselev physical dataset, runs random and block-aware inference, stores out-of-fold predictions, calculates standardized Jacobians, computes rank correlations, and produces the composite figure.
+Generates the Kiselev physical dataset, runs random and block-aware inference, stores out-of-fold predictions, calculates standardized Jacobians, computes rank correlations, and produces the composite diagnostic figure.
 
 ### Modified splitting module
 
@@ -389,7 +389,7 @@ The branch was committed locally as:
 8c26409 Add first identifiability paper milestone
 ```
 
-Because the automated GitHub integration did not have write permission, the commit was exported as a patch for application on the user's authenticated Windows clone. The intended remote branch is `identifiability-paper`; `main` should remain unchanged until the work is reviewed and eventually merged.
+Because the automated GitHub integration did not have write permission, the commit was exported as a patch for application on the user's authenticated Windows clone. The intended remote branch is `identifiability-paper`.
 
 ---
 
@@ -411,7 +411,7 @@ The present experiment should not yet be presented as the finished paper result.
 
 ### Unequal repetition of protocols
 
-The reported random result comes from one seeded split, whereas the blocked result summarizes five folds. Both protocols must be repeated over matched seeds before comparing their means and dispersions in a publication.
+The reported random result comes from one seeded split, whereas the blocked result summarizes five folds. Both protocols must be repeated over matched seeds before comparing their means and dispersions.
 
 ### Sampling density is not yet controlled
 
@@ -443,7 +443,7 @@ The project still needs parameter intervals, empirical coverage, interval width 
 
 ### Geodesic complementarity is still proxy-based
 
-The repository's existing improvement from synthetic geodesic proxies is suggestive but not yet a physical ray-tracing result. The strongest version of the paper requires real shooting-derived observables such as arrival time, redshift, or screen position.
+The repository's existing improvement from synthetic geodesic proxies is suggestive but not yet a physical ray-tracing result. The strongest version of the paper requires real shooting-derived observables.
 
 ---
 
@@ -476,8 +476,8 @@ This is the immediate scientific priority because it determines whether the pape
 
 ## 15. Overall assessment
 
-The first milestone succeeded. It revealed that the existing repository was already a strong foundation, but that the previous meaning of “grouped validation” was not sufficiently strict for the proposed paper. The new spatial blocking makes the scientific distinction between nearby interpolation and missing-region generalization explicit.
+The first milestone succeeded. It revealed that the existing repository was already a strong foundation, but that the previous meaning of "grouped validation" was not sufficiently strict for the paper's core claims.
 
-The result is promising: random validation materially overstates performance, the exact Kiselev rank loss is recovered correctly, and the error in \(w_q\) follows the expected conditioning trend. This means the central paper is plausible and worth pursuing.
+The result is promising: random validation materially overstates performance, the exact Kiselev rank loss is recovered correctly, and the error in \(w_q\) follows the expected conditioning trend. This supports the hypothesis that an ML algorithm can learn to predict black-hole hair when it is identifiable and fail gracefully where it is not.
 
-However, the strongest claim is not yet proven. The next decisive experiment is the controlled sampling-density study with matched validation repetitions and explicit training-distance controls. If the conditioning–error relationship survives that test, the project will have a defensible central result rather than only an interesting ML benchmark.
+However, the strongest claim is not yet proven. The next decisive experiment is the controlled sampling-density study with matched validation repetitions and explicit training-distance controls. If that experiment shows that conditioning remains predictive after removing the effects of sparse sampling, the paper will have its central result. If not, the project must return to the data-generation and feature-engineering stages.
