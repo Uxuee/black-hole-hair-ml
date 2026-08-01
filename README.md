@@ -123,6 +123,22 @@ training coverage, and grid spacing.
 See the [sampling-density study report](reports/sampling_density_study.md) for
 the matched validation results and interpretation.
 
+Directional extrapolation is evaluated separately with a histogram-boosted
+tree ensemble and a scaled MLP:
+
+```bash
+python -m bhhairml.experiments.extrapolation_study
+```
+
+The experiment holds out the upper or lower 20%, 30%, and 40% of each Kiselev
+parameter axis and compares performance with a size-matched random control and
+the nearest-training-boundary baseline.
+
+![Directional extrapolation results](reports/figures/extrapolation_study/directional_extrapolation.png)
+
+See the [directional extrapolation report](reports/extrapolation_study.md) for
+the protocol, numerical results, and limitations.
+
 Windows PowerShell:
 
 ```powershell
