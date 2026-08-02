@@ -150,12 +150,21 @@ def _arrival_curves(frame: pd.DataFrame, observer_clock_factor: float) -> pd.Dat
     # A static observer measures d(tau_obs)=sqrt(f_obs) dt.  Comparing this
     # proper arrival time with integral(1+z)d(tau_emit) avoids mixing clocks.
     frame.loc[successful, "arrival_time_relative"] = observer_clock_factor * (arrivals - arrivals[0])
-    tau = frame.loc[successful, "tau_emit"].to_numpy()
-    opz = frame.loc[successful, "one_plus_z"].to_numpy()
-    toa = np.zeros(len(successful))
-    if len(successful) > 1:
+    # Do not integrate across a failed shooting phase: doing so would silently
+    # interpolate the missing redshift.  The first successful contiguous block
+    # is integrated from the physical reference phase; later values stay NaN.
+    first = int(successful[0])
+    contiguous = [first]
+    for index in successful[1:]:
+        if int(index) != contiguous[-1] + 1:
+            break
+        contiguous.append(int(index))
+    tau = frame.loc[contiguous, "tau_emit"].to_numpy()
+    opz = frame.loc[contiguous, "one_plus_z"].to_numpy()
+    toa = np.zeros(len(contiguous))
+    if len(contiguous) > 1:
         toa[1:] = np.cumsum(np.diff(tau) * 0.5 * (opz[:-1] + opz[1:]))
-    frame.loc[successful, "toa_from_redshift"] = toa
+    frame.loc[contiguous, "toa_from_redshift"] = toa
     return frame
 
 

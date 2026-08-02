@@ -50,6 +50,7 @@ reports/*
 !reports/sampling_density_study.md
 !reports/extrapolation_study.md
 !reports/observable_complementarity.md
+!reports/schwarzschild_shooting_validation.md
 !reports/figures/
 reports/figures/*
 !reports/figures/sampling_density_study/
