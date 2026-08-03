@@ -8,6 +8,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 MODELS = ("HGB", "RF", "MLP")
@@ -26,29 +27,59 @@ def build_estimator_figure(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     x = np.arange(len(MODELS))
     colors = ("#3267a8", "#dc7f2a", "#3a9668")
-    fig, axes = plt.subplots(1, 3, figsize=(11.2, 3.5), sharex=True)
+    fig, axes = plt.subplots(1, 3, figsize=(7.0, 2.7), sharex=True)
     series = ((MEDIAN, "Median shift"), (P95, "95th-percentile shift"),
               (MAX_WQ, r"Largest identifiable-$w_q$ shift"))
     for ax, (values, title) in zip(axes, series):
         ax.bar(x, values, color=colors, edgecolor="#222222", linewidth=0.7)
         ax.set_xticks(x, MODELS)
-        ax.set_title(title, fontsize=11)
-        ax.set_ylabel("Normalized prediction shift")
-        ax.grid(axis="y", alpha=0.25, linewidth=0.7)
+        ax.set_title(title, fontsize=8.5)
+        ax.set_ylabel("Normalized shift", fontsize=8)
+        ax.grid(axis="y", alpha=0.22, linewidth=0.6)
+        ax.tick_params(labelsize=7.5)
         for i, value in enumerate(values):
             ax.text(i, value + max(values.max() * 0.035, 0.00018),
-                    f"{value:.5g}", ha="center", va="bottom", fontsize=9)
+                    f"{value:.5g}", ha="center", va="bottom", fontsize=7)
         ax.set_ylim(0, max(values.max() * 1.24, 0.0015))
-    axes[0].text(0.02, 0.96, "Tree predictions often do not\ncross a split threshold",
-                 transform=axes[0].transAxes, va="top", fontsize=8.5)
-    axes[2].text(0.98, 0.96,
-                 "MLP audit: 410 catastrophic records\n409 already catastrophic at 161 phases\n63 iteration-limit cases",
-                 transform=axes[2].transAxes, ha="right", va="top", fontsize=8.2,
-                 bbox={"facecolor": "white", "edgecolor": "#777777", "alpha": 0.92})
-    fig.suptitle("Estimator sensitivity after 161-to-321 forward convergence", fontsize=12)
+    fig.suptitle("Estimator sensitivity after 161-to-321 forward convergence", fontsize=10)
+    fig.text(.5, .005,
+             "MLP audit: 410 catastrophic records; 409 predate phase substitution; 63 iteration-limit cases.",
+             ha="center", fontsize=7)
+    fig.tight_layout(rect=(0, .06, 1, .94))
+    fig.savefig(output / "targeted_estimator_robustness_compact.pdf", bbox_inches="tight")
+    fig.savefig(output / "targeted_estimator_robustness_compact.png", dpi=320, bbox_inches="tight")
+    plt.close(fig)
+
+
+def build_resolution_figure(output: Path, source: Path) -> None:
+    """Plot pointwise forward convergence in a compact log-grid layout."""
+    feature = pd.read_csv(source)
+    q = feature.groupby(["k", "wq"], sort=True)[
+        ["normalized_change_81_161", "normalized_change_161_321"]
+    ].max().reset_index()
+    x = np.arange(len(q))
+    fig, ax = plt.subplots(figsize=(6.8, 2.55))
+    ax.plot(x, q.normalized_change_81_161, "o", ms=3.0, color="#3267a8", label=r"81$\to$161")
+    ax.plot(x, q.normalized_change_161_321, "o", ms=3.0, color="#dc7f2a", label=r"161$\to$321")
+    ax.set_yscale("log")
+    ax.set_xlabel(r"Selected point (ordered by $k,w_q$)")
+    ax.set_ylabel("Maximum normalized feature change")
+    ax.set_xticks(np.arange(0, 36, 5))
+    ax.grid(axis="y", which="major", color="0.78", linewidth=.65)
+    ax.grid(axis="y", which="minor", color="0.90", linewidth=.45)
+    ax.grid(axis="x", which="major", color="0.92", linewidth=.45)
+    median = float(feature.normalized_change_161_321.median())
+    p95 = float(feature.normalized_change_161_321.quantile(.95))
+    maximum = float(q.normalized_change_161_321.max())
+    ax.text(.015, .50,
+            f"0 unresolved at 321 phases\nmedian={median:.3e}; p95={p95:.3e}; accepted max={maximum:.3e}",
+            transform=ax.transAxes, va="center", fontsize=7.3,
+            bbox={"facecolor": "white", "edgecolor": "0.75", "alpha": .92, "pad": 2.5})
+    ax.legend(frameon=True, fontsize=7.5, loc="upper right")
+    ax.tick_params(labelsize=8)
     fig.tight_layout()
-    fig.savefig(output / "targeted_estimator_robustness.pdf", bbox_inches="tight")
-    fig.savefig(output / "targeted_estimator_robustness.png", dpi=320, bbox_inches="tight")
+    fig.savefig(output / "resolution_robustness_compact.pdf", bbox_inches="tight")
+    fig.savefig(output / "resolution_robustness_compact.png", dpi=320, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -106,6 +137,7 @@ def main() -> int:
                         default=Path("paper/journal_identifiability_visual/figures"))
     args = parser.parse_args()
     build_estimator_figure(args.output)
+    build_resolution_figure(args.output, Path("artifacts/targeted_321_audit/feature_convergence_81_161_321.csv"))
     build_local_sensitivity_figure(args.output)
     write_metrics(args.output)
     return 0

@@ -19,6 +19,7 @@ PAPER = ROOT / "paper" / "journal_identifiability_visual"
 
 REFINED_NAMES = (
     "phase_coloured_photon_shooting_with_inset",
+    "phase_coloured_photon_shooting_horizontal",
     "shooting_observables_vs_phase_refined",
     "observer_sky_track_with_residuals",
     "physical_shooting_to_ml_pipeline_clean",
@@ -86,7 +87,7 @@ def test_parameter_labels_observer_and_validation_provenance() -> None:
 def test_refined_manifest_entries_are_complete() -> None:
     manifest = json.loads((ART / "figure_manifest.json").read_text())
     entries = manifest["refined_figures"]
-    assert len(entries) == 9
+    assert len(entries) == 10
     required = {"original_filename", "refined_filename", "source_data", "designation",
                 "refinement_description", "physical_parameters", "validation_provenance"}
     assert all(required <= set(row) for row in entries)

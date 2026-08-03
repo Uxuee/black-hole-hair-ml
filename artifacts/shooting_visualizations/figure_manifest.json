@@ -487,6 +487,29 @@
       "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
     },
     {
+      "designation": "main: physical shooting",
+      "original_filename": "phase_coloured_photon_shooting.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "phase_coloured_photon_shooting_horizontal.pdf",
+      "refinement_description": "full-width landscape geometry plus separate actual-scale near-hole panel",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
       "designation": "main: physical complementarity",
       "original_filename": "shooting_observables_vs_phase.pdf",
       "physical_parameters": {

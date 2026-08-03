@@ -72,6 +72,51 @@ def phase_bundle_with_inset(frame, trajectories, selected, observer, refined, jo
     _save(fig, "phase_coloured_photon_shooting_with_inset", refined, journal, dpi)
 
 
+def phase_bundle_horizontal(frame, trajectories, selected, observer, refined, journal, dpi):
+    """Render the same validated rays in full and near-hole landscape panels."""
+    cmap = mpl.colormaps["plasma"]
+    norm = mpl.colors.Normalize(frame.phi.min(), frame.phi.max())
+    orbit = np.column_stack([frame.x_emit, frame.z_emit])
+    segments = np.stack([orbit[:-1], orbit[1:]], axis=1)
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.05), constrained_layout=True)
+    for ax in axes:
+        lc = LineCollection(segments, cmap=cmap, norm=norm, linewidth=1.8)
+        lc.set_array(frame.phi.iloc[:-1].to_numpy())
+        ax.add_collection(lc)
+        for ray_id, index in enumerate(selected):
+            path = trajectories[(trajectories.case == "kiselev_wq_m05") &
+                                (trajectories.ray_id == ray_id)]
+            ax.plot(path.x, path.z, color=cmap(norm(frame.phi.iloc[index])), lw=1.0)
+        ax.add_patch(Circle((0, 0), 2.0, color="#111111", zorder=7))
+        ax.set_aspect("equal", adjustable="box")
+        ax.set_xlabel(r"$x/M$")
+        ax.set_ylabel(r"$z/M$")
+    _, per = _turning(frame)
+    apo = frame.iloc[0]
+    for ax in axes:
+        ax.scatter(apo.x_emit, apo.z_emit, s=40, facecolor="white", edgecolor="black", zorder=8)
+        ax.scatter(per.x_emit, per.z_emit, s=38, facecolor="white", edgecolor="black", marker="D", zorder=8)
+    axes[0].scatter(observer[0], observer[2], marker="*", s=90, color="#56B4E9",
+                    edgecolor="black", zorder=8)
+    axes[0].annotate(r"apocentre, $\phi=\pi$", (apo.x_emit, apo.z_emit),
+                     xytext=(-14.5, 13.0), fontsize=7.5,
+                     arrowprops={"arrowstyle": "->", "lw": 0.7})
+    axes[0].annotate(fr"pericentre, $\phi={per.phi:.2f}$", (per.x_emit, per.z_emit),
+                     xytext=(-14.5, 6.0), fontsize=7.5,
+                     arrowprops={"arrowstyle": "->", "lw": 0.7})
+    axes[0].annotate("observer", (observer[0], observer[2]), xytext=(4.0, -73.0),
+                     fontsize=7.5, arrowprops={"arrowstyle": "->", "lw": 0.7})
+    axes[0].set(xlim=(-17, 17), ylim=(-85, 17))
+    axes[0].set_title("A  Full geometry", fontsize=9, pad=4)
+    axes[1].set(xlim=(-15, 15), ylim=(-15, 15),
+                )
+    axes[1].set_title(r"B  Near-hole view: $x,z\in[-15,15]M$", fontsize=9, pad=4)
+    colorbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=axes,
+                            location="right", pad=.025, fraction=.045)
+    colorbar.set_label(r"physical emission phase $\phi$")
+    _save(fig, "phase_coloured_photon_shooting_horizontal", refined, journal, dpi)
+
+
 def geometry_overview_clean(frame, trajectories, selected, observer, refined, journal, dpi):
     fig, ax = plt.subplots(figsize=(8.2, 6.2)); cmap=mpl.colormaps["viridis"]; norm=mpl.colors.Normalize(frame.phi.min(),frame.phi.max())
     ax.plot(frame.x_emit,frame.z_emit,color="#4D4D4D",lw=2,label="timelike emitter orbit")
@@ -219,6 +264,7 @@ def update_manifest(root: Path, refined: Path) -> None:
             "validation_provenance":"reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"}
     entries=[
       ("phase_coloured_photon_shooting.pdf","phase_coloured_photon_shooting_with_inset.pdf","main: physical shooting","full geometry plus equal-scale near-hole inset"),
+      ("phase_coloured_photon_shooting.pdf","phase_coloured_photon_shooting_horizontal.pdf","main: physical shooting","full-width landscape geometry plus separate actual-scale near-hole panel"),
       ("shooting_observables_vs_phase.pdf","shooting_observables_vs_phase_refined.pdf","main: physical complementarity","larger labels, grayscale line styles, precise tetrad sky label"),
       ("observer_sky_track_comparison.pdf","observer_sky_track_with_residuals.pdf","main: physical complementarity","actual track plus matched-phase Schwarzschild residual panels"),
       ("schwarzschild_kiselev_ray_comparison.pdf","schwarzschild_kiselev_ray_comparison.pdf","appendix: numerical validation","unchanged actual-scale validated comparison"),
@@ -239,6 +285,7 @@ def generate(config_path: Path) -> None:
     trajectories=pd.read_csv(artifact/"representative_photon_trajectories.csv.gz")
     selected=list(map(int,config["selected_phase_indices"])); observer=np.array([physical["observer_x"],physical["observer_y"],physical["observer_z"]],float); dpi=int(config["png_dpi"])
     phase_bundle_with_inset(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
+    phase_bundle_horizontal(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
     geometry_overview_clean(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
     sky_with_residuals(frames,refined,journal,dpi); observables_refined(frames,refined,journal,dpi)
     pipeline_clean(refined,journal,dpi); graphical_abstract(frames,trajectories,selected,observer,refined,journal,dpi)

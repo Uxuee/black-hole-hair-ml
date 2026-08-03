@@ -137,17 +137,18 @@ validated emitter states, launch angles, photon integrations, and observer
 geometry. It is a controlled benchmark visualization, not a radiative-transfer
 or detector simulation.
 
-\begin{figure}[t]
-\centering\includegraphics[width=.98\linewidth]{shooting/phase_coloured_photon_shooting_with_inset.pdf}
+\begin{figure*}[t]
+\centering\includegraphics[width=.86\textwidth]{shooting/phase_coloured_photon_shooting_horizontal.pdf}
 \caption{Representative direct-branch null geodesics for $M=1$, $r_p=8M$,
 $r_a=12M$, $k=10^{-3}$, $w_q=-0.5$, and observer $(0,0,-80M)$. Physical phase
 runs from $\pi$ at apocentre to $3\pi$; the diamond marks the numerically
 detected pericentre and the dark disk is a horizon-scale marker, not a shadow.
 At each phase, two launch angles are solved until the ray reaches the observer.
-The inset enlarges the stated near-hole coordinate region without changing the
-trajectory scale. This is a controlled dimensionless benchmark.}
+The right panel shows the stated near-hole coordinate bounds on their actual
+scale; no trajectory is geometrically magnified. This is a controlled
+dimensionless benchmark.}
 \label{fig:rays}
-\end{figure}
+\end{figure*}
 
 \section{Physical Observable Complementarity}
 A large response can reveal that the spacetime changed without revealing which
@@ -321,7 +322,7 @@ Figure~\ref{fig:resolution} displays both resolution increments on the same
 selected-point order.
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.92\textwidth]{resolution_robustness.pdf}
+\centering\includegraphics[width=.78\textwidth]{resolution_robustness_compact.pdf}
 \caption{Targeted pointwise maximum normalized feature changes from 81 to 161
 and 161 to 321 phases. The 321-phase audit resolves the forward-feature
 criterion but does not by itself certify inverse estimators.}
@@ -350,7 +351,7 @@ while its catastrophic directional records overwhelmingly predate that
 substitution.
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.92\textwidth]{targeted_estimator_robustness.pdf}
+\centering\includegraphics[width=.82\textwidth]{targeted_estimator_robustness_compact.pdf}
 \caption{Frozen-estimator sensitivity after forward convergence. Bars show the
 median, 95th-percentile, and largest identifiable-$\wq$ normalized prediction
 shift for HGB, RF, and MLP. The annotation records the distinct MLP failure
@@ -358,19 +359,6 @@ audit: 410 catastrophic directional records, 409 already catastrophic at 161
 phases, and 63 iteration-limit cases. No predictions are clipped.}
 \label{fig:estimator-robustness}
 \end{figure*}
-
-\begin{table*}[t]
-\caption{Targeted 321-phase frozen-estimator robustness.}
-\label{tab:robustness}
-\centering
-\begin{tabular}{lccc}
-Model & median & 95th percentile & max. identifiable $\wq$ \\
-\hline
-HGB & 0 & 0.08122 & 0.30593 \\
-RF & 0 & 0.08509 & 0.27053 \\
-MLP & 0.001143 & 0.008223 & 0.03819 \\
-\end{tabular}
-\end{table*}
 
 \section{Discussion}
 Jacobian conditioning answers whether nearby parameter directions are separated
@@ -412,7 +400,6 @@ converge while fitted estimators remain fragile. These conclusions motivate
 robust inverse methods and broader physical modeling before observational use.
 
 \FloatBarrier
-\clearpage
 \appendix
 \section{Historical Synthetic and Proxy Benchmark}
 \label{app:historical}
@@ -489,6 +476,23 @@ The machine-readable table contains standardized input magnitude, hidden
 activation magnitude, iteration status, overflow flag, training distance, and
 resolution response for every catastrophic record. It distinguishes
 optimization failure from extrapolation instability without clipping.
+
+Exact frozen-estimator shift summaries used in
+Fig.~\ref{fig:estimator-robustness} are retained in
+Table~\ref{tab:robustness} for numerical reference.
+
+\begin{table}[t]
+\caption{Targeted 321-phase frozen-estimator robustness.}
+\label{tab:robustness}
+\centering
+\begin{tabular}{lccc}
+Model & median & 95th percentile & max. $\wq$ \\
+\hline
+HGB & 0 & 0.08122 & 0.30593 \\
+RF & 0 & 0.08509 & 0.27053 \\
+MLP & 0.001143 & 0.008223 & 0.03819 \\
+\end{tabular}
+\end{table}
 
 \FloatBarrier
 \bibliographystyle{plain}

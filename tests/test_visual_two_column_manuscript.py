@@ -86,7 +86,32 @@ def test_all_figures_exist_are_referenced_and_precede_bibliography() -> None:
         assert (PAPER / "figures" / graphic).exists()
         assert f"ref{{{label}}}" in tex
         assert tex.index(f"label{{{label}}}") < bibliography
-    assert len(re.findall(r"\\begin\{figure\*\}", tex)) == 11
+    assert len(re.findall(r"\\begin\{figure\*\}", tex)) == 12
+
+
+def test_critical_layout_assets_and_float_repairs() -> None:
+    tex = _text()
+    figures = PAPER / "figures"
+    assert "shooting/phase_coloured_photon_shooting_horizontal.pdf" in tex
+    assert "phase_coloured_photon_shooting_with_inset" not in tex
+    assert "resolution_robustness_compact.pdf" in tex
+    assert "targeted_estimator_robustness_compact.pdf" in tex
+    assert "\\clearpage" not in tex
+    assert tex.index(r"\appendix") < tex.index(r"\label{tab:robustness}")
+    assert tex.index(r"\label{fig:estimator-robustness}") < tex.index(r"\section{Discussion}")
+    for graphic in (
+        "shooting/phase_coloured_photon_shooting_horizontal.pdf",
+        "resolution_robustness_compact.pdf",
+        "targeted_estimator_robustness_compact.pdf",
+    ):
+        assert (figures / graphic).stat().st_size > 10_000
+
+
+def test_compact_resolution_source_declares_log_grids() -> None:
+    source = (ROOT / "src/bhhairml/validation/visual_two_column_manuscript.py").read_text()
+    assert 'axis="y", which="major"' in source
+    assert 'axis="y", which="minor"' in source
+    assert "0 unresolved at 321 phases" in source
 
 
 def test_audits_pass_and_comparison_artifacts_exist() -> None:
