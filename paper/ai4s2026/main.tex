@@ -465,18 +465,22 @@ the gain.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{physical_grid_minimum_singular_value.png}
-\caption{Minimum-singular-value maps for the predeclared physical observable
-sets on the accepted Kiselev science grid.}
+\includegraphics[width=0.98\textwidth]{physical_grid_minimum_singular_value.png}
+\caption{Base-10 logarithm of the minimum singular value for each predeclared
+physical observable set. Exact $k=0$ rank-loss points are masked in grey, and
+the shared colour scale is computed only from finite $k>0$ values. Each square
+is a computed grid point; missing or invalid points are not interpolated.}
 \label{fig:physical-grid-sigma}
 \end{figure*}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{physical_observable_complementarity.png}
-\caption{Grid-wide comparison of physical observable sets.}
+\includegraphics[width=0.98\textwidth]{physical_observable_complementarity.png}
+\caption{Grid-wide median and interquartile range of the minimum singular value
+(left; higher is better) and condition number (right; lower is better), using
+finite $k>0$ points. Full names identify every observable construction.}
 \label{fig:physical-complementarity}
-\end{figure}
+\end{figure*}
 
 \begin{figure}[t]
 \centering
@@ -499,18 +503,20 @@ unobservable.
 \caption{Median normalized MAE across models, folds, and seeds.}
 \label{tab:physical-ml}
 \centering
-\begin{tabular}{lcccc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccc}
 \toprule
-Features & \multicolumn{2}{c}{Random} & \multicolumn{2}{c}{Grouped}\\
- & $k$ & $\wq$ & $k$ & $\wq$\\
+Features & \multicolumn{2}{c}{Random} & \multicolumn{2}{c}{Grouped} & \multicolumn{2}{c}{Directional}\\
+ & $k$ & $\wq$ & $k$ & $\wq$ & $k$ & $\wq$\\
 \midrule
-Ringdown & .0361 & .1688 & .0485 & .3093\\
-Photon geometry & .1088 & .0927 & .1813 & .1111\\
-All shooting & .0750 & .0453 & .1241 & .0729\\
-Ringdown+photon & .0378 & .0730 & .0457 & .0874\\
-Ringdown+all shooting & .0427 & .0454 & .0445 & .0727\\
+Ringdown & .0361 & .1688 & .0485 & .3093 & .0796 & .3011\\
+Photon geometry & .1088 & .0927 & .1813 & .1111 & .2291 & .2224\\
+All shooting & .0750 & .0453 & .1241 & .0729 & .2305 & .2072\\
+Ringdown+photon & .0378 & .0730 & .0457 & .0874 & .1305 & .2012\\
+Ringdown+all shooting & .0427 & .0454 & .0445 & .0727 & .1363 & .2067\\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 Random splitting is optimistic: grouped/random degradation reaches 1.67 for
@@ -521,13 +527,28 @@ and individual extrapolation directions provide counterexamples to universal
 improvement. Aggregate directional ringdown+photon NMAE is 0.1305 for $k$ and
 0.2012 for $\wq$.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{physical_ml_protocol_comparison.png}
-\caption{Physical-feature inverse error under random interpolation, held-out
-contiguous regions, and directional extrapolation.}
+\includegraphics[width=0.98\textwidth]{physical_ml_protocol_comparison.png}
+\caption{Median normalized MAE for $k$ (left) and identifiable $\wq$ (right)
+under random interpolation, held-out contiguous regions, and directional
+extrapolation. Central values reproduce Table~\ref{tab:physical-ml} exactly;
+intervals show fold/seed/model dispersion and, for the extrapolation summary,
+the four separately archived directions.}
 \label{fig:physical-ml-protocol}
-\end{figure}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.99\textwidth]{physical_ml_vs_jacobian_complementarity.png}
+\caption{Physical conditioning and grouped inverse-learning performance in a
+common feature-set order. Panels show (A) median minimum singular value (higher
+is better), (B) median condition number (lower is better), (C) grouped
+identifiable-$\wq$ NMAE, and (D) grouped-$k$ NMAE for HGB, RF, and MLP (lower is
+better). Physical conditioning generally agrees with tree-based grouped $\wq$
+performance, but does not perfectly rank every model, target, or protocol.}
+\label{fig:physical-ml-jacobian}
+\end{figure*}
 
 In a pooled explanatory model, standardized $\log\kappa$ has coefficient
 0.197 with 95\% bootstrap interval [0.185,0.210], after including training
@@ -543,13 +564,17 @@ do not extend to these shifted tests. Learning curves are still improving at
 78 training points, and grouped one-percent feature noise gives
 ringdown+photon NMAE 0.0699/0.0853.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{physical_ml_uncertainty_calibration.png}
-\caption{Conformal coverage degrades under physical-region and directional
+\includegraphics[width=0.92\textwidth]{physical_ml_uncertainty_calibration.png}
+\caption{Empirical split-conformal coverage for $k$ and identifiable $\wq$
+(with $k=0$ excluded from ordinary $\wq$ coverage), separated by validation
+protocol. Points and intervals are the median and interquartile range across
+models (and directions where applicable); the dashed line is nominal 0.90
+coverage. Extrapolation coverage is empirical and is not guaranteed under
 distribution shift.}
 \label{fig:physical-ml-uncertainty}
-\end{figure}
+\end{figure*}
 
 The principal failed check is phase-resolution robustness. On 27 independently
 recomputed points, replacing 81-phase shooting features with 161-phase values
@@ -557,13 +582,17 @@ changes selected HGB predictions by up to 0.000614 in $k$, approximately 0.100
 in $\wq$, and 0.093 in NMAE. The physical Jacobian is converged, but the inverse
 tree predictions are not uniformly robust to these small feature perturbations.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{physical_ml_high_resolution_robustness.png}
-\caption{Change in inverse-model NMAE when 161-phase features replace their
-81-phase counterparts at the 27 validation points.}
+\includegraphics[width=0.95\textwidth]{physical_ml_high_resolution_robustness.png}
+\caption{High-resolution robustness when 161-phase shooting features replace
+81-phase features at 27 validation points. Panel A reports the maximum
+individual prediction shift normalized by the target range; panel B reports
+the absolute change in aggregate NMAE. Targets are shown separately, and the
+ringdown-only construction is unchanged because it contains no shooting
+features.}
 \label{fig:physical-ml-highres}
-\end{figure}
+\end{figure*}
 
 \section{Limitations and Future Work}
 \textbf{Synthetic waveform scope.} The inputs are generated by
