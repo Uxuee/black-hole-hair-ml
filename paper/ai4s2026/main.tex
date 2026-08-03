@@ -606,6 +606,17 @@ in $\wq$, and 0.093 in NMAE. The physical Jacobian is converged, but the inverse
 tree predictions are not uniformly robust to these small feature perturbations,
 as summarized in Fig.~\ref{fig:physical-ml-highres}.
 
+A subsequent frozen-protocol replication regenerated all 121 physical points
+uniformly at 161 phases. All physical checks pass, and the median normalized
+feature difference is $7.91\times10^{-4}$, but 240 of 9317 feature--point
+comparisons exceed the predeclared 0.05 convergence threshold, led by
+third-harmonic timing and orbital coefficients. The median scored normalized
+prediction shift is $9.48\times10^{-4}$ (95th percentile 0.0261), yet
+high-$\wq$-to-low-$\wq$ MLP extrapolations with all shooting features are
+catastrophically unstable: the largest aggregate median-NMAE change is 16.85.
+Thus uniform sampling removes mixed resolution but does not resolve inverse
+robustness; the journal-readiness verdict remains conditional.
+
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{physical_ml_high_resolution_robustness.png}
@@ -646,9 +657,10 @@ and without secondary images, radiative transfer, or a finite detector.
 leakage but primarily measures interpolation across the sampled family. The
 physical feature grid is modest. Random, blocked-region, directional,
 conformal, and feature-noise tests are now reported, but learning curves remain
-data limited and shifted conformal coverage is below nominal. The 81/161-phase
-tree-prediction discrepancy must be resolved before final inverse-performance
-claims. Simulator-mismatch studies remain necessary.
+data limited and shifted conformal coverage is below nominal. The uniform
+161-phase rerun retains unresolved third-harmonic feature differences and
+catastrophic MLP extrapolation tails; these must be resolved before final
+inverse-performance claims. Simulator-mismatch studies remain necessary.
 
 The next ray-propagation step is secondary branches, radiative transfer, and a
 finite observing model. The next waveform step is validation against dedicated

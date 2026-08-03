@@ -107,7 +107,8 @@ Relative to ringdown alone, ringdown plus photon geometry improves median (sigma
 - [x] Final random/grouped/extrapolation ML validation completed
 - [x] Calibrated-uncertainty and grouped-noise analyses completed
 - [x] Final ML results incorporated into the workshop manuscript
-- [ ] Resolve failed 81/161-phase ML robustness check
+- [x] Generate and validate the uniform 121-point, 161-phase table
+- [ ] Resolve failed inverse robustness after the uniform 161-phase rerun
 - [ ] Full journal-manuscript rewrite
 - [ ] Literature comparison and journal selection
 
@@ -138,17 +139,26 @@ ringdown plus photon geometry reaches 0.0699/0.0853 NMAE; learning curves are
 still improving at 78 training points, so 121 points are not demonstrably
 saturated.
 
-The 27 high-resolution points reveal the unresolved failure: shooting-based HGB
-predictions change by as much as 0.000614 in (k), approximately 0.100 in
-(w_q), and 0.093 in NMAE when 161-phase features replace 81-phase features.
-The Jacobian maps are converged, but final inverse predictions are not uniformly
-phase-resolution robust.
+The follow-up uniform run completed all 121 physical points at 161 phases with
+no failed phases. Forward Jacobian complementarity and exact (k=0) rank loss
+remain stable. Feature convergence is nevertheless incomplete: 240 of 9,317
+feature-point comparisons exceed the predeclared 0.05 normalized threshold,
+with a maximum of 0.08069 in a third-harmonic timing coefficient.
+
+The unchanged inverse protocol is not uniformly robust and remains non-robust
+in a narrow but extreme tail.
+The median scored normalized prediction shift is 0.000948 and the 95th
+percentile is 0.02606, but frozen MLP extrapolations using all-shooting features
+produce maximum normalized shifts of 2562.84 target ranges for (k) and 2054.44
+for identifiable (w_q). The maximum aggregate median-NMAE change is 16.8497,
+although the median absolute change is only 0.000688. The journal-readiness
+verdict therefore remains conditional.
 
 ## 13. Remaining work before submission
 
-The remaining submission workflow must resolve the 81/161-phase prediction
-sensitivity, decide whether to build a uniformly phase-converged feature table or
-use a robustness-aware estimator, and rerun the fixed protocol. It also requires
+The remaining submission workflow must resolve the third-harmonic phase
+discretization and evaluate a predeclared training-only robustness-aware
+estimator under the same fixed protocol. It also requires
 literature comparison, supervisor/collaborator review, a reproducible release, and
 an archival version. No synthetic duplication or large unvalidated grid should be
 used to manufacture performance.
@@ -158,8 +168,8 @@ used to manufacture performance.
 The forward-physics validation and physical identifiability/complementarity result
 are paper-level, and the final inverse-model validation now shows both the predicted
 tree-model complementarity and its limits. The manuscript is scientifically
-complete enough for internal review, but not for final submission until the failed
-phase-resolution robustness check is resolved. This remains a controlled theoretical
+complete enough for internal review, but not for final submission: the uniform
+161-phase rerun failed the maximum-shift and maximum-NMAE criteria. This remains a controlled theoretical
 scientific-ML benchmark, not an observational constraint.
 
 ## 15. Repository map

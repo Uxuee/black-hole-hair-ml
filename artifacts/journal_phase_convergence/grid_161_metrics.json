@@ -1,0 +1,18 @@
+{
+  "complete": true,
+  "completed_points": 121,
+  "failed_points": 0,
+  "max_hit_error": 1.3676344451777778e-07,
+  "max_impact_parameter_drift": 1.7989165712606336e-11,
+  "max_null_constraint_error": 7.630566317695653e-12,
+  "max_timelike_constraint_error": 4.322098234865735e-13,
+  "result_status_counts": {
+    "completed": 35,
+    "skipped_completed": 86
+  },
+  "runtime_seconds_this_invocation": 4473.202448700002,
+  "uniform_phase_count": 161,
+  "validation_class_counts": {
+    "safe": 121
+  }
+}

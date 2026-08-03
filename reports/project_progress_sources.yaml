@@ -83,3 +83,33 @@ physical_ml_validation:
     max_prediction_change_wq: 0.0999660152036228
     max_absolute_nmae_change: 0.09293572811346172
     pass: false
+journal_phase_convergence:
+  report: reports/journal_phase_convergence.md
+  config: artifacts/journal_phase_convergence/experiment_config_frozen.yaml
+  audit: artifacts/journal_phase_convergence/input_audit.json
+  physical_grid:
+    source: artifacts/journal_phase_convergence/grid_161_metrics.json
+    completed_points: 121
+    failed_points: 0
+    phases: 161
+    runtime_seconds: 4473.202448700002
+    max_hit_error: 1.3676344451777778e-7
+    max_timelike_constraint_error: 4.322098234865735e-13
+    max_null_constraint_error: 7.630566317695653e-12
+    max_impact_parameter_drift: 1.7989165712606336e-11
+  feature_convergence:
+    source: artifacts/journal_phase_convergence/feature_comparison_81_vs_161.csv
+    converged: 7884
+    marginal: 1193
+    unresolved: 240
+    median_normalized_difference: 0.0007907783009308
+    maximum_normalized_difference: 0.0806924624790291
+  inverse_stability:
+    source: artifacts/journal_phase_convergence/final_journal_readiness.json
+    median_normalized_prediction_change: 0.0009482400571554
+    p95_normalized_prediction_change: 0.026061522458259483
+    maximum_normalized_k_prediction_change: 2562.8408713310214
+    maximum_normalized_wq_prediction_change: 2054.4445967894544
+    median_absolute_nmae_change: 0.0006880177709660505
+    maximum_absolute_nmae_change: 16.849740234879828
+    verdict: conditional

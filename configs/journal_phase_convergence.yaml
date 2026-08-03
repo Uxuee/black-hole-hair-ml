@@ -1,0 +1,18 @@
+seed: 2026
+base_grid_config: configs/kiselev_identifiability_grid.yaml
+base_ml_config: configs/physical_shooting_ml_validation.yaml
+output_directory: artifacts/journal_phase_convergence
+phase_count: 161
+max_workers: 4
+reuse_verified_high_resolution_points: true
+feature_numerical_floor: 1.0e-12
+feature_convergence_thresholds:
+  converged: 0.01
+  marginal: 0.05
+inverse_acceptance_thresholds:
+  max_repeated_absolute_nmae_change: 0.02
+  median_repeated_absolute_nmae_change: 0.005
+  max_normalized_wq_prediction_change: 0.05
+  require_ranking_stability: true
+  require_protocol_ordering_stability: true
+run_optional_robust_estimator: false

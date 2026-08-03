@@ -1,0 +1,183 @@
+{
+  "all_27_reusable": true,
+  "n_81_phase_points": 121,
+  "n_existing_161_points": 27,
+  "n_expected_points": 121,
+  "n_jacobian_points": 121,
+  "no_duplicate_or_missing_point": true,
+  "no_failed_phase_interpolation": true,
+  "no_proxy_substitution": true,
+  "parameter_alignment_exact": true,
+  "reusable_high_resolution_points": [
+    {
+      "k": 0.0,
+      "point_id": "k0p000000000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.00025,
+      "point_id": "k0p000250000_wqm0p610000000",
+      "reusable": true,
+      "wq": -0.61
+    },
+    {
+      "k": 0.00025,
+      "point_id": "k0p000250000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.00025,
+      "point_id": "k0p000250000_wqm0p550000000",
+      "reusable": true,
+      "wq": -0.55
+    },
+    {
+      "k": 0.0005,
+      "point_id": "k0p000500000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.00075,
+      "point_id": "k0p000750000_wqm0p666666667",
+      "reusable": true,
+      "wq": -0.6666666666666666
+    },
+    {
+      "k": 0.00075,
+      "point_id": "k0p000750000_wqm0p500000000",
+      "reusable": true,
+      "wq": -0.5
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p690000000",
+      "reusable": true,
+      "wq": -0.69
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p666666667",
+      "reusable": true,
+      "wq": -0.6666666666666666
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p640000000",
+      "reusable": true,
+      "wq": -0.64
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p525000000",
+      "reusable": true,
+      "wq": -0.525
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p500000000",
+      "reusable": true,
+      "wq": -0.5
+    },
+    {
+      "k": 0.001,
+      "point_id": "k0p001000000_wqm0p475000000",
+      "reusable": true,
+      "wq": -0.475
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p666666667",
+      "reusable": true,
+      "wq": -0.6666666666666666
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p610000000",
+      "reusable": true,
+      "wq": -0.61
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p550000000",
+      "reusable": true,
+      "wq": -0.55
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p500000000",
+      "reusable": true,
+      "wq": -0.5
+    },
+    {
+      "k": 0.00125,
+      "point_id": "k0p001250000_wqm0p450000000",
+      "reusable": true,
+      "wq": -0.45
+    },
+    {
+      "k": 0.0015,
+      "point_id": "k0p001500000_wqm0p580000000",
+      "reusable": true,
+      "wq": -0.58
+    },
+    {
+      "k": 0.0015,
+      "point_id": "k0p001500000_wqm0p475000000",
+      "reusable": true,
+      "wq": -0.475
+    },
+    {
+      "k": 0.0015,
+      "point_id": "k0p001500000_wqm0p450000000",
+      "reusable": true,
+      "wq": -0.45
+    },
+    {
+      "k": 0.00175,
+      "point_id": "k0p001750000_wqm0p450000000",
+      "reusable": true,
+      "wq": -0.45
+    },
+    {
+      "k": 0.00225,
+      "point_id": "k0p002250000_wqm0p712500000",
+      "reusable": true,
+      "wq": -0.7125
+    },
+    {
+      "k": 0.0025,
+      "point_id": "k0p002500000_wqm0p712500000",
+      "reusable": true,
+      "wq": -0.7125
+    },
+    {
+      "k": 0.0025,
+      "point_id": "k0p002500000_wqm0p690000000",
+      "reusable": true,
+      "wq": -0.69
+    }
+  ],
+  "source_sha256": {
+    "artifacts\\kiselev_identifiability_grid\\jacobian_diagnostics.csv": "f5b99c3b0a6b2f1d2105a62a17ed5235c589a85f4fbd0f76b40c908d417a7b8e",
+    "artifacts\\kiselev_identifiability_grid\\ml_ready_features.csv": "c04bcab87f65534b4d6e26fbb3cee3aba2f9df05203ac5458ad8c0dc48df5eea",
+    "artifacts\\physical_shooting_ml_validation\\split_assignments.csv": "54285265ccb2187e98d7d6a2e9a184c65454ebd0a28a4d92bcbbb92a179573ec",
+    "configs\\kiselev_identifiability_grid.yaml": "b0bb274627c051628f130aa3e1bbd148e65d1ad53ea03c2112f0920d1e19f4a9",
+    "configs\\physical_shooting_ml_validation.yaml": "b7a3ef64dc2fe7a152a5658e0c58cec4c06d4093f55492776c165cd9a256e506"
+  },
+  "split_assignments_exactly_reproduced": true
+}

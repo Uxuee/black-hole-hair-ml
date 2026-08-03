@@ -1,0 +1,37 @@
+{
+  "arrival_residual": 0.0021321297450640486,
+  "emitter_angular_momentum": 3.547381091977289,
+  "emitter_energy": 0.9346310786761846,
+  "f_observer": 0.775,
+  "failed_phases": 0,
+  "failure_reasons": [],
+  "file_sha256": {
+    "diagnostics.csv": "5eddf43c8901a81b9784fa20a51c451ec3568424dce7daa164232620e90e4f8b",
+    "phase_resolved.csv.gz": "80246eea40f74d4e3d60f7eef2509ad8b3b79090b6407c9e9d3074f8a7affbc4",
+    "summary.csv": "825a71cc1e04b4c5bd286d8d1482e5c38f967e7abfa148e2f217fb65743f1c28"
+  },
+  "finite_observable_coverage": true,
+  "k": 0.0025,
+  "max_hit_error": 3.313925511446956e-08,
+  "max_impact_parameter_drift": 1.4546586157848651e-11,
+  "max_null_constraint_error": 5.535877312112802e-12,
+  "max_timelike_constraint_error": 5.3956838996782614e-14,
+  "min_emitter_f": 0.7331587411835975,
+  "min_photon_f": 0.7331587411835975,
+  "phases": 161,
+  "pipeline_summary": {
+    "diagnostics": 0,
+    "failed_phases": 0,
+    "max_hit_error": 3.3139255114469556e-08,
+    "max_null_constraint_error": 5.5358773121128024e-12,
+    "max_timelike_constraint_error": 5.395683899678261e-14,
+    "parameter_points_requested": 1,
+    "parameter_points_written": 1,
+    "successful_phases": 161
+  },
+  "runtime_seconds": 573.8108120999968,
+  "shooting_success_fraction": 1.0,
+  "status": "completed",
+  "validation_hash_sha256": "2108155a2be855a0fc2ae859a218760f1cd9fc77baaf3f5e7f29e114de126b9b",
+  "wq": -0.6666666666666666
+}
