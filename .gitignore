@@ -52,6 +52,7 @@ reports/*
 !reports/observable_complementarity.md
 !reports/schwarzschild_shooting_validation.md
 !reports/kiselev_small_k_validation.md
+!reports/kiselev_wq_sensitivity.md
 !reports/figures/
 reports/figures/*
 !reports/figures/sampling_density_study/
