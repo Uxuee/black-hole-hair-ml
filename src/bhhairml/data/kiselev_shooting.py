@@ -29,7 +29,7 @@ DETAILED_COLUMNS = [
     "beta_sky", "alpha_sky_arcsec", "beta_sky_arcsec", "propagation_time",
     "euclidean_distance", "excess_time_delay", "one_plus_z", "redshift",
     "arrival_time_relative", "toa_from_redshift", "timelike_constraint_error",
-    "null_constraint_error", "root_success", "root_status", "root_message",
+    "null_constraint_error", "min_photon_f", "root_success", "root_status", "root_message",
     "number_of_function_evaluations", "photon_integration_status", "shooting_success",
     "failure_reason",
 ]
@@ -137,6 +137,7 @@ def _successful_row(metric: KiselevMetric, observer: np.ndarray, orbit, index: i
         "arrival_time_relative": np.nan, "toa_from_redshift": np.nan,
         "timelike_constraint_error": orbit.constraint_error[index],
         "null_constraint_error": integration.null_constraint_error,
+        "min_photon_f": float(np.min(metric.f(np.linalg.norm(integration.position, axis=1)))),
         "root_success": shot.root_success, "root_status": shot.root_status,
         "root_message": shot.root_message, "number_of_function_evaluations": shot.nfev,
         "photon_integration_status": integration.status, "shooting_success": True,
@@ -270,7 +271,8 @@ def run_pipeline(config: dict[str, Any], config_path: str | Path) -> dict[str, A
                         "phi": reference, "diagnostic_type": "summary_failure",
                         "reason": "configured reference phase has no successful shooting solution",
                     })
-                    _make_plots(point, figures_dir, f"M{metric.M:g}_k{k:g}_wq{wq:g}")
+                    if bool(config.get("make_point_plots", True)):
+                        _make_plots(point, figures_dir, f"M{metric.M:g}_k{k:g}_wq{wq:g}")
                     continue
                 ref = reference_rows.iloc[0]
                 summary_rows.append({
@@ -281,7 +283,8 @@ def run_pipeline(config: dict[str, Any], config_path: str | Path) -> dict[str, A
                     "redshift_curve_proxy": ok.redshift.max() - ok.redshift.min(),
                     "branch_label": "direct",
                 })
-            _make_plots(point, figures_dir, f"M{metric.M:g}_k{k:g}_wq{wq:g}")
+            if bool(config.get("make_point_plots", True)):
+                _make_plots(point, figures_dir, f"M{metric.M:g}_k{k:g}_wq{wq:g}")
     detailed = pd.DataFrame(detailed_rows, columns=DETAILED_COLUMNS)
     summary = pd.DataFrame(summary_rows, columns=["M", "k", "wq", "impact_parameter_proxy",
         "screen_coordinate_proxy", "propagation_time_delay_proxy", "redshift_curve_proxy", "branch_label"])

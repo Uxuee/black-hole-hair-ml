@@ -53,6 +53,8 @@ reports/*
 !reports/schwarzschild_shooting_validation.md
 !reports/kiselev_small_k_validation.md
 !reports/kiselev_wq_sensitivity.md
+!reports/kiselev_identifiability_feature_schema.md
+!reports/kiselev_identifiability_grid.md
 !reports/figures/
 reports/figures/*
 !reports/figures/sampling_density_study/

@@ -1,0 +1,46 @@
+seed: 2026
+mode: production
+M: 1.0
+r_p: 8.0
+r_a: 12.0
+phi_start: 3.141592653589793
+phi_end: 9.42477796076938
+inclination_deg: 135.0
+omega_deg: 65.0
+Omega_deg: 225.0
+observer_x: 0.0
+observer_y: 0.0
+observer_z: -80.0
+emitter_rtol: 1.0e-11
+emitter_atol: 1.0e-13
+photon_rtol: 1.0e-10
+photon_atol: 1.0e-12
+photon_max_step: 4.0
+photon_max_affine_parameter: 200.0
+root_method: least_squares
+root_tolerance: 1.0e-10
+hit_tolerance: 1.0e-5
+use_continuation: true
+reference_phase: 3.141592653589793
+max_workers: 2
+candidate_phase_count: 41
+science_phase_count: 81
+high_resolution_phase_count: 161
+turning_point_phi_end: 53.40707511102649
+candidate_k_values: [0.0, 0.000375, 0.00075, 0.001, 0.001125, 0.0015, 0.002, 0.0025, 0.003]
+candidate_wq_values: [-0.75, -0.7125, -0.6666666666666666, -0.6375, -0.6, -0.5625, -0.525, -0.5, -0.45]
+science_k_values: [0.0, 0.00025, 0.0005, 0.00075, 0.001, 0.00125, 0.0015, 0.00175, 0.002, 0.00225, 0.0025]
+science_wq_values: [-0.7125, -0.69, -0.6666666666666666, -0.64, -0.61, -0.58, -0.55, -0.525, -0.5, -0.475, -0.45]
+staticity_safe_min_f: 0.1
+staticity_marginal_min_f: 0.0
+harmonic_count: 3
+feature_scale_quantiles: [0.05, 0.95]
+feature_scale_floor: 1.0e-12
+rank_relative_tolerance: 1.0e-10
+output_directory: artifacts/kiselev_identifiability_grid
+validation_thresholds:
+  required_success_fraction: 1.0
+  max_hit_error: 1.0e-5
+  max_timelike_constraint_error: 1.0e-10
+  max_null_constraint_error: 1.0e-8
+  max_impact_parameter_drift: 1.0e-7
