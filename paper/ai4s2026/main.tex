@@ -617,6 +617,23 @@ catastrophically unstable: the largest aggregate median-NMAE change is 16.85.
 Thus uniform sampling removes mixed resolution but does not resolve inverse
 robustness; the journal-readiness verdict remains conditional.
 
+A predeclared targeted 321-phase audit then recomputed 35 scientifically
+informative points without interpolation or proxy replacement. All points pass
+the physical checks. The median and 95th-percentile normalized 161-to-321
+feature changes fall to $1.96\times10^{-4}$ and $7.23\times10^{-3}$,
+respectively, with no unresolved comparisons and unchanged Jacobian rank.
+Nevertheless, the frozen HGB/RF 95th-percentile normalized prediction shifts
+are 0.0812/0.0851 and their largest identifiable-$\wq$ shifts are
+0.306/0.271. The predeclared decision is therefore \textbf{Outcome B}:
+forward features converge, but the tree families remain sensitive in their
+tails. A fixed Extra Trees baseline and training-fold numerical-perturbation
+ensembles do not pass all robustness and grouped-performance criteria.
+Catastrophic MLP errors remain un-clipped, but 409 of 410 audited records are
+already catastrophic at 161 phases and none is materially worsened by the
+321-phase substitution. Journal readiness consequently remains conditional
+because estimator robustness, rather than forward convergence, is the
+outstanding blocker.
+
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{physical_ml_high_resolution_robustness.png}
@@ -658,9 +675,12 @@ leakage but primarily measures interpolation across the sampled family. The
 physical feature grid is modest. Random, blocked-region, directional,
 conformal, and feature-noise tests are now reported, but learning curves remain
 data limited and shifted conformal coverage is below nominal. The uniform
-161-phase rerun retains unresolved third-harmonic feature differences and
-catastrophic MLP extrapolation tails; these must be resolved before final
-inverse-performance claims. Simulator-mismatch studies remain necessary.
+161-phase rerun retains unresolved third-harmonic feature differences, while
+the targeted 321-phase audit resolves those forward-feature comparisons but
+shows that HGB/RF tail sensitivity still exceeds the frozen criteria.
+Catastrophic MLP extrapolation tails remain a separate estimator failure. These
+issues must be resolved before final inverse-performance claims;
+simulator-mismatch studies remain necessary.
 
 The next ray-propagation step is secondary branches, radiative transfer, and a
 finite observing model. The next waveform step is validation against dedicated

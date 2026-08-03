@@ -113,3 +113,28 @@ journal_phase_convergence:
     median_absolute_nmae_change: 0.0006880177709660505
     maximum_absolute_nmae_change: 16.849740234879828
     verdict: conditional
+targeted_321_audit:
+  report: reports/targeted_321_convergence_audit.md
+  decision: artifacts/targeted_321_audit/journal_readiness_decision.json
+  selected_points: 35
+  runtime_seconds: 5318.229499799985
+  physical_validation:
+    completed_points: 35
+    failed_points: 0
+    max_hit_error: 7.091295968958788e-08
+    max_timelike_constraint_error: 3.1302738179306294e-13
+    max_null_constraint_error: 7.621382691613832e-12
+    max_impact_parameter_drift: 1.793232229374553e-11
+  feature_convergence:
+    median_normalized_change: 0.0001962829642914
+    p95_normalized_change: 0.007234221596301265
+    maximum_normalized_change: 0.0201555878694279
+    unresolved_rows: 0
+  frozen_prediction_stability:
+    hgb: {median: 0.0, p95: 0.0812206635024945, maximum_identifiable_wq: 0.305933353209626}
+    random_forest: {median: 0.0, p95: 0.08508988331443604, maximum_identifiable_wq: 0.27053475801095}
+    mlp: {median: 0.0011430868367657502, p95: 0.0082229395332811, maximum: 0.0397027126395575}
+  mlp_catastrophic_records: 410
+  outcome: B
+  verdict: conditional
+  uniform_321_grid_required: false

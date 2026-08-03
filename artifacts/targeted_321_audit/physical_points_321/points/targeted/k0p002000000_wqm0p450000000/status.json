@@ -1,0 +1,31 @@
+{
+  "arrival_residual": 0.000498806232883453,
+  "emitter_angular_momentum": 3.743917167157977,
+  "emitter_energy": 0.95352646553561,
+  "f_observer": 0.9657293221239118,
+  "failed_phases": 0,
+  "failure_reasons": [],
+  "finite_observable_coverage": true,
+  "k": 0.002,
+  "max_hit_error": 3.7104008972866086e-08,
+  "max_impact_parameter_drift": 1.7816859099184512e-11,
+  "max_null_constraint_error": 7.592690365321175e-12,
+  "max_timelike_constraint_error": 1.770805724277125e-13,
+  "min_emitter_f": 0.7458591283254664,
+  "min_photon_f": 0.7377273011811191,
+  "phases": 321,
+  "pipeline_summary": {
+    "diagnostics": 0,
+    "failed_phases": 0,
+    "max_hit_error": 3.710400897286608e-08,
+    "max_null_constraint_error": 7.592690365321175e-12,
+    "max_timelike_constraint_error": 1.7708057242771247e-13,
+    "parameter_points_requested": 1,
+    "parameter_points_written": 1,
+    "successful_phases": 321
+  },
+  "runtime_seconds": 694.5053069999994,
+  "shooting_success_fraction": 1.0,
+  "status": "completed",
+  "wq": -0.45
+}

@@ -1,0 +1,22 @@
+feature_classification:
+  converged: 0.01
+  marginal: 0.05
+forward_acceptance:
+  median_normalized_change: 0.001
+  p95_normalized_change: 0.01
+  require_no_family_trend: true
+  require_ringdown_unchanged: true
+  require_rank_unchanged: true
+tree_acceptance:
+  median_normalized_prediction_shift: 0.005
+  p95_normalized_prediction_shift: 0.03
+  maximum_identifiable_wq_shift: 0.1
+  aggregate_nmae_change: 0.02
+robust_estimator:
+  perturbation_replicas: 16
+  extra_trees:
+    n_estimators: 160
+    max_depth: 8
+    min_samples_leaf: 4
+    max_features: 0.8
+frozen_before_321_run: true

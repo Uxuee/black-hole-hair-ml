@@ -184,3 +184,8 @@ scientific-ML benchmark, not an observational constraint.
 - IEEE manuscript: `paper/ai4s2026/main.tex`
 - Numerical provenance: `reports/project_progress_sources.yaml`
 - Tests: `tests/test_kiselev_shooting.py`, `tests/test_schwarzschild_shooting_validation.py`, `tests/test_kiselev_identifiability_grid.py`
+## Targeted 321-phase robustness audit
+
+The predeclared targeted audit recomputed 35 points at 321 phases in 5,318.2 s. All points completed without interpolation or proxy substitution. Maximum hit, timelike-constraint, null-constraint, and impact-parameter-drift errors were respectively $7.0913\times10^{-8}$, $3.1303\times10^{-13}$, $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
+
+Forward convergence passed: the median and 95th-percentile normalized feature changes were $1.9628\times10^{-4}$ and $7.2342\times10^{-3}$, no comparison remained unresolved, ringdown was exactly unchanged, and Jacobian rank was preserved. Frozen tree tails did not pass: HGB/RF 95th-percentile normalized prediction shifts were 0.08122/0.08509, and maximum identifiable-$w_q$ shifts were 0.30593/0.27053. Neither predeclared robustness-aware alternative passed all stability and grouped-performance criteria. The decision is **Outcome B** and journal readiness remains **CONDITIONAL**; a uniform 321-phase grid is not the next priority because the remaining blocker is estimator sensitivity.
