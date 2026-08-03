@@ -1,0 +1,25 @@
+seed: 2026
+source_configuration: configs/kiselev_identifiability_grid.yaml
+source_root: artifacts/journal_phase_convergence/physical_grid_161/points/science
+artifact_output_directory: artifacts/shooting_visualizations
+journal_output_directory: paper/journal_identifiability/figures/shooting
+png_dpi: 320
+trajectory_samples: 180
+selected_phase_indices: [0, 20, 40, 60, 80, 100, 120, 140, 160]
+comparison_phase_indices: [0, 40, 80, 120, 160]
+cases:
+  schwarzschild:
+    label: Schwarzschild
+    k: 0.0
+    wq: -0.5
+    directory: k0p000000000_wqm0p500000000
+  kiselev_wq_m05:
+    label: 'Kiselev: k=0.001, w_q=-0.5'
+    k: 0.001
+    wq: -0.5
+    directory: k0p001000000_wqm0p500000000
+  kiselev_wq_m23:
+    label: 'Kiselev: k=0.001, w_q=-2/3'
+    k: 0.001
+    wq: -0.6666666666666666
+    directory: k0p001000000_wqm0p666666667

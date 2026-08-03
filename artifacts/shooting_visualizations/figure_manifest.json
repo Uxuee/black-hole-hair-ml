@@ -1,0 +1,548 @@
+{
+  "configuration": "configs/shooting_visualizations.yaml",
+  "displayed_trajectory_count": 27,
+  "figures": [
+    {
+      "filename_pdf": "physical_shooting_geometry_overview.pdf",
+      "filename_png": "physical_shooting_geometry_overview.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "geometry and shooting method",
+      "selected_phases": [
+        3.141592653589793,
+        3.9269908169872414,
+        4.71238898038469,
+        5.497787143782138,
+        6.283185307179586,
+        7.0685834705770345,
+        7.853981633974483,
+        8.63937979737193,
+        9.42477796076938
+      ],
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": true,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "phase_coloured_photon_shooting.pdf",
+      "filename_png": "phase_coloured_photon_shooting.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "poster/talk ray bundle",
+      "selected_phases": [
+        3.141592653589793,
+        3.9269908169872414,
+        4.71238898038469,
+        5.497787143782138,
+        6.283185307179586,
+        7.0685834705770345,
+        7.853981633974483,
+        8.63937979737193,
+        9.42477796076938
+      ],
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": true,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "observer_sky_track_comparison.pdf",
+      "filename_png": "observer_sky_track_comparison.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "signed tetrad sky complementarity",
+      "selected_phases": "all successful archived phases",
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": false,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "shooting_observables_vs_phase.pdf",
+      "filename_png": "shooting_observables_vs_phase.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "phase-resolved physical observables",
+      "selected_phases": "all successful archived phases",
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": false,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "schwarzschild_kiselev_ray_comparison.pdf",
+      "filename_png": "schwarzschild_kiselev_ray_comparison.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "resolved metric-dependent ray differences",
+      "selected_phases": [
+        3.141592653589793,
+        3.9269908169872414,
+        4.71238898038469,
+        5.497787143782138,
+        6.283185307179586,
+        7.0685834705770345,
+        7.853981633974483,
+        8.63937979737193,
+        9.42477796076938
+      ],
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": false,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "physical_shooting_to_ml_pipeline.pdf",
+      "filename_png": "physical_shooting_to_ml_pipeline.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "reproducible conceptual pipeline",
+      "selected_phases": "all successful archived phases",
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": false,
+        "manuscript": true,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "physical_shooting_poster_composite.pdf",
+      "filename_png": "physical_shooting_poster_composite.png",
+      "parameter_values": [
+        {
+          "directory": "k0p000000000_wqm0p500000000",
+          "k": 0.0,
+          "label": "Schwarzschild",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p500000000",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-0.5",
+          "wq": -0.5
+        },
+        {
+          "directory": "k0p001000000_wqm0p666666667",
+          "k": 0.001,
+          "label": "Kiselev: k=0.001, w_q=-2/3",
+          "wq": -0.6666666666666666
+        }
+      ],
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "landscape summary for posters",
+      "selected_phases": [
+        3.141592653589793,
+        3.9269908169872414,
+        4.71238898038469,
+        5.497787143782138,
+        6.283185307179586,
+        7.0685834705770345,
+        7.853981633974483,
+        8.63937979737193,
+        9.42477796076938
+      ],
+      "source_data": [
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+          "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+          "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+          "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+        },
+        {
+          "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+          "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+          "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+          "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+        }
+      ],
+      "suitability": {
+        "README": true,
+        "manuscript": false,
+        "poster": true
+      }
+    },
+    {
+      "filename_pdf": "shooting_figure_contact_sheet.pdf",
+      "filename_png": "shooting_figure_contact_sheet.png",
+      "parameter_values": "as above",
+      "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+      "scientific_purpose": "visual QA contact sheet",
+      "selected_phases": "as above",
+      "source_data": "seven final figure pairs",
+      "suitability": {
+        "README": false,
+        "manuscript": false,
+        "poster": false
+      }
+    }
+  ],
+  "fingerprint_inputs": {
+    "config_sha256": "19512d70fc204026880101b0fc0c03de43f594d00d70c830821ef23c3d2c5fe6",
+    "script_sha256": "e48a73c557e0ebf64f0ae8adb195cc56f6c20ff547167b542e59b32bf4f91fe8",
+    "source_hashes": {
+      "kiselev_wq_m05": {
+        "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+        "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+        "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+        "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+      },
+      "kiselev_wq_m23": {
+        "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+        "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+        "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+        "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+      },
+      "schwarzschild": {
+        "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+        "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+        "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+        "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+      }
+    }
+  },
+  "generation_fingerprint": "a68820cbe75a907fb605b37d8ee078e1568b095347f7b93167e12fcdd7f2dcaa",
+  "observer": [
+    0.0,
+    0.0,
+    -80.0
+  ],
+  "orbit": {
+    "M": 1.0,
+    "Omega_deg": 225.0,
+    "inclination_deg": 135.0,
+    "omega_deg": 65.0,
+    "phi_end": 9.42477796076938,
+    "phi_start": 3.141592653589793,
+    "r_a": 12.0,
+    "r_p": 8.0
+  },
+  "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+  "schema_version": 1,
+  "schwarzschild_kiselev_differences": {
+    "alpha_sky": {
+      "maximum_absolute_difference": 0.0007558688558792909,
+      "median_absolute_difference": 9.656542900129961e-05
+    },
+    "beta_sky": {
+      "maximum_absolute_difference": 0.00036563872504709327,
+      "median_absolute_difference": 9.247734288999991e-05
+    },
+    "impact_parameter": {
+      "maximum_absolute_difference": 0.05805326346938955,
+      "median_absolute_difference": 0.03437330519018644
+    },
+    "propagation_time": {
+      "maximum_absolute_difference": 0.5597493927146786,
+      "median_absolute_difference": 0.5318176883454413
+    },
+    "redshift": {
+      "maximum_absolute_difference": 0.0070867689777571186,
+      "median_absolute_difference": 0.004155622941988096
+    },
+    "x_hit": {
+      "maximum_absolute_difference": 1.7170991295500926e-08,
+      "median_absolute_difference": 2.06210049036315e-12
+    },
+    "y_hit": {
+      "maximum_absolute_difference": 6.471327140822325e-08,
+      "median_absolute_difference": 1.866229393243657e-12
+    }
+  },
+  "schwarzschild_wq_independence_source": "configs/schwarzschild_shooting_validation.yaml and its validated two-wq outputs",
+  "selected_phase_indices": [
+    0,
+    20,
+    40,
+    60,
+    80,
+    100,
+    120,
+    140,
+    160
+  ],
+  "selected_phases": [
+    3.141592653589793,
+    3.9269908169872414,
+    4.71238898038469,
+    5.497787143782138,
+    6.283185307179586,
+    7.0685834705770345,
+    7.853981633974483,
+    8.63937979737193,
+    9.42477796076938
+  ],
+  "source_configuration": "configs/kiselev_identifiability_grid.yaml",
+  "sources": {
+    "kiselev_wq_m05": {
+      "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\phase_resolved.csv.gz",
+      "phase_sha256": "1b23000bc1ca36100c984256014576bea40db3eca797000299eb498cfdf79b88",
+      "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p500000000\\status.json",
+      "status_sha256": "bb4e40c8f3712852eb4426f2b94505052ed383021de387fd2b13aaf051130bfd"
+    },
+    "kiselev_wq_m23": {
+      "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\phase_resolved.csv.gz",
+      "phase_sha256": "6082c73fd18294c0ba6dae18e247adba9463873870789730d68bbea3674ffce7",
+      "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p001000000_wqm0p666666667\\status.json",
+      "status_sha256": "0fdff28d141c216bc77274ee4ff485d42a0074d754467fdb979cce4cdf2278ab"
+    },
+    "schwarzschild": {
+      "phase_resolved": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\phase_resolved.csv.gz",
+      "phase_sha256": "48d6b6ba6fad1a533cf2ce38b3f9cdea33bf013d4e9ea8cf135ec6e9ae7a3df0",
+      "status": "artifacts\\journal_phase_convergence\\physical_grid_161\\points\\science\\k0p000000000_wqm0p500000000\\status.json",
+      "status_sha256": "de44048f0d1ce083ec40eabd8ff05fc2457488d33755aac0c884c21a386855cc"
+    }
+  },
+  "trajectories_regenerated": true,
+  "trajectory_method": "integrate_photon with archived converged launch angles; no root rerun",
+  "validation_maxima": {
+    "hit_error": 1.0366474992995411e-09,
+    "impact_parameter_drift": 9.821476965043985e-12,
+    "null_constraint_error": 5.491766763565664e-12,
+    "timelike_constraint_error": 8.060219158778636e-14
+  }
+}

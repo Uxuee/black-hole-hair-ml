@@ -10,7 +10,20 @@
 
 ![Pipeline overview](docs/images/pipeline_schematic.png)
 
-*Analytic black-hole models are evaluated with leakage-aware grouped validation and Jacobian sensitivity. The geodesic branch currently uses synthetic proxies; GW150914 supplies only a posterior-scale comparison.*
+*Analytic black-hole models are evaluated with leakage-aware grouped validation and Jacobian sensitivity. Historical proxy results are preserved, and a separate validated physical geodesic-shooting branch supplies timelike-emitter and direct null-geodesic observables. GW150914 supplies only a posterior-scale comparison.*
+
+## Physical geodesic shooting
+
+![Phase-coloured physical photon shooting](artifacts/shooting_visualizations/phase_coloured_photon_shooting.png)
+
+The shooting solver starts a timelike emitter at apocentre, $\phi=\pi$, on an
+$r_p=8M$, $r_a=12M$ orbit and adjusts each direct-branch photon launch direction
+until it reaches the observer at $(0,0,-80M)$. The representative image uses
+$M=1$, $k=10^{-3}$, and $w_q=-0.5$; every plotted path is re-integrated from an
+archived converged launch angle. See the
+[physical visualization validation report](reports/shooting_visualization_validation.md)
+for constraint and hit-error checks. This is a controlled theoretical benchmark,
+not an observational image of a real black hole or a ray-traced accretion flow.
 
 ## Main scientific takeaway
 
