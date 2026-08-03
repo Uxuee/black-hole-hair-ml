@@ -55,6 +55,88 @@ def timelike_hamiltonian(metric: KiselevMetric, r, p_r, E: float, L: float):
     return 0.5 * (-E**2 / f + f * np.asarray(p_r) ** 2 + L**2 / np.asarray(r) ** 2)
 
 
+def emitter_phase_rhs(metric: KiselevMetric, energy: float, angular_momentum: float):
+    """Build the timelike Hamilton equations with coordinate phi as parameter."""
+    def rhs(_phase, state):
+        r, p_r, _t, _tau = state
+        f = metric.f(r, require_static=True)
+        fp = metric.f_prime(r)
+        factor = r**2 / angular_momentum
+        return [
+            f * p_r * factor,
+            (-energy**2 * fp / (2.0 * f**2) - fp * p_r**2 / 2.0
+             + angular_momentum**2 / r**3) * factor,
+            (energy / f) * factor,
+            factor,
+        ]
+    return rhs
+
+
+@dataclass(frozen=True)
+class RadialTurningPoints:
+    pericentre_phi: float
+    pericentre_radius: float
+    apocentre_phi: float
+    apocentre_radius: float
+
+    @property
+    def radial_azimuthal_period(self) -> float:
+        return self.apocentre_phi - np.pi
+
+    @property
+    def apsidal_advance(self) -> float:
+        return self.radial_azimuthal_period - 2.0 * np.pi
+
+
+def find_radial_turning_points(
+    metric: KiselevMetric,
+    r_p: float,
+    r_a: float,
+    phi_end: float,
+    *,
+    rtol: float = 1e-12,
+    atol: float = 1e-14,
+) -> RadialTurningPoints:
+    """Locate the next p_r=0 pericentre and apocentre after phi=pi."""
+    if not np.isfinite(phi_end) or phi_end <= np.pi:
+        raise ValueError("turning-point phi_end must exceed pi")
+    energy, angular_momentum = turning_point_constants(metric, r_p, r_a)
+    rhs = emitter_phase_rhs(metric, energy, angular_momentum)
+
+    def pericentre_event(_phase, state):
+        return state[1]
+
+    pericentre_event.direction = 1
+    pericentre_event.terminal = False
+
+    def apocentre_event(_phase, state):
+        return state[1]
+
+    apocentre_event.direction = -1
+    apocentre_event.terminal = False
+
+    solution = solve_ivp(
+        rhs, (np.pi, float(phi_end)), [r_a, 0.0, 0.0, 0.0],
+        events=(pericentre_event, apocentre_event), rtol=rtol, atol=atol,
+        method="DOP853", dense_output=True, max_step=0.05,
+    )
+    if not solution.success:
+        raise RuntimeError(f"turning-point integration failed: {solution.message}")
+    peri = solution.t_events[0]
+    apo = solution.t_events[1]
+    peri = peri[peri > np.pi + 1e-8]
+    apo = apo[apo > np.pi + 1e-8]
+    if len(peri) == 0 or len(apo) == 0:
+        raise RuntimeError("next pericentre/apocentre not found before configured phi_end")
+    peri_phi, apo_phi = float(peri[0]), float(apo[0])
+    if apo_phi <= peri_phi:
+        raise RuntimeError("detected apocentre does not follow detected pericentre")
+    return RadialTurningPoints(
+        peri_phi, float(solution.sol(peri_phi)[0]),
+        apo_phi, float(solution.sol(apo_phi)[0]),
+    )
+
+
 def integrate_emitter_orbit(
     metric: KiselevMetric,
     r_p: float,
@@ -76,17 +158,7 @@ def integrate_emitter_orbit(
         raise ValueError("phi samples must be strictly increasing")
     E, L = turning_point_constants(metric, r_p, r_a)
 
-    def rhs(_phase, state):
-        r, p_r, _t, _tau = state
-        f = metric.f(r, require_static=True)
-        fp = metric.f_prime(r)
-        factor = r**2 / L
-        return [
-            f * p_r * factor,
-            (-E**2 * fp / (2.0 * f**2) - fp * p_r**2 / 2.0 + L**2 / r**3) * factor,
-            (E / f) * factor,
-            factor,
-        ]
+    rhs = emitter_phase_rhs(metric, E, L)
 
     solution = solve_ivp(
         rhs,

@@ -1,0 +1,50 @@
+schema_version: 1
+scope: "Numerical provenance for the physical-identifiability progress report and IEEE manuscript update"
+original_workshop:
+  waveform_only_r2_k: {value: 0.8959840891778823, source: paper/ai4s2026/claims.json, key: claims.waveform_only_r2_k.value}
+  waveform_only_r2_wq: {value: 0.9586520380090987, source: paper/ai4s2026/claims.json, key: claims.waveform_only_r2_wq.value}
+  waveform_proxy_r2_k: {value: 0.9792724899377677, source: paper/ai4s2026/claims.json, key: claims.waveform_proxy_r2_k.value}
+  waveform_proxy_r2_wq: {value: 0.9890640602848116, source: paper/ai4s2026/claims.json, key: claims.waveform_proxy_r2_wq.value}
+  original_macro_f1: {value: 0.985810, source: paper/ai4s2026/rank_deficiency_correction.md, selector: before/after table, status: superseded}
+  original_weak_fraction: {value: 0.539112, source: paper/ai4s2026/rank_deficiency_correction.md, selector: before/after table, status: superseded}
+  corrected_macro_f1: {value: 0.9927762474328815, source: paper/ai4s2026/claims.json, key: claims.identifiability_macro_f1.value}
+  corrected_weak_fraction: {value: 0.5757575757575758, source: paper/ai4s2026/claims.json, key: claims.weakly_identifiable_fraction.value}
+  scalar_wq_mae: {value: 0.022482397770188484, source: paper/ai4s2026/claims.json, key: claims.scalar_wq_mae.value}
+  proxy_wq_mae: {value: 0.014310149798521958, source: paper/ai4s2026/claims.json, key: claims.extended_wq_mae.value}
+  proxy_sigma_min_gain: {value: 11.992183832597918, source: paper/ai4s2026/claims.json, key: claims.near_zero_min_singular_improvement.value}
+  proxy_condition_gain: {value: 2.127492633660492, source: paper/ai4s2026/claims.json, key: claims.near_zero_condition_improvement.value}
+schwarzschild_validation:
+  source: reports/schwarzschild_shooting_validation.md
+  machine_source: artifacts/schwarzschild_shooting_validation/validation_metrics.json
+  values:
+    successful_phases: 322
+    max_hit_error: 3.847359158340565e-8
+    max_timelike_constraint_error: 2.012834343645409e-13
+    max_null_constraint_error: 7.1964170733629365e-12
+    max_impact_parameter_drift: 1.7776002891878306e-11
+    arrival_residual: 0.001981955241092237
+    pericentre_phi: 8.28374830030291
+    radial_period: 10.28431129342623
+    apsidal_advance: 4.0011259862466435
+small_k_validation:
+  source: reports/kiselev_small_k_validation.md
+  machine_source: artifacts/kiselev_small_k_validation/validation_metrics.json
+  max_differences: {radius: 0.03810970119171664, redshift: 0.0070867689777571186, impact_parameter: 0.05805326346938955, alpha_sky: 0.0007558688558776949, beta_sky: 0.00036563872504709327, excess_delay: 0.5352734200006068, relative_arrival_time: 0.45686296826241346, apsidal_advance: 0.12766766312523536}
+wq_sensitivity:
+  source: artifacts/kiselev_wq_sensitivity/validation_metrics.json
+  report: reports/kiselev_wq_sensitivity.md
+  max_differences: {radius: 0.28435, radial_momentum: 0.01798, redshift: 0.07341, impact_parameter: 0.30504, alpha_sky: 0.005044, beta_sky: 0.003525, propagation_time: 3.3481, excess_delay: 3.2342, relative_arrival_time: 1.6523, integrated_arrival_time: 1.6522}
+  turning_point_changes: {pericentre_phi: 0.489805, radial_period: 0.979610, apsidal_advance: 0.979610}
+local_identifiability:
+  source: reports/kiselev_wq_sensitivity.md
+  table: local sensitivity comparison
+grid_identifiability:
+  source: artifacts/kiselev_identifiability_grid/grid_metrics.json
+  report: reports/kiselev_identifiability_grid.md
+  keys: {counts: counts, criteria: criteria, high_resolution: high_resolution_validation, rankings: observable_set_rankings, runtimes: runtimes}
+  headline: {candidate_safe: 77, candidate_invalid: 4, candidate_failed: 0, science_accepted: 121, sigma_min_highres_relative_change: 0.0004008559345133067, condition_highres_relative_change: 0.0007128181519155125, point_cpu_seconds: 12631.04445249997}
+  observable_sets:
+    ringdown_plus_all_shooting: {median_sigma_min: 1.5311777550129293, median_condition: 4.497376274924927}
+    ringdown_plus_photon_geometry: {median_sigma_min: 1.232579363188941, median_condition: 4.073123549900778}
+    all_shooting: {median_sigma_min: 0.9723200657645921, median_condition: 6.020715190221268}
+    gains: {ringdown_plus_geometry_sigma_min: 4.542865176635441, ringdown_plus_geometry_condition: 2.281889432747297}

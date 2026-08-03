@@ -55,6 +55,41 @@ def null_hamiltonian(metric: KiselevMetric, position, momentum) -> float:
     return float(0.5 * (-1.0 / f + np.dot(p, p) + (f - 1.0) * s**2))
 
 
+def static_observer_tetrad_projection(
+    metric: KiselevMetric, position, contravariant_spatial_tangent
+) -> tuple[np.ndarray, tuple[float, float]]:
+    """Project a photon tangent onto a static observer's orthonormal tetrad.
+
+    Returns spatial components ``(sky_x, sky_y, outward_radial)`` and the two
+    apparent sky slopes relative to the outward radial line of sight.
+    """
+    x = np.asarray(position, dtype=float)
+    k = np.asarray(contravariant_spatial_tangent, dtype=float)
+    if x.shape != (3,) or k.shape != (3,) or not np.all(np.isfinite(np.r_[x, k])):
+        raise ValueError("finite three-vector position and tangent required")
+    radius = np.linalg.norm(x)
+    if radius == 0:
+        raise ValueError("observer position must be nonzero")
+    f = metric.f(radius, require_static=True)
+    radial = x / radius
+    seed = np.array([1.0, 0.0, 0.0])
+    sky_x = seed - np.dot(seed, radial) * radial
+    if np.linalg.norm(sky_x) < 1e-12:
+        seed = np.array([0.0, 1.0, 0.0])
+        sky_x = seed - np.dot(seed, radial) * radial
+    sky_x /= np.linalg.norm(sky_x)
+    sky_y = np.cross(sky_x, radial)
+    components = np.array([
+        np.dot(k, sky_x),
+        np.dot(k, sky_y),
+        np.dot(k, radial) / np.sqrt(f),
+    ])
+    if abs(components[2]) <= np.finfo(float).eps:
+        raise ValueError("photon has zero radial tetrad component at observer")
+    return components, (float(components[0] / components[2]),
+                        float(components[1] / components[2]))
+
+
 def photon_rhs(metric: KiselevMetric, _lambda: float, state: np.ndarray) -> np.ndarray:
     x = state[:3]
     p = state[3:6]
