@@ -15,7 +15,7 @@ the workshop.
 
 - `main.tex` — manuscript source
 - `references.bib` — BibTeX database
-- `figures/` — copied vector PDF figures used by the manuscript
+- `figures/` — original vector figures plus traceable physical-shooting PNGs
 
 ## Compile
 
@@ -56,12 +56,15 @@ latexmk -c
    afterward. Float placement can vary between TeX installations.
 4. Inspect every figure at 100% zoom and check font readability.
 5. Run a spelling and bibliography audit.
-6. Retain all scope statements: synthetic leading-eikonal waves, synthetic
-   geodesic proxies, no strain inference, no hair detection, no modified-gravity
-   constraint, no full QNM solution, and no physical ray tracing.
+6. Retain the distinction between the original synthetic proxies and the later
+   physical direct-branch shooting outputs, together with the remaining scope
+   statements: no strain inference, no hair detection, no modified-gravity
+   constraint, no full QNM solution, no radiative transfer, and no detector model.
 
 ## Local build status
 
-The source and copied figure PDFs were compiled with Tectonic 0.16.9 on
-2026-07-31. The resulting draft is five pages. The conclusion and references
-flow together on page 5 without a forced bibliography page break.
+The tracked `main.pdf` records the pre-physical-update build compiled with
+Tectonic 0.16.9 on 2026-07-31. The 2026-08-03 source update adds physical
+shooting and grid-identifiability sections. No TeX compiler was available in
+the update environment, so that revision has not yet been compiled or visually
+paginated; `main.pdf` must not be treated as a rendering of the updated source.

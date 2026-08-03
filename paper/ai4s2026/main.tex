@@ -31,7 +31,7 @@ ill-conditioned for finite-precision inference. To prevent repeated mode
 realizations of one spacetime from leaking across data partitions, we use
 grouped physical cross-validation and fit waveform PCA only on training folds.
 A waveform-only random forest reaches $R^2(k)=0.8960$ and
-$R^2(\wq)=0.9587$; adding synthetic geodesic proxies raises these scores to
+$R^2(\wq)=0.9587$; the original synthetic-geodesic proxy experiment raises these scores to
 $0.9793$ and $0.9891$ with histogram gradient boosting. More importantly, an
 all-feature random-forest classifier reproduces a Fisher/Jacobian
 observability boundary with macro F1 $=0.9928$, using
@@ -39,9 +39,13 @@ $\sigw>0.3$ at one-percent relative observable precision as the weak-
 identifiability criterion. In a companion scalar/proxy identifiability
 experiment, adding synthetic geodesic features reduces mean absolute $\wq$
 error from $0.0225$ to $0.0143$ and improves local conditioning near $k=0$.
-The study is intended as a controlled scientific-ML benchmark rather than an
-observational analysis: the signals are synthetic leading-eikonal curves, and
-the geodesic features are replaceable proxies rather than ray-tracing outputs.
+We subsequently replace those proxies with validated timelike-emitter and
+three-dimensional null-geodesic shooting. On a 121-point physical Kiselev
+grid, adding photon geometry to ringdown improves the median minimum singular
+value by $4.54\times$ and median conditioning by $2.28\times$ relative to
+ringdown alone. This is a controlled physical-identifiability benchmark, not
+an observational constraint; final inverse-ML generalization on the physical
+feature table remains a separate validation stage.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -80,7 +84,8 @@ practically identifiable under a stated precision model. A numerical
 Fisher/Jacobian calculation provides the scientific label and an analytic
 interpretation of failures.
 
-We address that question through five connected components:
+We address that question through the original inverse-learning study and a
+subsequent physical-validation program:
 \begin{itemize}
   \item grouped physical validation for waveform-to-hair inference, with PCA
   fitted inside each training fold;
@@ -88,7 +93,12 @@ We address that question through five connected components:
   \item Fisher/Jacobian labels for weakly identifiable regions;
   \item comparison of waveform-only, scalar, and synthetic geodesic-proxy
   representations; and
-  \item joint interpretation of ML errors and local singular-value diagnostics.
+  \item joint interpretation of ML errors and local singular-value diagnostics;
+  \item Hamiltonian timelike and null shooting with physical phase beginning
+  at apocentre, $\phi=\pi$;
+  \item Schwarzschild, small-$k$, and fixed-$k$ $\wq$-sensitivity validation;
+  and
+  \item two-dimensional physical Jacobian and observable-complementarity maps.
 \end{itemize}
 
 The central result is not the regression score by itself. The more useful
@@ -141,6 +151,12 @@ coordinate, propagation-time delay, and a redshift curve. They exercise a
 replaceable multi-observable interface and test whether parameter dependence
 not reducible to $(\Omega,\lambda)$ can improve conditioning. They should not be
 interpreted as geodesic-shooting or ray-tracing predictions.
+
+The later physical-shooting features are a distinct family, not a relabeling
+of these proxies. They are derived from integrated emitter and photon
+trajectories and include redshift, impact parameter, signed observer-tetrad sky
+coordinates, propagation delay, and arrival-time curves. The regression values
+below remain the historical proxy benchmark.
 
 \section{Leakage-Aware Inverse-Learning Protocol}
 \subsection{Grouped physical validation}
@@ -265,8 +281,10 @@ than physical shooting or ray tracing.}
 Adding proxy observables raises the jointly selected model scores to $0.9793$
 and $0.9891$ with histogram gradient boosting. Figure~\ref{fig:features} gives
 the complementary best-per-target comparison across representations. Within
-this simulator, additional parameter dependence improves inverse recovery; the
-next physics question is whether validated observables retain that advantage.
+this simulator, additional parameter dependence improves inverse recovery. The
+physical analysis below tests whether validated observables retain that
+advantage; final inverse-model generalization is not inferred from the Jacobian
+alone.
 
 The optional true-versus-predicted diagnostic in
 Fig.~\ref{fig:truepred} shows the held-out structure for the best all-feature
@@ -341,6 +359,129 @@ At the same time, the comparison remains internal to the assumed formulas and
 error model. A different observable covariance or a validated perturbative
 spectrum would move the practical boundary.
 
+\section{Validated Physical Geodesic Shooting}
+The proxy experiment motivated a separate physical calculation in the static
+Kiselev metric
+\begin{equation}
+ ds^2=-f(r)dt^2+\frac{dr^2}{f(r)}+r^2d\Omega_2^2,
+ \quad f(r)=1-\frac{2M}{r}-\frac{k}{r^{1+3\wq}}.
+\end{equation}
+An equatorial timelike emitter is evolved with conserved energy and angular
+momentum from apocentre. The saved coordinate azimuth begins at $\phi=\pi$,
+with $r=r_a$, $p_r=0$, and emission time and proper time zero. Coordinate
+$\phi$ is not a Newtonian anomaly, so radial turning points are detected from
+$p_r=0$ rather than imposed at multiples of $2\pi$.
+
+Photons use a three-dimensional Cartesian null Hamiltonian,
+\begin{equation}
+ H_\gamma=\frac12\left[-\frac{1}{f}+\mathbf p^2+
+ (f-1)(\mathbf n\!\cdot\!\mathbf p)^2\right]=0,
+\end{equation}
+and a two-angle root solve targets the static-observer plane. The direct branch
+exports redshift $1+z=\omega_{\rm emit}/\omega_{\rm obs}$, conserved impact
+parameter, signed observer-tetrad sky coordinates, propagation and excess
+delay, and direct arrival time. An independent curve uses
+\begin{equation}
+ T_z(\phi)=\int_{\tau(\pi)}^{\tau(\phi)}(1+z)\,d\tau_{\rm emit},
+\end{equation}
+with only the common additive constant removed. Failed phases are reported,
+not interpolated or replaced by proxy values.
+
+For the Schwarzschild benchmark ($M=1$, $r_p=8M$, $r_a=12M$, observer at
+$(0,0,-80M)$), all 322 rays across two arbitrary $\wq$ labels succeed and all
+observables agree exactly between labels. Maximum hit, timelike-constraint,
+null-constraint, and impact-drift errors are respectively
+$3.85\times10^{-8}$, $2.01\times10^{-13}$, $7.20\times10^{-12}$, and
+$1.78\times10^{-11}$. The arrival integral converges at approximately second
+order. Pericentre is at $\phi=8.28375$ and the radial azimuthal period is
+$10.28431$, giving physical apsidal advance $4.00113$.
+
+At fixed $\wq=-0.5$, changing $k$ from zero to $10^{-3}$ produces resolved
+changes in every selected orbital, redshift, photon-geometry, and timing
+observable; the apsidal advance changes by 0.12767. At fixed $k=10^{-3}$,
+changing $\wq$ from $-0.5$ to $-2/3$ changes the maximum redshift by 0.07341,
+impact parameter by 0.30504, excess delay by 3.2342, and relative arrival time
+by 1.6523. These ratios establish numerical resolvability, not observational
+signal significance.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_schwarzschild_arrival_validation.png}
+\caption{Schwarzschild direct and integrated-redshift arrival curves. The
+trapezoidal residual is reported rather than forced to zero.}
+\label{fig:physical-schwarzschild}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_small_k_signal_validation.png}
+\caption{First nonzero-$k$ physical differences relative to numerical error.}
+\label{fig:physical-small-k}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_wq_sensitivity.png}
+\caption{Fixed-$k$ physical sensitivity to changing $\wq$.}
+\label{fig:physical-wq}
+\end{figure}
+
+\section{Physical Observable Complementarity Across Parameter Space}
+Local standardized sensitivity vectors show that large responses may still be
+nearly collinear. Timing has a large response but a sensitivity-vector angle
+of $178.76^\circ$ and condition number 1275.5; photon geometry has the most
+distinct tested direction ($159.37^\circ$, condition number 81.4). Adding more
+signals can therefore add redundancy rather than independent information.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_local_sensitivity_comparison.png}
+\caption{Local sensitivity and conditioning by physical observable group.}
+\label{fig:physical-local}
+\end{figure}
+
+A 9-by-9 admissibility scan identified 77 safe points, four invalid physical
+points, and no software failures. The selected 11-by-11 science grid contains
+121 accepted systems over $0\leq k\leq0.0025$ and
+$-0.7125\leq\wq\leq-0.45$. At $k=0$, the metric is independent of $\wq$ and
+\begin{equation}
+ \frac{\partial\mathbf O}{\partial\wq}=0,
+\end{equation}
+so exact rank loss is required physically. Twenty-seven 161-phase checks change
+the minimum singular value by at most 0.0401\% and the condition number by at
+most 0.0713\%.
+
+Across the grid, ringdown plus all shooting has median minimum singular value
+1.5312 and median condition number 4.4974. Ringdown plus photon geometry gives
+1.2326 and 4.0731, while all shooting gives 0.9723 and 6.0207. Relative to
+ringdown alone, ringdown plus photon geometry improves median minimum singular
+value by $4.54\times$ and median conditioning by $2.28\times$. Independent
+parameter direction, rather than feature count or signal amplitude, controls
+the gain.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{physical_grid_minimum_singular_value.png}
+\caption{Minimum-singular-value maps for the predeclared physical observable
+sets on the accepted Kiselev science grid.}
+\label{fig:physical-grid-sigma}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_observable_complementarity.png}
+\caption{Grid-wide comparison of physical observable sets.}
+\label{fig:physical-complementarity}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{physical_k_zero_rank_loss.png}
+\caption{Exact $k=0$ rank loss: $\wq$ disappears from every physical
+observable.}
+\label{fig:physical-kzero}
+\end{figure}
+
 \section{Limitations and Future Work}
 \textbf{Synthetic waveform scope.} The inputs are generated by
 Eq.~\eqref{eq:ringdown}, not measured strain. Detector response, colored noise,
@@ -355,23 +496,28 @@ leading-order approximation \cite{cardoso2009geodesic}. Dedicated perturbative
 spectra are needed to determine whether the same observability structure
 survives finite-$\ell$ corrections and waveform modeling error.
 
-\textbf{Proxy-observable scope.} The impact-parameter, screen-coordinate,
-propagation-time, and redshift quantities are smooth synthetic proxies. Their
-improvement demonstrates the value of new functional dependence, not the
-performance of physical ray tracing or a proposed observing program.
+\textbf{Proxy and physical-observable scope.} The original workshop
+impact-parameter, screen-coordinate, delay, and redshift features remain
+synthetic proxies. They are preserved as a historical benchmark and must not be
+confused with the later Hamiltonian shooting outputs. Physical shooting is now
+implemented and numerically validated, but only for the direct branch, a point
+emitter and point observer, a static observer, compact dimensionless geometry,
+and without secondary images, radiative transfer, or a finite detector.
 
 \textbf{Validation and extrapolation scope.} Grouped CV removes mode-level
-leakage but primarily measures interpolation across the sampled family. Blocked
-parameter tests, repeated sampling designs, calibrated predictive uncertainty,
-and simulator-mismatch studies are required before making claims about
-extrapolation.
+leakage but primarily measures interpolation across the sampled family. The
+physical feature grid is modest, and its final random, blocked-region, and
+directional-extrapolation inverse-model results are not claimed in this
+workshop update. Calibrated uncertainty, feature-noise robustness, and
+simulator-mismatch studies remain necessary.
 
-The next physics step is to replace proxies with converged direct and secondary
-geodesic-shooting outputs and recompute the enlarged Jacobian. The next waveform
-step is validation against dedicated Kiselev perturbative calculations,
-including multiple modes and finite-$\ell$ corrections. Only after these
-checks should the framework be connected to public-event posteriors or a
-non-GR strain-level likelihood.
+The next ray-propagation step is secondary branches, radiative transfer, and a
+finite observing model. The next waveform step is validation against dedicated
+Kiselev perturbative calculations, including multiple modes and finite-$\ell$
+corrections. The ringdown model remains leading-eikonal, and there is no
+strain-level likelihood. Only after the physical-grid inverse validation and
+these modeling checks should the framework be connected to public-event
+posteriors or a non-GR likelihood.
 
 \section{Conclusion}
 We presented a leakage-aware scientific-ML study of Kiselev waveform-to-hair
@@ -383,9 +529,13 @@ observability classifier learns a Fisher/Jacobian phase boundary with macro F1
 0.9928, linking machine-learning errors to the local geometry of the inverse
 problem. The independently evaluated $k=0$ limit establishes structural
 non-identifiability, while the sampled small-nonzero-$|k|$ region reveals
-full-rank but practically weak identifiability. This suggests a general
-AI-for-science principle: inverse models should learn when parameters are
-observable, not merely fit them.
+full-rank but practically weak identifiability. The validated physical grid
+sharpens the interpretation: large timing or redshift signals may remain poorly
+identifiable when parameter responses are nearly collinear, whereas physically
+complementary ringdown and photon-geometry observables improve conditioning.
+Final empirical generalization on the physical feature table is deliberately
+left pending. The broader AI-for-science principle is that inverse models
+should learn when parameters are observable, not merely fit them.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
