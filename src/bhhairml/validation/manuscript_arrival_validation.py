@@ -30,7 +30,7 @@ def build(source_root: Path, output: Path) -> None:
     wq_direct = a.arrival_time_relative.to_numpy() - b.arrival_time_relative.to_numpy()
 
     fig, (top, residual) = plt.subplots(
-        2, 1, figsize=(3.45, 3.65), sharex=True,
+        2, 1, figsize=(3.45, 3.55), sharex=True,
         gridspec_kw={"height_ratios": [1.65, 1.0], "hspace": .10},
     )
     styles = (
@@ -42,23 +42,21 @@ def build(source_root: Path, output: Path) -> None:
     for values, color, linestyle, label in styles:
         top.plot(phi, values, color=color, linestyle=linestyle, linewidth=1.45, label=label)
     top.set_ylabel(r"relative arrival time $/M$")
-    top.text(.02, .95, "Four curves are plotted and overlap.", transform=top.transAxes,
-             va="top", fontsize=7,
-             bbox={"facecolor": "white", "edgecolor": "0.8", "alpha": .9, "pad": 2})
-    top.legend(loc="lower right", frameon=False, fontsize=6.2, ncol=2,
-               columnspacing=.8, handlelength=2.1)
+    top.legend(loc="lower center", bbox_to_anchor=(.5, 1.01), frameon=False,
+               fontsize=6.2, ncol=2, columnspacing=.8, handlelength=2.1)
 
     residual.axhline(0.0, color="0.55", linewidth=.7)
-    residual.plot(phi, direct_integrated, color="#dc7f2a", linewidth=1.25,
-                  label=r"direct $-$ integrated ($w_q=-0.5$)")
-    residual.plot(phi, wq_direct, color="#3267a8", linestyle="--", linewidth=1.25,
-                  label=r"direct: $w_q=-0.5$ $-$ $w_q=-2/3$")
+    residual.plot(phi, direct_integrated * 1e3, color="#dc7f2a", linewidth=1.25)
+    residual.plot(phi, wq_direct * 1e3, color="#3267a8", linestyle="--", linewidth=1.25)
+    residual.set_xlim(phi.min(), phi.max() + 1.55)
+    residual.text(phi.max() + .10, direct_integrated[-1] * 1e3,
+                  "direct - integrated", color="#dc7f2a", fontsize=5.8, va="center")
+    residual.text(phi.max() + .10, 0.0, r"$w_q$ difference", color="#3267a8",
+                  fontsize=5.8, va="center")
     residual.set_xlabel(r"physical phase $\phi$")
-    residual.set_ylabel(r"residual $/M$")
+    residual.set_ylabel(r"residual $/M$ ($\times10^{-3}$)")
     residual.grid(axis="y", alpha=.20, linewidth=.55)
-    residual.legend(loc="best", frameon=False, fontsize=6.2,
-                    handlelength=2.1)
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0, 1, .94))
 
     output.mkdir(parents=True, exist_ok=True)
     fig.savefig(output / "schwarzschild_arrival_validation_with_residuals.pdf",

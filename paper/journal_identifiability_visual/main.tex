@@ -1,5 +1,5 @@
 \documentclass[10pt,twocolumn]{article}
-\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,xcolor,url}
+\usepackage{amsmath,amssymb,booktabs,graphicx,microtype,xcolor,url,capt-of}
 \usepackage[letterpaper,margin=0.72in,columnsep=0.25in]{geometry}
 \usepackage{placeins}
 \emergencystretch=2em
@@ -235,13 +235,6 @@ finite-$k$ color scale.}
 \label{fig:grid}
 \end{figure*}
 
-\begin{figure*}[t]
-\centering\includegraphics[width=.86\textwidth]{physical_observable_complementarity.png}
-\caption{Grid-wide median and interquartile summaries of $\smin$ and condition
-number. Photon geometry provides the clearest complement to ringdown.}
-\label{fig:complementarity}
-\end{figure*}
-
 \begin{table}[t]
 \caption{Primary physical-complementarity summaries. The reported combined-set
 gains are the archived grid-wide improvement statistics relative to ringdown,
@@ -259,8 +252,6 @@ Rdown + all shooting & 1.5312 & 4.4974 & -- \\
 \end{tabular}
 \end{table}
 
-\FloatBarrier
-
 \section{Leakage-Aware Inverse-Learning Protocols}
 Five primary feature sets are ordered consistently: ringdown, photon geometry,
 all shooting, ringdown plus photon geometry, and ringdown plus all shooting.
@@ -273,12 +264,23 @@ layouts, and four directional extrapolation tests. All nominal $k=0$ records
 are retained and flagged, but ordinary $\wq$ error excludes them because $\wq$
 is exactly non-identifiable there.
 
+\begin{center}
+\begin{minipage}{.98\columnwidth}
+\centering\includegraphics[width=.98\columnwidth]{physical_observable_complementarity.pdf}
+\captionof{figure}{Grid-wide median and interquartile summaries of $\smin$ and condition
+number. Photon geometry provides the clearest complement to ringdown.}
+\label{fig:complementarity}
+\end{minipage}
+\end{center}
+
 Normalized mean absolute error divides MAE by the full target span. Split-
 conformal intervals target 90\% coverage and are interpreted under their
 exchangeability assumptions \cite{vovk2005conformal,tibshirani2019covariate,angelopoulos2021guide}.
 Feature-noise scales and every preprocessing transform are learned on training
 folds. The 81-to-161 and targeted 161-to-321 comparisons apply archived frozen
 estimators; they do not retrain on higher-resolution test features.
+
+\FloatBarrier
 
 \section{Inverse-Learning Results}
 Random splitting is optimistic. For HGB, RF, and MLP considered together,
@@ -376,9 +378,8 @@ substitution.
 \centering\includegraphics[width=.82\textwidth]{targeted_estimator_robustness_compact.pdf}
 \caption{Frozen-estimator sensitivity after forward convergence. Bars show the
 median, 95th-percentile, and largest identifiable-$\wq$ normalized prediction
-shift for HGB, RF, and MLP. The annotation records the distinct MLP failure
-audit: 410 catastrophic directional records, 409 already catastrophic at 161
-phases, and 63 iteration-limit cases. No predictions are clipped.}
+shift for HGB, RF, and MLP. The audit note summarizes the distinct MLP failure
+audit. No predictions are clipped.}
 \label{fig:estimator-robustness}
 \end{figure*}
 

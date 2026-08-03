@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib import ticker
 import numpy as np
 import pandas as pd
 
@@ -27,27 +28,41 @@ def build_estimator_figure(output: Path) -> None:
     output.mkdir(parents=True, exist_ok=True)
     x = np.arange(len(MODELS))
     colors = ("#3267a8", "#dc7f2a", "#3a9668")
-    fig, axes = plt.subplots(1, 3, figsize=(7.0, 2.7), sharex=True)
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.45), sharex=True)
     series = ((MEDIAN, "Median shift"), (P95, "95th-percentile shift"),
               (MAX_WQ, r"Largest identifiable-$w_q$ shift"))
-    for ax, (values, title) in zip(axes, series):
+    value_labels = (
+        ("0", "0", r"$1.14\times10^{-3}$"),
+        ("0.0812", "0.0851", r"$8.22\times10^{-3}$"),
+        ("0.306", "0.271", "0.0382"),
+    )
+    for panel, (ax, (values, title), labels) in enumerate(zip(axes, series, value_labels)):
         ax.bar(x, values, color=colors, edgecolor="#222222", linewidth=0.7)
         ax.set_xticks(x, MODELS)
         ax.set_title(title, fontsize=8.5)
         ax.set_ylabel("Normalized shift", fontsize=8)
         ax.grid(axis="y", alpha=0.22, linewidth=0.6)
         ax.tick_params(labelsize=7.5)
-        for i, value in enumerate(values):
+        for i, (value, label) in enumerate(zip(values, labels)):
             ax.text(i, value + max(values.max() * 0.035, 0.00018),
-                    f"{value:.5g}", ha="center", va="bottom", fontsize=7)
+                    label, ha="center", va="bottom", fontsize=7)
         ax.set_ylim(0, max(values.max() * 1.24, 0.0015))
+        if panel == 0:
+            formatter = ticker.ScalarFormatter(useMathText=True)
+            formatter.set_scientific(True)
+            formatter.set_powerlimits((-3, -3))
+            ax.yaxis.set_major_formatter(formatter)
+            ax.set_yticks([0, .0005, .0010, .0015])
+            ax.yaxis.get_offset_text().set_fontsize(7)
     fig.suptitle("Estimator sensitivity after 161-to-321 forward convergence", fontsize=10)
-    fig.text(.5, .005,
+    fig.text(.5, .012,
              "MLP audit: 410 catastrophic records; 409 predate phase substitution; 63 iteration-limit cases.",
              ha="center", fontsize=7)
-    fig.tight_layout(rect=(0, .06, 1, .94))
-    fig.savefig(output / "targeted_estimator_robustness_compact.pdf", bbox_inches="tight")
-    fig.savefig(output / "targeted_estimator_robustness_compact.png", dpi=320, bbox_inches="tight")
+    fig.tight_layout(rect=(0, .10, 1, .92), w_pad=.65)
+    fig.savefig(output / "targeted_estimator_robustness_compact.pdf",
+                bbox_inches="tight", pad_inches=.08)
+    fig.savefig(output / "targeted_estimator_robustness_compact.png", dpi=320,
+                bbox_inches="tight", pad_inches=.08)
     plt.close(fig)
 
 
@@ -58,30 +73,34 @@ def build_resolution_figure(output: Path, source: Path) -> None:
         ["normalized_change_81_161", "normalized_change_161_321"]
     ].max().reset_index()
     x = np.arange(len(q))
-    fig, ax = plt.subplots(figsize=(6.8, 2.55))
-    ax.plot(x, q.normalized_change_81_161, "o", ms=3.0, color="#3267a8", label=r"81$\to$161")
-    ax.plot(x, q.normalized_change_161_321, "o", ms=3.0, color="#dc7f2a", label=r"161$\to$321")
+    fig, ax = plt.subplots(figsize=(6.8, 2.35), layout="constrained")
+    blue, orange = "#3267a8", "#dc7f2a"
+    ax.plot(x, q.normalized_change_81_161, "o", ms=3.0, color=blue)
+    ax.plot(x, q.normalized_change_161_321, "o", ms=3.0, color=orange)
     ax.set_yscale("log")
     ax.set_xlabel(r"Selected point (ordered by $k,w_q$)")
     ax.set_ylabel("Maximum normalized feature change")
     ax.set_xticks(np.arange(0, 36, 5))
+    ax.set_xlim(-.7, 39.2)
     ax.grid(axis="y", which="major", color="0.78", linewidth=.65)
     ax.grid(axis="y", which="minor", color="0.90", linewidth=.45)
     ax.grid(axis="x", which="major", color="0.92", linewidth=.45)
     median = float(feature.normalized_change_161_321.median())
     p95 = float(feature.normalized_change_161_321.quantile(.95))
     maximum = float(q.normalized_change_161_321.max())
-    ax.text(.015, .50,
-            f"0 unresolved at 321 phases\nmedian={median:.3e}; p95={p95:.3e}; accepted max={maximum:.3e}",
-            transform=ax.transAxes, va="center", fontsize=7.3,
-            bbox={"facecolor": "white", "edgecolor": "0.75", "alpha": .92, "pad": 2.5})
-    ax.legend(loc="upper center", bbox_to_anchor=(.5, -.24), ncol=2,
-              frameon=False, fontsize=7.5)
+    fig.suptitle(
+        rf"321 phases: 0 unresolved; median $1.96\times10^{{-4}}$; "
+        rf"p95 $7.23\times10^{{-3}}$; max $2.02\times10^{{-2}}$",
+        fontsize=8.2,
+    )
+    y_blue = float(q.normalized_change_81_161.iloc[-1])
+    y_orange = float(q.normalized_change_161_321.iloc[-1])
+    ax.text(35.2, y_blue, r"81$\to$161", color=blue, va="center", fontsize=7.5)
+    ax.text(35.2, y_orange, r"161$\to$321", color=orange, va="center", fontsize=7.5)
     ax.tick_params(labelsize=8)
-    fig.tight_layout(rect=(0, .12, 1, 1))
-    fig.savefig(output / "resolution_robustness_compact.pdf", bbox_inches="tight", pad_inches=.12)
+    fig.savefig(output / "resolution_robustness_compact.pdf", bbox_inches="tight", pad_inches=.08)
     fig.savefig(output / "resolution_robustness_compact.png", dpi=320,
-                bbox_inches="tight", pad_inches=.12)
+                bbox_inches="tight", pad_inches=.08)
     plt.close(fig)
 
 

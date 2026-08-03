@@ -128,15 +128,25 @@ def figure_sigma_maps(jac: pd.DataFrame, path: Path) -> None:
 
 def figure_observable_summary(jac: pd.DataFrame, path: Path) -> None:
     s=_jacobian_stats(jac,OBSERVABLE_SETS); y=np.arange(len(OBSERVABLE_SETS))
-    fig,axes=plt.subplots(1,2,figsize=(13,5.4),sharey=True)
+    fig,axes=plt.subplots(2,1,figsize=(3.45,3.9),sharey=True)
     for ax,metric,label,better in [(axes[0],"sigma_min",r"Minimum singular value $\sigma_{\min}$","higher is better"),
                                     (axes[1],"condition_number",r"Condition number $\kappa$","lower is better")]:
         q=s[s.metric==metric].set_index("observable_set").reindex(OBSERVABLE_SETS)
         v=q["median"].to_numpy()
         ax.errorbar(v,y,xerr=np.vstack([v-q.q25.to_numpy(),q.q75.to_numpy()-v]),fmt="o",capsize=3,color="#4477AA")
-        ax.set_xscale("log"); ax.set_xlabel(f"Median {label} (IQR; {better})"); ax.grid(axis="x",alpha=.25)
-    axes[0].set_yticks(y,[DISPLAY[x] for x in OBSERVABLE_SETS]); axes[0].invert_yaxis()
-    fig.tight_layout(); _save(fig,path)
+        ax.set_xscale("log")
+        ax.set_title(label, fontsize=8)
+        ax.set_xlabel(f"Median (IQR; {better})", fontsize=7.5)
+        ax.grid(axis="x",alpha=.25)
+        ax.tick_params(labelsize=7)
+    for ax in axes:
+        ax.set_yticks(y,[DISPLAY[x] for x in OBSERVABLE_SETS])
+    axes[0].invert_yaxis()
+    fig.tight_layout()
+    # Keep a vector companion for manuscript use while retaining the PNG for
+    # audit/contact-sheet workflows.
+    fig.savefig(path.with_suffix(".pdf"), bbox_inches="tight", pad_inches=.06)
+    _save(fig,path)
 
 
 def figure_ml_jacobian(jac: pd.DataFrame, folds: pd.DataFrame, path: Path) -> None:

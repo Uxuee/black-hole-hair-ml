@@ -81,12 +81,20 @@ def test_all_figures_exist_are_referenced_and_precede_bibliography() -> None:
         r"\\begin\{figure(\*)?\}.*?\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}"
         r".*?\\label\{([^}]+)\}.*?\\end\{figure\*?\}", tex, re.S,
     )
-    assert len(blocks) == 15
+    inline = re.findall(
+        r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}.*?"
+        r"\\captionof\{figure\}.*?\\label\{([^}]+)\}", tex, re.S,
+    )
+    assert len(blocks) + len(inline) == 15
     for _, graphic, label in blocks:
         assert (PAPER / "figures" / graphic).exists()
         assert f"ref{{{label}}}" in tex
         assert tex.index(f"label{{{label}}}") < bibliography
-    assert len(re.findall(r"\\begin\{figure\*\}", tex)) == 13
+    for graphic, label in inline:
+        assert (PAPER / "figures" / graphic).exists()
+        assert f"ref{{{label}}}" in tex
+        assert tex.index(f"label{{{label}}}") < bibliography
+    assert len(re.findall(r"\\begin\{figure\*\}", tex)) == 12
 
 
 def test_critical_layout_assets_and_float_repairs() -> None:
@@ -111,7 +119,7 @@ def test_compact_resolution_source_declares_log_grids() -> None:
     source = (ROOT / "src/bhhairml/validation/visual_two_column_manuscript.py").read_text()
     assert 'axis="y", which="major"' in source
     assert 'axis="y", which="minor"' in source
-    assert "0 unresolved at 321 phases" in source
+    assert "321 phases: 0 unresolved" in source
 
 
 def test_audits_pass_and_comparison_artifacts_exist() -> None:

@@ -65,11 +65,15 @@ def test_schwarzschild_arrival_residual_definitions_are_finite_and_exact_in_wq()
     assert np.array_equal(wq_direct, np.zeros_like(wq_direct))
 
 
-def test_resolution_legend_is_outside_axes_and_grid_is_preserved() -> None:
+def test_resolution_direct_labels_external_statistics_and_grid_are_preserved() -> None:
     source = (ROOT / "src" / "bhhairml" / "validation" /
               "visual_two_column_manuscript.py").read_text(encoding="utf-8")
-    assert "bbox_to_anchor=(.5, -.24)" in source
-    assert "ncol=2" in source and "frameon=False" in source
+    function = source[source.index("def build_resolution_figure"):]
+    function = function.partition("\ndef ")[0]
+    assert ".legend(" not in function
+    assert 'r"81$\\to$161"' in function
+    assert 'r"161$\\to$321"' in function
+    assert "fig.suptitle(" in function
     assert 'axis="y", which="major"' in source
     assert 'axis="y", which="minor"' in source
 
