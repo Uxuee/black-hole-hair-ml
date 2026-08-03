@@ -75,11 +75,13 @@ def build_resolution_figure(output: Path, source: Path) -> None:
             f"0 unresolved at 321 phases\nmedian={median:.3e}; p95={p95:.3e}; accepted max={maximum:.3e}",
             transform=ax.transAxes, va="center", fontsize=7.3,
             bbox={"facecolor": "white", "edgecolor": "0.75", "alpha": .92, "pad": 2.5})
-    ax.legend(frameon=True, fontsize=7.5, loc="upper right")
+    ax.legend(loc="upper center", bbox_to_anchor=(.5, -.24), ncol=2,
+              frameon=False, fontsize=7.5)
     ax.tick_params(labelsize=8)
-    fig.tight_layout()
-    fig.savefig(output / "resolution_robustness_compact.pdf", bbox_inches="tight")
-    fig.savefig(output / "resolution_robustness_compact.png", dpi=320, bbox_inches="tight")
+    fig.tight_layout(rect=(0, .12, 1, 1))
+    fig.savefig(output / "resolution_robustness_compact.pdf", bbox_inches="tight", pad_inches=.12)
+    fig.savefig(output / "resolution_robustness_compact.png", dpi=320,
+                bbox_inches="tight", pad_inches=.12)
     plt.close(fig)
 
 

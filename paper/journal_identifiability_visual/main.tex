@@ -96,6 +96,32 @@ The rank-aware historical benchmark that motivated the mature physical
 calculation is retained in Appendix~\ref{app:historical} and
 Fig.~\ref{fig:boundary}.
 
+Exact $k=0$ rank loss is structural, while small nonzero $k$ produces practical
+ill-conditioning at finite precision. The historical proxy experiment
+suggested that an additional observable family might improve the weakest
+parameter direction; this motivated replacing those proxies with validated
+physical shooting observables.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.96\textwidth]{historical_analytic_identifiability_lens.pdf}
+\caption{Historical analytic identifiability lens motivating the
+physical-shooting study. Left: local Jacobian condition number, which grows
+near $k=0$. Center: minimum singular value, showing the weakest identifiable
+direction. Right: change in identifiable-$\wq$ error after adding the
+historical synthetic geodesic proxies; the mean MAE changes from 0.0225 to
+0.0143. White regions are invalid or missing source-grid points and are not
+interpolated. The first two panels diagnose inverse-map geometry; the third
+records the original proxy experiment and must not be interpreted as physical
+ray tracing or geodesic shooting. Proxy augmentation does not resolve the exact
+$k=0$ rank loss.}
+\label{fig:lens}
+\end{figure*}
+
+The third panel is therefore historical motivation rather than evidence from
+the mature physical solver. The physical results below use timelike-emitter and
+three-dimensional null-geodesic integrations without proxy substitution.
+
 \section{Physical Geodesic Shooting and Numerical Validation}
 The emitter follows the equatorial timelike Hamiltonian
 \begin{equation}
@@ -122,15 +148,9 @@ In the Schwarzschild benchmark, all 161 phases succeed for both tested nominal
 $\wq$ values, which agree because $k=0$. The independent radial benchmark
 validates the turning-point period and apsidal advance. The physical 121-point
 grid also preserves the Hamiltonian constraints and exact rank-loss boundary.
-Figure~\ref{fig:schwarzschild} shows the arrival-time consistency check.
-
-\begin{figure}[t]
-\centering\includegraphics[width=.96\linewidth]{physical_schwarzschild_arrival_validation.png}
-\caption{Schwarzschild shooting validation. Physical phase begins at
-$\phi=\pi$ at apocentre. Direct arrival time and the integrated-redshift curve
-share only the first-phase additive constant.}
-\label{fig:schwarzschild}
-\end{figure}
+The overlapping arrival curves and their numerical residuals are retained as
+supporting evidence in Appendix~\ref{app:numerical-thresholds} and
+Fig.~\ref{fig:schwarzschild}.
 
 Figure~\ref{fig:rays} makes the direct-branch geometry explicit using actual
 validated emitter states, launch angles, photon integrations, and observer
@@ -159,7 +179,7 @@ Figure~\ref{fig:shooting-observables} first shows how the same three validated
 spacetimes produce distinct phase-resolved response patterns.
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.91\textwidth]{shooting/shooting_observables_vs_phase_refined.pdf}
+\centering\includegraphics[width=.87\textwidth]{shooting/shooting_observables_vs_phase_refined.pdf}
 \caption{Physical direct-branch observables over $\phi\in[\pi,3\pi]$ for
 Schwarzschild and $k=10^{-3}$ with $w_q=-0.5,-2/3$, using $M=1$,
 $r_p=8M$, $r_a=12M$, and observer $(0,0,-80M)$. The dashed line marks the
@@ -172,7 +192,7 @@ amplitude and independent parameter information are not equivalent.}
 The standardized local comparison is shown in Fig.~\ref{fig:local}.
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.93\textwidth]{physical_local_sensitivity_comparison.png}
+\centering\includegraphics[width=.88\textwidth]{physical_local_sensitivity_comparison.png}
 \caption{Local standardized response and separation diagnostics. Timing has a
 large response but an angle of $178.76^\circ$ and condition number 1275.5;
 photon geometry rotates the response to $159.37^\circ$ and lowers the condition
@@ -188,7 +208,7 @@ residuals relative to Schwarzschild. These small resolved changes supply a
 direction that is difficult to see on the full track.
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.91\textwidth]{shooting/observer_sky_track_with_residuals.pdf}
+\centering\includegraphics[width=.84\textwidth]{shooting/observer_sky_track_with_residuals.pdf}
 \caption{Static-observer-tetrad sky tracks and actual-scale residuals for the
 same $M=1$, $r_p=8M$, $r_a=12M$, observer $(0,0,-80M)$ direct-branch benchmark.
 Open circles mark $\phi=\pi$ apocentre, diamonds mark numerical pericentre, and
@@ -216,26 +236,28 @@ finite-$k$ color scale.}
 \end{figure*}
 
 \begin{figure*}[t]
-\centering\includegraphics[width=.94\textwidth]{physical_observable_complementarity.png}
+\centering\includegraphics[width=.86\textwidth]{physical_observable_complementarity.png}
 \caption{Grid-wide median and interquartile summaries of $\smin$ and condition
 number. Photon geometry provides the clearest complement to ringdown.}
 \label{fig:complementarity}
 \end{figure*}
 
-\begin{table*}[t]
+\begin{table}[t]
 \caption{Primary physical-complementarity summaries. The reported combined-set
 gains are the archived grid-wide improvement statistics relative to ringdown,
 not ratios formed from separately reported medians.}
 \label{tab:complementarity}
 \centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
 \begin{tabular}{lccc}
-Features & $\mathrm{med}(\smin)$ & $\mathrm{med}(\kappaJ)$ & gain \\
+Features & med. $\smin$ & med. $\kappaJ$ & gain \\
 \hline
 Ringdown & 0.2782 & 6.6112 & reference \\
-Ringdown + photon geometry & 1.2326 & 4.0731 & $4.54\times/2.28\times$ \\
-Ringdown + all shooting & 1.5312 & 4.4974 & -- \\
+Rdown + photon geom. & 1.2326 & 4.0731 & $4.54\times/2.28\times$ \\
+Rdown + all shooting & 1.5312 & 4.4974 & -- \\
 \end{tabular}
-\end{table*}
+\end{table}
 
 \FloatBarrier
 
@@ -410,6 +432,10 @@ $R^2(k)=0.8960$ and $R^2(\wq)=0.9587$; HGB with proxy augmentation achieved
 57.6\% weak-identifiability fraction. PCA compressed correlated information; it
 did not create a new physical response direction. These historical results
 motivated the physical shooting study and are not substituted for it.
+Figure~\ref{fig:boundary} serves a distinct role from the historical lens in
+Fig.~\ref{fig:lens}: it compares a learned rank-aware class with the analytic
+weak-identifiability boundary rather than displaying conditioning or proxy
+regression-error changes.
 
 \begin{figure}[t]
 \centering\includegraphics[width=.9\linewidth]{learning_when_hair_is_observable_rank_aware.pdf}
@@ -449,10 +475,26 @@ Grouped one-percent feature noise yields ringdown-plus-photon-geometry NMAE
 points, so data limitation remains part of the interpretation.
 
 \section{Numerical-Validation Thresholds}
+\label{app:numerical-thresholds}
 The 35-point 321-phase run takes 5318.2 s. Maximum hit, timelike-constraint,
 null-constraint, and impact-parameter drift errors are respectively
 $7.0913\times10^{-8}$, $3.1303\times10^{-13}$,
 $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
+The Schwarzschild arrival-time comparison in Fig.~\ref{fig:schwarzschild}
+separates the visually overlapping curves from their actual-scale residuals.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.98\columnwidth]{schwarzschild_arrival_validation_with_residuals.pdf}
+\caption{Schwarzschild arrival-time validation. Four arrival-time curves are
+plotted. The two nominal $\wq$ cases coincide because the $k=0$ geometry is
+Schwarzschild, while the direct and integrated-redshift constructions agree
+within numerical quadrature error. The lower panel shows direct minus
+integrated arrival time for $w_q=-0.5$ and the direct-arrival difference
+between $w_q=-0.5$ and $w_q=-2/3$ on their actual numerical scales.}
+\label{fig:schwarzschild}
+\end{figure}
+
 Matched Schwarzschild and Kiselev direct rays are compared on their actual
 coordinate scale in Fig.~\ref{fig:ray-difference}.
 
