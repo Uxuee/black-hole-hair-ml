@@ -6,10 +6,14 @@ import pandas as pd
 import pytest
 
 from bhhairml.data.kiselev_shooting import DETAILED_COLUMNS, load_config
-from bhhairml.shooting.emitter import integrate_emitter_orbit
+from bhhairml.shooting.emitter import (
+    find_radial_turning_points, integrate_emitter_orbit,
+)
 from bhhairml.shooting.kiselev_metric import KiselevMetric
+from bhhairml.shooting.photon import static_observer_tetrad_projection
 from bhhairml.validation.schwarzschild_shooting_validation import (
     OBSERVABLES, calculate_validation_metrics, compare_wq_runs,
+    schwarzschild_binet_turning_points,
 )
 
 
@@ -40,9 +44,32 @@ def test_full_interval_emitter_is_wq_independent_and_has_turning_point_behavior(
     peri = int(np.argmin(first.r))
     assert 0 < peri < len(phases) - 1
     assert first.r[peri] == pytest.approx(8.0, abs=2e-3)
-    # For this strong-field orbit, coordinate-azimuth precession means 3pi is
-    # not the next apocentre. The validation report must expose that fact.
-    assert abs(first.r[-1] - 12.0) > 0.1
+
+
+def test_radial_period_uses_turning_points_and_matches_binet_benchmark():
+    metric = KiselevMetric(1.0, 0.0, -0.5)
+    turning = find_radial_turning_points(metric, 8.0, 12.0, 5.0 * np.pi)
+    benchmark = schwarzschild_binet_turning_points(1.0, 8.0, 12.0, 5.0 * np.pi)
+    assert turning.pericentre_phi > np.pi
+    assert turning.apocentre_phi > turning.pericentre_phi
+    assert turning.pericentre_radius == pytest.approx(8.0, abs=1e-9)
+    assert turning.apocentre_radius == pytest.approx(12.0, abs=1e-9)
+    assert turning.radial_azimuthal_period > 2.0 * np.pi
+    assert turning.apsidal_advance > 0.0
+    assert turning.pericentre_phi == pytest.approx(benchmark["pericentre_phi"], abs=1e-9)
+    assert turning.apocentre_phi == pytest.approx(benchmark["apocentre_phi"], abs=1e-9)
+
+
+def test_static_observer_tetrad_projection_is_orthonormal():
+    metric = KiselevMetric()
+    observer = np.array([0.0, 0.0, -80.0])
+    tangent = np.array([0.01, -0.02, -1.0])
+    components, slopes = static_observer_tetrad_projection(metric, observer, tangent)
+    f = metric.f(80.0)
+    assert components[0] == pytest.approx(tangent[0])
+    assert components[1] == pytest.approx(tangent[1])
+    assert components[2] == pytest.approx(1.0 / np.sqrt(f))
+    assert slopes == pytest.approx((tangent[0] * np.sqrt(f), tangent[1] * np.sqrt(f)))
 
 
 def _synthetic_frame(failed_index: int | None = None) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
@@ -104,12 +131,17 @@ def test_failed_phases_are_explicit_and_fail_acceptance():
     metrics = calculate_validation_metrics(detailed, diagnostics, config)
     assert metrics["phase_counts"]["failed"] == 2
     assert metrics["criteria"]["failed_phases_reported"]
-    assert not metrics["criteria"]["all_phases_succeeded"]
+    assert not metrics["criteria"]["required_success_fraction"]
+    assert not metrics["criteria"]["wq_complete_finite_coverage"]
     assert not metrics["overall_pass"]
+    config["validation_thresholds"] = dict(config["validation_thresholds"])
+    config["validation_thresholds"]["required_success_fraction"] = 2.0 / 3.0
+    relaxed = calculate_validation_metrics(detailed, diagnostics, config)
+    assert relaxed["criteria"]["required_success_fraction"]
 
 
 def test_arrival_convergence_metric_requires_full_resolution():
     detailed, diagnostics, config = _synthetic_frame()
     metrics = calculate_validation_metrics(detailed, diagnostics, config)
     assert metrics["arrival_time_phase_resolution_convergence"] == {}
-    assert not metrics["criteria"]["arrival_residual_converges_with_phase_resolution"]
+    assert not metrics["criteria"]["arrival_second_order_convergence"]

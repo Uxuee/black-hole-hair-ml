@@ -13,14 +13,18 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import yaml
+from scipy.integrate import solve_ivp
 
 from bhhairml.data.kiselev_shooting import load_config, run_pipeline
+from bhhairml.shooting.emitter import find_radial_turning_points
+from bhhairml.shooting.kiselev_metric import KiselevMetric
 
 OBSERVABLES = [
     "r_emit", "redshift", "impact_parameter", "propagation_time",
     "excess_time_delay", "arrival_time_relative", "toa_from_redshift",
     "hit_error", "timelike_constraint_error", "null_constraint_error",
-    "impact_parameter_drift",
+    "impact_parameter_drift", "alpha_sky", "beta_sky",
+    "alpha_sky_arcsec", "beta_sky_arcsec",
 ]
 
 
@@ -49,16 +53,19 @@ def compare_wq_runs(detailed: pd.DataFrame, expected_phases: int) -> dict[str, A
     comparison: dict[str, Any] = {
         "wq_values": [float(wq_values[0]), float(wq_values[1])],
         "phase_alignment_exact": True,
+        "complete_finite_coverage": True,
         "observables": {},
     }
     for column in OBSERVABLES:
         a = pd.to_numeric(left[column], errors="coerce").to_numpy(dtype=float)
         b = pd.to_numeric(right[column], errors="coerce").to_numpy(dtype=float)
         common = np.isfinite(a) & np.isfinite(b)
+        complete = bool(np.all(np.isfinite(a)) and np.all(np.isfinite(b)))
+        comparison["complete_finite_coverage"] &= complete
         if not np.any(common):
             comparison["observables"][column] = {
                 "common_finite_phases": 0, "max_absolute_difference": None,
-                "max_relative_difference": None,
+                "max_relative_difference": None, "complete_finite_coverage": False,
             }
             continue
         absolute = np.abs(a[common] - b[common])
@@ -66,10 +73,63 @@ def compare_wq_runs(detailed: pd.DataFrame, expected_phases: int) -> dict[str, A
                                    np.full(np.sum(common), np.finfo(float).eps)))
         comparison["observables"][column] = {
             "common_finite_phases": int(np.sum(common)),
+            "finite_phases_left": int(np.sum(np.isfinite(a))),
+            "finite_phases_right": int(np.sum(np.isfinite(b))),
+            "complete_finite_coverage": complete,
             "max_absolute_difference": float(np.max(absolute)),
             "max_relative_difference": float(np.max(absolute / scale)),
         }
     return comparison
+
+
+def schwarzschild_binet_turning_points(
+    M: float, r_p: float, r_a: float, phi_end: float,
+    *, rtol: float = 1e-12, atol: float = 1e-14,
+) -> dict[str, float]:
+    """Independent Schwarzschild benchmark using u''+u=M/L^2+3Mu^2."""
+    f_p, f_a = 1.0 - 2.0 * M / r_p, 1.0 - 2.0 * M / r_a
+    angular_momentum_squared = (f_a - f_p) / (f_p / r_p**2 - f_a / r_a**2)
+    if not np.isfinite(angular_momentum_squared) or angular_momentum_squared <= 0:
+        raise ValueError("independent Schwarzschild turning radii give non-positive L^2")
+
+    def rhs(_phi, state):
+        u, du = state
+        return [du, M / angular_momentum_squared + 3.0 * M * u**2 - u]
+
+    def pericentre_event(_phi, state):
+        return state[1]
+
+    pericentre_event.direction = -1
+    pericentre_event.terminal = False
+
+    def apocentre_event(_phi, state):
+        return state[1]
+
+    apocentre_event.direction = 1
+    apocentre_event.terminal = False
+
+    solution = solve_ivp(
+        rhs, (np.pi, float(phi_end)), [1.0 / r_a, 0.0],
+        events=(pericentre_event, apocentre_event), method="DOP853",
+        rtol=rtol, atol=atol, dense_output=True, max_step=0.05,
+    )
+    if not solution.success:
+        raise RuntimeError(f"Binet benchmark failed: {solution.message}")
+    peri = solution.t_events[0]
+    apo = solution.t_events[1]
+    peri = peri[peri > np.pi + 1e-8]
+    apo = apo[apo > np.pi + 1e-8]
+    if len(peri) == 0 or len(apo) == 0:
+        raise RuntimeError("Binet benchmark did not find both radial turning points")
+    peri_phi, apo_phi = float(peri[0]), float(apo[0])
+    return {
+        "pericentre_phi": peri_phi,
+        "pericentre_radius": float(1.0 / solution.sol(peri_phi)[0]),
+        "apocentre_phi": apo_phi,
+        "apocentre_radius": float(1.0 / solution.sol(apo_phi)[0]),
+        "radial_azimuthal_period": apo_phi - np.pi,
+        "apsidal_advance": apo_phi - np.pi - 2.0 * np.pi,
+    }
 
 
 def calculate_validation_metrics(
@@ -85,7 +145,7 @@ def calculate_validation_metrics(
         float(np.max(np.abs(arrival_common.arrival_time_relative - arrival_common.toa_from_redshift)))
         if len(arrival_common) else None
     )
-    convergence: dict[str, float] = {}
+    convergence: dict[str, Any] = {}
     convergence_frame = detailed[np.isclose(detailed.wq, float(config["wq_values"][0]))].sort_values("phi")
     if len(convergence_frame) == 161 and convergence_frame.shooting_success.astype(bool).all():
         for count, stride in ((41, 4), (81, 2), (161, 1)):
@@ -97,19 +157,41 @@ def calculate_validation_metrics(
             convergence[str(count)] = float(np.max(np.abs(
                 subset.arrival_time_relative.to_numpy(dtype=float) - integrated
             )))
-    first_run = detailed[np.isclose(detailed.wq, float(config["wq_values"][0]))].sort_values("phi")
-    radius = first_run.r_emit.to_numpy(dtype=float)
-    phase = first_run.phi.to_numpy(dtype=float)
-    peri_index = int(np.argmin(radius))
+        convergence["observed_orders"] = {
+            "41_to_81": float(np.log2(convergence["41"] / convergence["81"])),
+            "81_to_161": float(np.log2(convergence["81"] / convergence["161"])),
+        }
+    metric = KiselevMetric(float(config["M"]), 0.0, float(config["wq_values"][0]))
+    turning = find_radial_turning_points(
+        metric, float(config["r_p"]), float(config["r_a"]),
+        float(config["turning_point_phi_end"]),
+        rtol=float(config["emitter_rtol"]), atol=float(config["emitter_atol"]),
+    )
+    benchmark = schwarzschild_binet_turning_points(
+        float(config["M"]), float(config["r_p"]), float(config["r_a"]),
+        float(config["turning_point_phi_end"]),
+        rtol=float(config["emitter_rtol"]), atol=float(config["emitter_atol"]),
+    )
     physical = {
-        "r_at_phi_pi": float(radius[0]),
-        "starts_at_apocentre": bool(np.isclose(radius[0], float(config["r_a"]), atol=1e-10, rtol=0.0)),
-        "moves_inward_immediately": bool(radius[1] < radius[0]),
-        "sampled_pericentre_radius": float(radius[peri_index]),
-        "sampled_pericentre_phase": float(phase[peri_index]),
-        "pericentre_phase_offset_from_2pi": float(phase[peri_index] - 2.0 * np.pi),
-        "r_at_phi_3pi": float(radius[-1]),
-        "endpoint_apocentre_radius_error": float(abs(radius[-1] - float(config["r_a"]))),
+        "initial_apocentre_phi": float(np.pi),
+        "initial_apocentre_radius": float(config["r_a"]),
+        "next_pericentre_phi": turning.pericentre_phi,
+        "next_pericentre_radius": turning.pericentre_radius,
+        "next_apocentre_phi": turning.apocentre_phi,
+        "next_apocentre_radius": turning.apocentre_radius,
+        "radial_azimuthal_period": turning.radial_azimuthal_period,
+        "apsidal_advance": turning.apsidal_advance,
+    }
+    benchmark_differences = {
+        key: float(abs(physical[physical_key] - benchmark[key]))
+        for key, physical_key in (
+            ("pericentre_phi", "next_pericentre_phi"),
+            ("pericentre_radius", "next_pericentre_radius"),
+            ("apocentre_phi", "next_apocentre_phi"),
+            ("apocentre_radius", "next_apocentre_radius"),
+            ("radial_azimuthal_period", "radial_azimuthal_period"),
+            ("apsidal_advance", "apsidal_advance"),
+        )
     }
     thresholds = config["validation_thresholds"]
     maximums = {
@@ -119,32 +201,43 @@ def calculate_validation_metrics(
         "impact_parameter_drift": _finite_max(successful.impact_parameter_drift),
         "direct_vs_integrated_arrival_time_residual": arrival_residual,
     }
-    wq_abs = max(item["max_absolute_difference"] or 0.0 for item in comparison["observables"].values())
-    wq_rel = max(item["max_relative_difference"] or 0.0 for item in comparison["observables"].values())
+    finite_comparisons = [item for item in comparison["observables"].values()
+                          if item["max_absolute_difference"] is not None]
+    wq_abs = max((item["max_absolute_difference"] for item in finite_comparisons), default=np.inf)
+    wq_rel = max((item["max_relative_difference"] for item in finite_comparisons), default=np.inf)
+    success_fraction = float(success.mean()) if len(success) else 0.0
+    orders = convergence.get("observed_orders", {})
+    benchmark_phase_max = max(benchmark_differences["pericentre_phi"], benchmark_differences["apocentre_phi"])
+    benchmark_radius_max = max(benchmark_differences["pericentre_radius"], benchmark_differences["apocentre_radius"])
     criteria = {
-        "all_phases_succeeded": int(success.sum()) == expected_total,
+        "required_success_fraction": success_fraction >= float(thresholds["required_success_fraction"]),
         "hit_error": maximums["observer_hit_error"] is not None and maximums["observer_hit_error"] < float(thresholds["max_hit_error"]),
         "timelike_constraint": maximums["timelike_constraint_error"] is not None and maximums["timelike_constraint_error"] < float(thresholds["max_timelike_constraint_error"]),
         "null_constraint": maximums["null_constraint_error"] is not None and maximums["null_constraint_error"] < float(thresholds["max_null_constraint_error"]),
         "impact_parameter_conservation": maximums["impact_parameter_drift"] is not None and maximums["impact_parameter_drift"] < float(thresholds["max_impact_parameter_drift"]),
-        "wq_absolute_independence": wq_abs < float(thresholds["max_wq_absolute_difference"]),
-        "wq_relative_independence": wq_rel < float(thresholds["max_wq_relative_difference"]),
-        "starts_at_apocentre": physical["starts_at_apocentre"],
-        "moves_inward_immediately": physical["moves_inward_immediately"],
-        "pericentre_near_2pi": abs(physical["pericentre_phase_offset_from_2pi"]) < float(thresholds["pericentre_phase_tolerance"]),
-        "returns_near_apocentre_at_3pi": physical["endpoint_apocentre_radius_error"] < float(thresholds["endpoint_radius_tolerance"]),
+        "wq_complete_finite_coverage": comparison["complete_finite_coverage"],
+        "wq_absolute_independence": comparison["complete_finite_coverage"] and wq_abs < float(thresholds["max_wq_absolute_difference"]),
+        "wq_relative_independence": comparison["complete_finite_coverage"] and wq_rel < float(thresholds["max_wq_relative_difference"]),
+        "starts_at_apocentre": bool(np.isclose(detailed.sort_values("phi").r_emit.iloc[0], float(config["r_a"]), atol=1e-10)),
+        "moves_inward_immediately": bool(detailed[detailed.wq == float(config["wq_values"][0])].sort_values("phi").r_emit.iloc[1] < float(config["r_a"])),
+        "turning_point_radii": abs(turning.pericentre_radius - float(config["r_p"])) < float(thresholds["max_turning_radius_error"]) and abs(turning.apocentre_radius - float(config["r_a"])) < float(thresholds["max_turning_radius_error"]),
+        "independent_benchmark_phase": benchmark_phase_max < float(thresholds["max_benchmark_phase_difference"]),
+        "independent_benchmark_radius": benchmark_radius_max < float(thresholds["max_benchmark_radius_difference"]),
         "failed_phases_reported": bool(success.all()) or len(diagnostics[diagnostics.diagnostic_type == "failed_phase"]) == int((~success).sum()),
         "arrival_comparison_available": arrival_residual is not None,
-        "arrival_residual_converges_with_phase_resolution": (
-            len(convergence) == 3 and convergence["161"] < convergence["81"] < convergence["41"]
+        "arrival_absolute_residual": arrival_residual is not None and arrival_residual < float(thresholds["max_arrival_time_residual"]),
+        "arrival_second_order_convergence": (
+            len(orders) == 2 and min(orders.values()) >= float(thresholds["min_arrival_convergence_order"])
         ),
     }
     numerical_keys = [
-        "all_phases_succeeded", "hit_error", "timelike_constraint", "null_constraint",
+        "required_success_fraction", "hit_error", "timelike_constraint", "null_constraint",
         "impact_parameter_conservation", "wq_absolute_independence",
-        "wq_relative_independence", "starts_at_apocentre", "moves_inward_immediately",
+        "wq_relative_independence", "wq_complete_finite_coverage",
+        "starts_at_apocentre", "moves_inward_immediately", "turning_point_radii",
+        "independent_benchmark_phase", "independent_benchmark_radius",
         "failed_phases_reported", "arrival_comparison_available",
-        "arrival_residual_converges_with_phase_resolution",
+        "arrival_absolute_residual", "arrival_second_order_convergence",
     ]
     return {
         "configuration": {
@@ -157,12 +250,14 @@ def calculate_validation_metrics(
         },
         "phase_counts": {
             "expected_total": expected_total, "successful": int(success.sum()),
-            "failed": int((~success).sum()), "success_fraction": float(success.mean()),
+            "failed": int((~success).sum()), "success_fraction": success_fraction,
         },
         "maximums": maximums,
         "arrival_time_phase_resolution_convergence": convergence,
         "wq_independence": comparison,
         "physical_orbit_checks": physical,
+        "independent_schwarzschild_binet_benchmark": benchmark,
+        "benchmark_absolute_differences": benchmark_differences,
         "thresholds": thresholds,
         "criteria": {key: bool(value) for key, value in criteria.items()},
         "numerical_acceptance_pass": bool(all(criteria[key] for key in numerical_keys)),
@@ -211,16 +306,20 @@ def make_validation_figures(detailed: pd.DataFrame, output: Path) -> None:
 
 def write_markdown_report(metrics: dict[str, Any], path: Path) -> None:
     maximums, physical, counts = metrics["maximums"], metrics["physical_orbit_checks"], metrics["phase_counts"]
+    benchmark = metrics["independent_schwarzschild_binet_benchmark"]
+    benchmark_diff = metrics["benchmark_absolute_differences"]
     criteria = "\n".join(f"- {'PASS' if passed else 'FAIL'}: `{name}`" for name, passed in metrics["criteria"].items())
     convergence = metrics["arrival_time_phase_resolution_convergence"]
-    convergence_text = ", ".join(f"{count} phases: {value}" for count, value in convergence.items()) or "not available"
+    residual_items = [(count, value) for count, value in convergence.items() if count != "observed_orders"]
+    convergence_text = ", ".join(f"{count} phases: {value}" for count, value in residual_items) or "not available"
+    order_text = ", ".join(f"{interval}: {value}" for interval, value in convergence.get("observed_orders", {}).items()) or "not available"
     wq_results = metrics["wq_independence"]["observables"].values()
     wq_max_absolute = max(item["max_absolute_difference"] or 0.0 for item in wq_results)
     wq_results = metrics["wq_independence"]["observables"].values()
     wq_max_relative = max(item["max_relative_difference"] or 0.0 for item in wq_results)
     concerns = []
-    if not metrics["criteria"]["pericentre_near_2pi"] or not metrics["criteria"]["returns_near_apocentre_at_3pi"]:
-        concerns.append("The coordinate-azimuth interval pi to 3pi is not a closed radial period for this strong-field orbit; Schwarzschild apsidal precession shifts the turning points.")
+    if not metrics["criteria"]["independent_benchmark_phase"] or not metrics["criteria"]["independent_benchmark_radius"]:
+        concerns.append("The Hamiltonian turning points do not yet pass the independent Schwarzschild Binet benchmark.")
     if counts["failed"]:
         concerns.append(f"{counts['failed']} shooting phases failed and were retained explicitly without interpolation.")
     if not concerns: concerns.append("No acceptance-criterion failures were found.")
@@ -231,9 +330,11 @@ emitter, photon trajectories, and observables must be independent of `wq`.
 
 ## Geometry and numerics
 
-The run uses `M=1`, `r_p=8M`, `r_a=12M`, a static observer at `(0,0,-80M)`,
-and 161 physical phase samples from `phi=pi` through `phi=3pi`. The emitter starts
-at apocentre with `r=12M` and zero radial momentum. ODE tolerances are emitter
+The photon run uses `M=1`, `r_p=8M`, `r_a=12M`, a static observer at `(0,0,-80M)`,
+and 161 physical coordinate-azimuth samples from `phi=pi` through `phi=3pi`.
+Coordinate `phi` is not treated as a radial anomaly. The emitter starts at
+apocentre with `r=12M` and zero radial momentum. A separate emitter-only integration
+continues until the next `p_r=0` apocentre. ODE tolerances are emitter
 `rtol=1e-11`, `atol=1e-13` and photon `rtol=1e-10`, `atol=1e-12`; the observer hit
 tolerance is `1e-5 M`.
 
@@ -246,13 +347,20 @@ tolerance is `1e-5 M`.
 - Maximum impact-parameter drift: {maximums['impact_parameter_drift']}
 - Maximum direct-versus-integrated arrival residual: {maximums['direct_vs_integrated_arrival_time_residual']}
 - Arrival residual convergence: {convergence_text}
+- Observed trapezoidal convergence orders: {order_text}
 - Maximum `wq` absolute difference over all observables: {wq_max_absolute}
 - Maximum `wq` relative difference over all observables: {wq_max_relative}
-- Sampled pericentre: `r={physical['sampled_pericentre_radius']}` at `phi={physical['sampled_pericentre_phase']}`
-- Radius at `3pi`: `{physical['r_at_phi_3pi']}`
+- Next pericentre: `r={physical['next_pericentre_radius']}` at `phi={physical['next_pericentre_phi']}`
+- Next apocentre: `r={physical['next_apocentre_radius']}` at `phi={physical['next_apocentre_phi']}`
+- Radial azimuthal period `Delta_phi_r`: `{physical['radial_azimuthal_period']}`
+- Apsidal advance `Delta_omega=Delta_phi_r-2pi`: `{physical['apsidal_advance']}`
+- Maximum Hamiltonian/Binet turning-phase difference: `{max(benchmark_diff['pericentre_phi'], benchmark_diff['apocentre_phi'])}`
+- Maximum Hamiltonian/Binet turning-radius difference: `{max(benchmark_diff['pericentre_radius'], benchmark_diff['apocentre_radius'])}`
 
 The arrival curves share only the physical zero at the first emission phase. No
 additional shift, rescaling, proxy substitution, or failed-phase interpolation is used.
+Apparent sky angles are calculated only after projecting the final photon tangent
+onto the static observer's orthonormal tetrad.
 
 ## Criteria
 
@@ -260,18 +368,15 @@ additional shift, rescaling, proxy substitution, or failed-phase interpolation i
 
 Numerical acceptance status: **{'PASS' if metrics['numerical_acceptance_pass'] else 'FAIL'}**.
 
-Overall status including the requested coordinate-phase turning-point checks:
-**{'PASS' if metrics['overall_pass'] else 'FAIL'}**.
+Overall status: **{'PASS' if metrics['overall_pass'] else 'FAIL'}**.
 
 ## Concerns and readiness for nonzero k
 
 {' '.join(concerns)}
 
-Readiness for the first nonzero-`k` experiment: **{'READY' if metrics['overall_pass'] else 'NOT READY'}**.
-The phase convention must be clarified before proceeding: either retain coordinate
-azimuth and use the measured relativistic radial period, or explicitly introduce a
-radial anomaly parameter distinct from coordinate `phi`. This validation does not
-authorize a large grid.
+Readiness for the first nonzero-`k` experiment: **{'READY FOR A FIRST SMALL NONZERO-k TEST' if metrics['overall_pass'] else 'NOT READY'}**.
+Readiness requires the independent Binet benchmark, complete finite `wq` coverage,
+and all numerical criteria to pass. This validation does not authorize a large grid.
 """
     path.parent.mkdir(parents=True, exist_ok=True); path.write_text(text, encoding="utf-8")
 

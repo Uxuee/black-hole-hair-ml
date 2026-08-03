@@ -15,7 +15,9 @@ import yaml
 
 from bhhairml.shooting.emitter import integrate_emitter_orbit
 from bhhairml.shooting.kiselev_metric import KiselevMetric, StaticRegionError
-from bhhairml.shooting.photon import angles_from_direction, shoot_photon
+from bhhairml.shooting.photon import (
+    angles_from_direction, shoot_photon, static_observer_tetrad_projection,
+)
 
 ARCSEC_PER_RADIAN = 180.0 * 3600.0 / np.pi
 
@@ -105,9 +107,9 @@ def _successful_row(metric: KiselevMetric, observer: np.ndarray, orbit, index: i
     n_hit = x_hit / r_hit
     s_hit = float(np.dot(n_hit, p_hit))
     k_spatial = p_hit + (f_hit - 1.0) * s_hit * n_hit
-    if abs(k_spatial[2]) <= np.finfo(float).eps:
-        raise ValueError("final photon tangent has k_z=0")
-    alpha_sky, beta_sky = k_spatial[0] / k_spatial[2], k_spatial[1] / k_spatial[2]
+    _tetrad_components, (alpha_sky, beta_sky) = static_observer_tetrad_projection(
+        metric, x_hit, k_spatial
+    )
     p_emit = integration.momentum[0]
     omega_emit = float(u_emit[0] - np.dot(u_emit[1:], p_emit))
     omega_obs = float(1.0 / np.sqrt(f_hit))
