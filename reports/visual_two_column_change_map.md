@@ -2,7 +2,8 @@
 
 | Current journal source | Older two-column visual source | New location | Status |
 |---|---|---|---|
-| Introduction and rank-aware framework | learned-versus-analytic boundary | Secs. 1-2, Fig. 1 | retained, historical role clarified |
+| Introduction and rank-aware framework | learned-versus-analytic boundary | Appendix A | moved to the historical benchmark |
+| validated physical rays and phase observables | absent | Secs. 3-4 | three mature-solver figures integrated |
 | Schwarzschild validation | physical arrival validation | Sec. 3, Fig. 2 | retained |
 | validated shooting discussion | none in the older paper | Sec. 3, Fig. 3 | added from mature solver outputs |
 | local sensitivity comparison | physical local diagnostics | Sec. 4, Fig. 4 | redesigned as aligned singular-value, angle, and conditioning panels |

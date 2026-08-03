@@ -15,11 +15,11 @@ minimum-singular-value maps; complementarity summary; validation protocols;
 ML-versus-Jacobian comparison; conformal coverage; 81-to-161-to-321 forward
 convergence; and targeted estimator robustness.
 
-- Main-text figures: 11
-- Appendix figures: 0 (the appendices retain concise audited supporting text)
+- Main-text figures: 12
+- Appendix figures: 2
 - Tables: 2
-- Full-width figures: 8
-- One-column figures: 3
+- Full-width figures: 10 in the main text (11 including the appendix ray comparison)
+- One-column figures: 2 in the main text, plus the historical appendix boundary
 
 Wide environments are reserved for maps and aligned multipanel comparisons.
 Compact diagnostics remain one-column. The local-sensitivity plot was

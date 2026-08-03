@@ -103,7 +103,7 @@ def test_pdfs_are_valid_and_pngs_are_high_resolution():
 def test_readme_and_reports_reference_physical_outputs():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "## Physical geodesic shooting" in readme
-    assert "phase_coloured_photon_shooting.png" in readme
+    assert "phase_coloured_photon_shooting_with_inset.png" in readme
     assert "not an observational image" in readme
     assert (ROOT / "reports" / "shooting_visualization_input_audit.md").exists()
     assert (ROOT / "reports" / "shooting_visualization_validation.md").exists()

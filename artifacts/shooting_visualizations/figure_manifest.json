@@ -462,6 +462,215 @@
     "r_p": 8.0
   },
   "plotting_script": "src/bhhairml/visualization/shooting_figures.py",
+  "refined_figures": [
+    {
+      "designation": "main: physical shooting",
+      "original_filename": "phase_coloured_photon_shooting.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "phase_coloured_photon_shooting_with_inset.pdf",
+      "refinement_description": "full geometry plus equal-scale near-hole inset",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "main: physical complementarity",
+      "original_filename": "shooting_observables_vs_phase.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "shooting_observables_vs_phase_refined.pdf",
+      "refinement_description": "larger labels, grayscale line styles, precise tetrad sky label",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "main: physical complementarity",
+      "original_filename": "observer_sky_track_comparison.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "observer_sky_track_with_residuals.pdf",
+      "refinement_description": "actual track plus matched-phase Schwarzschild residual panels",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "appendix: numerical validation",
+      "original_filename": "schwarzschild_kiselev_ray_comparison.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "schwarzschild_kiselev_ray_comparison.pdf",
+      "refinement_description": "unchanged actual-scale validated comparison",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "README/graphical abstract",
+      "original_filename": "physical_shooting_to_ml_pipeline.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "physical_shooting_to_ml_pipeline_clean.pdf",
+      "refinement_description": "clean non-crossing complementary branches",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "poster",
+      "original_filename": "physical_shooting_poster_composite.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "physical_shooting_poster_composite.pdf",
+      "refinement_description": "original validated landscape composite retained",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "outreach/poster",
+      "original_filename": "physical_shooting_poster_composite.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "physical_shooting_poster_composite_dark.pdf",
+      "refinement_description": "dark-background version using the same validated rays and observables",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "README/teaching",
+      "original_filename": "physical_shooting_geometry_overview.pdf",
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "physical_shooting_geometry_overview.pdf",
+      "refinement_description": "original overview retained; not duplicated in manuscript",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    },
+    {
+      "designation": "graphical abstract candidate",
+      "original_filename": null,
+      "physical_parameters": {
+        "M": 1,
+        "branch": "direct",
+        "observer": [
+          0,
+          0,
+          -80
+        ],
+        "phi_range": [
+          3.141592653589793,
+          9.42477796076938
+        ],
+        "r_a": 12,
+        "r_p": 8
+      },
+      "refined_filename": "physical_identifiability_graphical_abstract.pdf",
+      "refinement_description": "compact rays, complementary pipeline, and sky response",
+      "source_data": "artifacts/shooting_visualizations/representative_photon_trajectories.csv.gz and archived phase-resolved tables",
+      "validation_provenance": "reports/shooting_visualization_validation.md; displayed-ray maxima in this manifest"
+    }
+  ],
   "schema_version": 1,
   "schwarzschild_kiselev_differences": {
     "alpha_sky": {

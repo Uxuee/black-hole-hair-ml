@@ -14,7 +14,7 @@
 
 ## Physical geodesic shooting
 
-![Phase-coloured physical photon shooting](artifacts/shooting_visualizations/phase_coloured_photon_shooting.png)
+![Phase-coloured physical photon shooting with near-hole inset](artifacts/shooting_visualizations/refined/phase_coloured_photon_shooting_with_inset.png)
 
 The shooting solver starts a timelike emitter at apocentre, $\phi=\pi$, on an
 $r_p=8M$, $r_a=12M$ orbit and adjusts each direct-branch photon launch direction
@@ -24,6 +24,10 @@ archived converged launch angle. See the
 [physical visualization validation report](reports/shooting_visualization_validation.md)
 for constraint and hit-error checks. This is a controlled theoretical benchmark,
 not an observational image of a real black hole or a ray-traced accretion flow.
+The shooting algorithm adjusts two initial photon angles at each emitter phase
+until the direct null geodesic reaches the observer. These trajectories generate
+the physical photon-geometry, redshift, and timing observables used in the
+identifiability analysis.
 
 ## Main scientific takeaway
 
