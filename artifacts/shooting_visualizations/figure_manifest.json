@@ -422,7 +422,7 @@
     }
   ],
   "fingerprint_inputs": {
-    "config_sha256": "19512d70fc204026880101b0fc0c03de43f594d00d70c830821ef23c3d2c5fe6",
+    "config_sha256": "ee47b9f62f86697714cbbf3809204882fde28d344a99605187a388d48f42461a",
     "script_sha256": "e48a73c557e0ebf64f0ae8adb195cc56f6c20ff547167b542e59b32bf4f91fe8",
     "source_hashes": {
       "kiselev_wq_m05": {
@@ -445,7 +445,7 @@
       }
     }
   },
-  "generation_fingerprint": "a68820cbe75a907fb605b37d8ee078e1568b095347f7b93167e12fcdd7f2dcaa",
+  "generation_fingerprint": "787759c08fc38e4896ba5e77295a47ff14de08226b559979d5e42c5345bf13b7",
   "observer": [
     0.0,
     0.0,
