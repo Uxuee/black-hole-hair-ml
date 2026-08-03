@@ -55,6 +55,8 @@ reports/*
 !reports/kiselev_wq_sensitivity.md
 !reports/kiselev_identifiability_feature_schema.md
 !reports/kiselev_identifiability_grid.md
+!reports/physical_shooting_ml_validation.md
+!reports/physical_shooting_ml_validation_protocol.md
 !reports/figures/
 reports/figures/*
 !reports/figures/sampling_density_study/

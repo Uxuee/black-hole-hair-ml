@@ -1,0 +1,27 @@
+seed: 2026
+seeds: [2026, 2027, 2028, 2029, 2030]
+mode: paper
+input_features_csv: artifacts/kiselev_identifiability_grid/ml_ready_features.csv
+jacobian_csv: artifacts/kiselev_identifiability_grid/jacobian_diagnostics.csv
+grid_metrics_json: artifacts/kiselev_identifiability_grid/grid_metrics.json
+high_resolution_features_csv: artifacts/kiselev_identifiability_grid/high_resolution_features.csv
+output_directory: artifacts/physical_shooting_ml_validation
+feature_sets:
+  primary: [ringdown, photon_geometry, all_shooting, ringdown_plus_photon_geometry, ringdown_plus_all_shooting]
+  secondary: [orbital, redshift, timing]
+models: [hgb, random_forest, mlp]
+random_test_fraction: 0.2
+calibration_fraction: 0.2
+conformal_alpha: 0.1
+group_layouts:
+  - {name: blocks_3x3, k_shift: 0, wq_shift: 0}
+  - {name: blocks_3x3_shifted, k_shift: 1, wq_shift: 1}
+directional_test_levels: 3
+learning_fractions: [0.25, 0.4, 0.6, 0.8, 1.0]
+noise_levels: [0.0, 0.001, 0.005, 0.01]
+noise_realizations: 5
+bootstrap_samples: 500
+model_parameters:
+  hgb: {max_iter: 180, learning_rate: 0.06, max_leaf_nodes: 15, l2_regularization: 0.1}
+  random_forest: {n_estimators: 120, max_depth: 8, min_samples_leaf: 2}
+  mlp: {hidden_layer_sizes: [32, 16], alpha: 0.01, max_iter: 600, early_stopping: true, n_iter_no_change: 30}
