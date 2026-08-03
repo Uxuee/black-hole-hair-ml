@@ -49,7 +49,7 @@ def feature_sets(frame):
     return groups
 
 
-def validate_inputs(frame, jacobian, sets):
+def validate_inputs(frame, jacobian, sets, high_resolution=None):
     if len(frame) != 121:
         raise ValueError(f"Expected exactly 121 science-grid rows, found {len(frame)}")
     if frame[list(TARGETS)].duplicated().any():
@@ -68,7 +68,21 @@ def validate_inputs(frame, jacobian, sets):
             raise ValueError(f"Feature/Jacobian alignment failure for {name}")
     if not np.allclose(frame.k.unique(), np.linspace(0, .0025, 11)):
         raise ValueError("Unexpected k units or grid")
-    return {"rows": len(frame), "features": len(required), "aligned": True}
+    k0 = frame[np.isclose(frame.k, 0)]
+    audit = {"rows": len(frame), "unique_parameter_points": int(len(frame[list(TARGETS)].drop_duplicates())),
+             "features": len(required), "aligned": True, "duplicate_parameter_points": 0,
+             "all_required_features_finite": True, "k_min": float(frame.k.min()), "k_max": float(frame.k.max()),
+             "wq_min": float(frame.wq.min()), "wq_max": float(frame.wq.max()),
+             "k_zero_points": int(len(k0)), "k_zero_exact_rank_loss": True,
+             "derivative_quality_values": sorted(jacobian.derivative_quality.dropna().astype(str).unique().tolist())}
+    if high_resolution is not None:
+        aligned_high = frame[list(TARGETS)].merge(high_resolution[list(TARGETS)], on=list(TARGETS), how="inner")
+        audit.update({"high_resolution_rows": int(len(high_resolution)),
+                      "high_resolution_unique_points": int(len(high_resolution[list(TARGETS)].drop_duplicates())),
+                      "high_resolution_aligned": bool(len(aligned_high) == 27)})
+        if not audit["high_resolution_aligned"]:
+            raise ValueError("Expected 27 exactly aligned high-resolution points")
+    return audit
 
 
 def point_ids(frame):
@@ -197,6 +211,7 @@ def fit_split(frame, jacobian, columns, feature_set, model_name, seed, train, ca
                 "condition_number": diag.condition_number, "cosine_similarity": diag.cosine_similarity,
                 "sensitivity_angle_deg": diag.sensitivity_angle_deg, "numerical_rank": diag.numerical_rank,
                 "derivative_quality": diag.derivative_quality, "training_distance": distances[local],
+                "training_region_distance": distances[local],
                 "exact_rank_loss": bool(np.isclose(p.k, 0)), "wq_identifiable": bool(not np.isclose(p.k, 0)),
                 "extrapolation": bool(extrapolation), "scored": bool(identifiable)})
     return pd.DataFrame(rows), models
@@ -233,21 +248,42 @@ def correlations(predictions, samples=500):
             for kind in ("spearman","pearson"):
                 est,lo,hi=bootstrap_correlation(x,y,kind,samples=samples)
                 rows.append(dict(zip(("target","feature_set","protocol"),keys), quantity=quantity,
-                                 correlation=kind,value=est,ci_low=lo,ci_high=hi,n=len(g)))
+                                 statistic="correlation",correlation=kind,value=est,ci_low=lo,ci_high=hi,n=len(g),
+                                 bin_index=np.nan,bin_left=np.nan,bin_right=np.nan,error_median=np.nan,error_q25=np.nan,error_q75=np.nan))
+            finite=np.isfinite(x)&np.isfinite(y)
+            if finite.sum() >= 5:
+                bins=pd.qcut(x[finite],q=min(5,len(np.unique(x[finite]))),duplicates="drop")
+                table=pd.DataFrame({"x":x[finite],"error":np.exp(y[finite])-1e-8,"bin":bins}).groupby("bin",observed=True)
+                for bi,(interval,part) in enumerate(table):
+                    rows.append(dict(zip(("target","feature_set","protocol"),keys),quantity=quantity,
+                                     statistic="binned_error",correlation="",value=np.nan,ci_low=np.nan,ci_high=np.nan,n=len(part),
+                                     bin_index=bi,bin_left=float(interval.left),bin_right=float(interval.right),
+                                     error_median=float(part.error.median()),error_q25=float(part.error.quantile(.25)),error_q75=float(part.error.quantile(.75))))
     return pd.DataFrame(rows)
+
+
+def _linear_error_model(g, conditioning, samples):
+    raw_condition = (np.log(np.maximum(g.condition_number,1)) if conditioning == "log_condition"
+                     else -np.log(np.maximum(g.sigma_min,1e-15)))
+    raw=np.c_[np.ones(len(g)),raw_condition,g.training_distance,g.extrapolation.astype(float)]
+    y=np.log(g.normalized_error+1e-8); means=raw[:,1:].mean(axis=0); scales=raw[:,1:].std(axis=0)
+    X=raw.copy(); X[:,1:]=(X[:,1:]-means)/np.where(scales>0,scales,1)
+    beta=np.linalg.lstsq(X,y,rcond=None)[0]; raw_beta=np.linalg.lstsq(raw,y,rcond=None)[0]
+    fitted=X@beta; r2=1-np.sum((y-fitted)**2)/np.sum((y-y.mean())**2)
+    rng=np.random.default_rng(2026); boots=[]; raw_boots=[]
+    for _ in range(samples):
+        ix=rng.integers(0,len(g),len(g)); boots.append(np.linalg.lstsq(X[ix],y.iloc[ix],rcond=None)[0]); raw_boots.append(np.linalg.lstsq(raw[ix],y.iloc[ix],rcond=None)[0])
+    boots=np.asarray(boots); raw_boots=np.asarray(raw_boots); names=("intercept",conditioning,"training_distance","extrapolation")
+    return {"conditioning_variable":conditioning,"n":len(g),"r2":float(r2),
+            "standardized_coefficients":{n:{"estimate":float(beta[i]),"ci_low":float(np.quantile(boots[:,i],.025)),"ci_high":float(np.quantile(boots[:,i],.975))} for i,n in enumerate(names)},
+            "raw_coefficients":{n:{"estimate":float(raw_beta[i]),"ci_low":float(np.quantile(raw_boots[:,i],.025)),"ci_high":float(np.quantile(raw_boots[:,i],.975))} for i,n in enumerate(names)}}
 
 
 def error_model(predictions, samples=500):
     g=predictions[predictions.scored & np.isfinite(predictions.condition_number)].copy()
-    X=np.c_[np.ones(len(g)), np.log(np.maximum(g.condition_number,1)), g.training_distance, g.extrapolation.astype(float)]
-    y=np.log(g.normalized_error+1e-8); scale=X[:,1:].std(axis=0); X[:,1:]=(X[:,1:]-X[:,1:].mean(axis=0))/np.where(scale>0,scale,1)
-    beta=np.linalg.lstsq(X,y,rcond=None)[0]; fitted=X@beta; r2=1-np.sum((y-fitted)**2)/np.sum((y-y.mean())**2)
-    rng=np.random.default_rng(2026); boots=[]
-    for _ in range(samples):
-        ix=rng.integers(0,len(g),len(g)); boots.append(np.linalg.lstsq(X[ix],y.iloc[ix],rcond=None)[0])
-    boots=np.asarray(boots); names=("intercept","log_condition","training_distance","extrapolation")
-    return {"formula":"log(normalized_error+1e-8) ~ standardized log(kappa) + standardized training_distance + extrapolation",
-            "n":len(g),"r2":r2,"coefficients":{n:{"estimate":float(beta[i]),"ci_low":float(np.quantile(boots[:,i],.025)),"ci_high":float(np.quantile(boots[:,i],.975))} for i,n in enumerate(names)}}
+    return {"purpose":"Descriptive association after controlling for training coverage; not causal.",
+            "models":{"log_condition":_linear_error_model(g,"log_condition",samples),
+                      "negative_log_sigma_min":_linear_error_model(g,"negative_log_sigma_min",samples)}}
 
 
 def summarize(metrics):
@@ -353,7 +389,7 @@ def highres_robustness(frame, high, sets, config):
     return pd.DataFrame(rows)
 
 
-def figures(pred,summary,corr,unc,reject,noise,learning,output):
+def figures(pred,summary,corr,unc,reject,noise,learning,robust,output):
     out=Path(output); out.mkdir(parents=True,exist_ok=True); plt.rcParams.update({"figure.dpi":140,"font.size":9})
     def save(name,draw,size=(10,6)):
         fig,ax=plt.subplots(figsize=size); draw(ax); fig.tight_layout(); fig.savefig(out/name); plt.close(fig)
@@ -380,10 +416,16 @@ def figures(pred,summary,corr,unc,reject,noise,learning,output):
     def boundary(ax):
         q=pred[(pred.target=="wq")&pred.exact_rank_loss]; ax.scatter(q.true_target,q.predicted_target,s=8,alpha=.3); ax.plot([q.true_target.min(),q.true_target.max()],[q.true_target.min(),q.true_target.max()],"k--"); ax.set(title="k=0: wq is exactly non-identifiable",xlabel="nominal wq",ylabel="model prediction")
     save("k_zero_boundary_analysis.png",boundary)
+    def highres(ax):
+        q=robust.copy(); labels=q.feature_set+" / "+q.target
+        ax.barh(labels,q.absolute_NMAE_change,color=np.where(q.target.eq("wq"),"#d1495b","#3b82f6"))
+        ax.set(xlabel="absolute NMAE change (81 to 161 phases)",title="High-resolution feature substitution")
+    save("high_resolution_robustness.png",highres,(10,6))
 
 
 def reports(config, final, output):
-    out=Path(output); report=Path("reports/physical_shooting_ml_validation.md"); protocol=Path("reports/physical_shooting_ml_validation_protocol.md")
+    out=Path(output); report=out/"logs/auto_summary.md"; protocol=out/"logs/auto_protocol.md"
+    report.parent.mkdir(parents=True,exist_ok=True)
     ranked=final["headline_grouped_nmae"]
     report.write_text("# Physical-shooting ML validation\n\n"+final["narrative"]+"\n\n## Headline grouped NMAE\n\n"+
                       "| Feature set | k | wq |\n|---|---:|---:|\n"+"\n".join(f"| {k} | {v.get('k',float('nan')):.4g} | {v.get('wq',float('nan')):.4g} |" for k,v in ranked.items())+
@@ -408,11 +450,14 @@ pytest
 """,encoding="utf-8")
 
 
-def run(config, mode="paper", protocols=None, models=None, selected_sets=None, seeds=None, figures_only=False):
+def run(config, mode="paper", protocols=None, models=None, selected_sets=None, seeds=None, targets=None, figures_only=False):
     started=time.perf_counter(); out=Path(config["output_directory"])
+    if mode == "smoke":
+        out=out/"smoke"
     for name in ("metrics","predictions","splits","uncertainty","noise","figures","models","logs"): (out/name).mkdir(parents=True,exist_ok=True)
-    frame=pd.read_csv(config["input_features_csv"]); jac=pd.read_csv(config["jacobian_csv"]); sets=feature_sets(frame)
-    audit=validate_inputs(frame,jac,sets); all_sets=list(config["feature_sets"]["primary"])+(list(config["feature_sets"]["secondary"]) if mode=="paper" else [])
+    frame=pd.read_csv(config["input_features_csv"]); jac=pd.read_csv(config["jacobian_csv"]); high=pd.read_csv(config["high_resolution_features_csv"]); sets=feature_sets(frame)
+    audit=validate_inputs(frame,jac,sets,high); (out/"input_audit.json").write_text(json.dumps(audit,indent=2),encoding="utf-8")
+    all_sets=list(config["feature_sets"]["primary"])+(list(config["feature_sets"]["secondary"]) if mode=="paper" else [])
     selected_sets=selected_sets or all_sets; models=models or (config["models"] if mode=="paper" else ["hgb"])
     if seeds is not None: config=dict(config,seeds=seeds)
     protocols=protocols or ["random_interpolation","grouped_physical_interpolation","directional_extrapolation"]
@@ -430,12 +475,18 @@ def run(config, mode="paper", protocols=None, models=None, selected_sets=None, s
                     chunk,fitted=fit_split(frame,jac,sets[fs],fs,model,seed,tr,ca,te,protocol,fold,config,direction,protocol=="directional_extrapolation")
                     _atomic_csv(chunk,path)
                     for target,m in fitted.items(): joblib.dump(m,out/"models"/f"{token}_{target}.joblib")
+                if "training_region_distance" not in chunk: chunk["training_region_distance"]=chunk.training_distance
                 chunks.append(chunk)
-    predictions=pd.concat(chunks,ignore_index=True); _atomic_csv(predictions,out/"all_predictions.csv")
+    predictions=pd.concat(chunks,ignore_index=True)
+    if targets:
+        predictions=predictions[predictions.target.isin(targets)].copy()
+    _atomic_csv(predictions,out/"all_predictions.csv")
     metrics=prediction_metrics(predictions); summary=summarize(metrics); corr=correlations(predictions,config["bootstrap_samples"])
     unc=uncertainty_metrics(predictions,config["conformal_alpha"]); reject=rejection_metrics(predictions)
-    learning,noise=learning_and_noise(frame,sets,config)
-    high=pd.read_csv(config["high_resolution_features_csv"]); robust=highres_robustness(frame,high,sets,config)
+    analysis_config=config
+    if mode == "smoke": analysis_config={**config,"learning_fractions":[1.0],"noise_levels":[0.0],"noise_realizations":1,"bootstrap_samples":30}
+    learning,noise=learning_and_noise(frame,sets,analysis_config)
+    robust=highres_robustness(frame,high,sets,config)
     _atomic_csv(metrics,out/"fold_metrics.csv"); _atomic_csv(summary,out/"summary_metrics.csv"); _atomic_csv(corr,out/"error_conditioning_correlations.csv")
     _atomic_csv(unc,out/"uncertainty_metrics.csv"); _atomic_csv(reject,out/"rejection_metrics.csv"); _atomic_csv(noise,out/"noise_metrics.csv"); _atomic_csv(learning,out/"learning_curve_metrics.csv"); _atomic_csv(robust,out/"high_resolution_robustness.csv")
     errmodel=error_model(predictions,config["bootstrap_samples"]); (out/"error_model_results.json").write_text(json.dumps(errmodel,indent=2),encoding="utf-8")
@@ -443,19 +494,23 @@ def run(config, mode="paper", protocols=None, models=None, selected_sets=None, s
     headline={i:{c:float(grouped.loc[i,c]) for c in grouped.columns} for i in grouped.index}
     criteria={"input_alignment":audit["aligned"],"no_preprocessing_leakage":True,"protocols_reproducible":True,"physical_groups_held_out":True,"directions_separate":True,"k_zero_exact_rank_loss":True,"fold_and_seed_metrics_saved":True,"multiple_model_families":len(models)>=2,"conditioning_uncertainty_reported":True,"training_distance_controlled":True,"ringdown_complementarity_compared":True,"test_free_calibration":True,"extrapolation_guarantee_not_claimed":True,"training_scaled_noise":True,"high_resolution_robustness":float(robust.max_prediction_change.max())<.01,"learning_curves_saved":True,"no_synthetic_duplication":True,"no_shooting_regeneration":True,"figures_from_tables":True}
     narrative="This run compares optimistic random interpolation, contiguous grouped interpolation, and four separate extrapolation directions. Results are descriptive for a 121-point regular physical grid. Physical conditioning and training coverage are evaluated jointly; counterexamples and model dispersion remain visible in the saved tables."
-    final={"audit":audit,"runtime_seconds":time.perf_counter()-started,"criteria":criteria,"headline_grouped_nmae":headline,"error_model":errmodel,"max_highres_prediction_change":float(robust.max_prediction_change.max()),"n_predictions":len(predictions),"n_failed_combinations":0,"n_seeds":len(config["seeds"]),"n_models":len(models),"n_feature_sets":len(selected_sets),"narrative":narrative}
+    final={"audit":audit,"runtime_seconds":time.perf_counter()-started,"criteria":criteria,"headline_grouped_nmae":headline,"error_model":errmodel,
+           "high_resolution_validation":{"max_prediction_change":float(robust.max_prediction_change.max()),
+               "max_absolute_NMAE_change":float(robust.absolute_NMAE_change.max()),"pass":bool(criteria["high_resolution_robustness"])},
+           "n_predictions":len(predictions),"n_failed_combinations":0,"n_seeds":len(config["seeds"]),"n_models":len(models),"n_feature_sets":len(selected_sets),
+           "readiness_for_final_manuscript":"conditional_not_final" if not criteria["high_resolution_robustness"] else "ready", "narrative":narrative}
     (out/"final_metrics.json").write_text(json.dumps(final,indent=2),encoding="utf-8")
     Path(out/"experiment_config.yaml").write_text(yaml.safe_dump({**config,"resolved_feature_sets":sets},sort_keys=False),encoding="utf-8")
-    figures(predictions,summary,corr,unc,reject,noise,learning,out/"figures"); reports(config,final,out)
+    figures(predictions,summary,corr,unc,reject,noise,learning,robust,out/"figures"); reports(config,final,out)
     return final
 
 
 def main(argv=None):
     parser=argparse.ArgumentParser(); parser.add_argument("--config",required=True); parser.add_argument("--mode",choices=("smoke","paper"),default="paper")
-    parser.add_argument("--protocol",action="append"); parser.add_argument("--model",action="append"); parser.add_argument("--feature-set",action="append"); parser.add_argument("--seed",action="append",type=int)
+    parser.add_argument("--protocol",action="append"); parser.add_argument("--model",action="append"); parser.add_argument("--feature-set",action="append"); parser.add_argument("--seed",action="append",type=int); parser.add_argument("--target",action="append",choices=TARGETS)
     args=parser.parse_args(argv); config=load_config(args.config)
     if args.mode=="smoke" and args.seed is None: args.seed=[config["seeds"][0]]
-    result=run(config,args.mode,args.protocol,args.model,args.feature_set,args.seed)
+    result=run(config,args.mode,args.protocol,args.model,args.feature_set,args.seed,args.target)
     print(json.dumps({k:v for k,v in result.items() if k not in ("error_model","headline_grouped_nmae","narrative")},indent=2))
     return 0
 

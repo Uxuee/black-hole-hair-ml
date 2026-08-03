@@ -104,20 +104,63 @@ Relative to ringdown alone, ringdown plus photon geometry improves median (sigma
 - [x] Two-dimensional shooting grid
 - [x] Physical Jacobian maps
 - [x] ML-ready shooting table
-- [ ] Final random/grouped/extrapolation ML validation incorporated into the workshop manuscript
-- [ ] Final calibrated-uncertainty and noise conclusions incorporated into the manuscript
-- [ ] Full manuscript rewrite
+- [x] Final random/grouped/extrapolation ML validation completed
+- [x] Calibrated-uncertainty and grouped-noise analyses completed
+- [x] Final ML results incorporated into the workshop manuscript
+- [ ] Resolve failed 81/161-phase ML robustness check
+- [ ] Full journal-manuscript rewrite
 - [ ] Literature comparison and journal selection
 
-The repository now also contains a subsequent ML-validation working report. Its conclusions, including a high-resolution feature-sensitivity concern, are deliberately not promoted into this workshop update until that follow-up is scientifically resolved.
+### Final physical-feature inverse-ML validation
+
+The completed run contains 59,700 held-out target predictions from five seeds,
+three model families, five primary feature sets, two contiguous-block layouts,
+and four directional extrapolation tests. Median random/grouped NMAE for
+ringdown plus photon geometry is 0.0378/0.0457 for (k) and 0.0730/0.0874
+for identifiable (w_q). Ringdown alone gives 0.0361/0.0485 for (k) but
+0.1688/0.3093 for (w_q). Photon geometry therefore supplies the missing
+(w_q) direction for both tree families, although the MLP and individual
+extrapolation directions provide honest counterexamples to universal improvement.
+
+Directional extrapolation is substantially harder: aggregate ringdown-plus-photon
+NMAE is 0.1305 for (k) and 0.2012 for (w_q), with all four directions
+reported separately. In the pooled coverage-controlled model, standardized
+(logkappa) has coefficient 0.197 with 95% bootstrap interval
+[0.185,0.210], compared with 0.330 [0.317,0.342] for training distance and
+0.276 [0.263,0.287] for extrapolation. The alternative
+(-logsigma_{\min}) coefficient is consistent with zero, so conditioning is
+informative but not reducible to one scalar sensitivity measure.
+
+Nominal 90% conformal coverage is 89.2%/96.5% for random (k/w_q),
+72.2%/85.1% for grouped regions, and 50.9%/66.0% for extrapolation. Interval
+width does not fully recognize distribution shift. At 1% grouped feature noise,
+ringdown plus photon geometry reaches 0.0699/0.0853 NMAE; learning curves are
+still improving at 78 training points, so 121 points are not demonstrably
+saturated.
+
+The 27 high-resolution points reveal the unresolved failure: shooting-based HGB
+predictions change by as much as 0.000614 in (k), approximately 0.100 in
+(w_q), and 0.093 in NMAE when 161-phase features replace 81-phase features.
+The Jacobian maps are converged, but final inverse predictions are not uniformly
+phase-resolution robust.
 
 ## 13. Remaining work before submission
 
-The final submission workflow must consolidate random interpolation, held-out physical regions, four directional extrapolation tests, empirical error versus conditioning, distance-to-training control, calibrated uncertainty, rejection behavior, controlled feature noise, learning curves, and manuscript figures. It also requires literature comparison, supervisor/collaborator review, a reproducible release, and an archival version. No synthetic duplication or large unvalidated grid should be used to manufacture performance.
+The remaining submission workflow must resolve the 81/161-phase prediction
+sensitivity, decide whether to build a uniformly phase-converged feature table or
+use a robustness-aware estimator, and rerun the fixed protocol. It also requires
+literature comparison, supervisor/collaborator review, a reproducible release, and
+an archival version. No synthetic duplication or large unvalidated grid should be
+used to manufacture performance.
 
 ## 14. Publication readiness
 
-The forward-physics validation and physical identifiability/complementarity result are paper-level. The project is ready for final inverse-model validation, but a complete paper should not be submitted until empirical ML behavior is shown to follow—or demonstrably fail to follow—the Jacobian prediction and phase-resolution sensitivity is resolved. This is a controlled theoretical scientific-ML benchmark, not an observational constraint.
+The forward-physics validation and physical identifiability/complementarity result
+are paper-level, and the final inverse-model validation now shows both the predicted
+tree-model complementarity and its limits. The manuscript is scientifically
+complete enough for internal review, but not for final submission until the failed
+phase-resolution robustness check is resolved. This remains a controlled theoretical
+scientific-ML benchmark, not an observational constraint.
 
 ## 15. Repository map
 

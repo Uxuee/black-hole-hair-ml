@@ -30,7 +30,8 @@ def test_ieee_manuscript_distinguishes_proxy_and_physical_features():
     assert r"\section{Validated Physical Geodesic Shooting}" in text
     assert r"\section{Physical Observable Complementarity Across Parameter Space}" in text
     assert "historical proxy benchmark" in text
-    assert "Final empirical generalization" in text
+    assert r"\section{Inverse Learning from Physical Shooting Features}" in text
+    assert "high-resolution substitution" in text
 
 
 def test_all_manuscript_figure_references_exist():
@@ -40,3 +41,13 @@ def test_all_manuscript_figure_references_exist():
     assert figure_names
     missing = [name for name in figure_names if not (manuscript.parent / "figures" / name).exists()]
     assert missing == []
+
+
+def test_final_ml_claims_have_provenance_and_failed_robustness_is_visible():
+    data=yaml.safe_load((ROOT/"reports/project_progress_sources.yaml").read_text(encoding="utf-8"))
+    ml=data["physical_ml_validation"]
+    assert ml["predictions"]["rows"] == 59700
+    assert ml["high_resolution"]["pass"] is False
+    report=(ROOT/"reports/project_progress_physical_identifiability.md").read_text(encoding="utf-8")
+    assert "59,700 held-out target predictions" in report
+    assert "not uniformly" in report

@@ -48,3 +48,38 @@ grid_identifiability:
     ringdown_plus_photon_geometry: {median_sigma_min: 1.232579363188941, median_condition: 4.073123549900778}
     all_shooting: {median_sigma_min: 0.9723200657645921, median_condition: 6.020715190221268}
     gains: {ringdown_plus_geometry_sigma_min: 4.542865176635441, ringdown_plus_geometry_condition: 2.281889432747297}
+physical_ml_validation:
+  input_audit: {source: artifacts/physical_shooting_ml_validation/input_audit.json, keys: [rows, unique_parameter_points, features, k_zero_points, high_resolution_rows]}
+  predictions: {source: artifacts/physical_shooting_ml_validation/all_predictions.csv, rows: 59700}
+  summary: {source: artifacts/physical_shooting_ml_validation/summary_metrics.csv, selector: "metric=NMAE; median across fold/seed/model summaries"}
+  random_nmae:
+    ringdown: {k: 0.03609, wq: 0.16875}
+    ringdown_plus_photon_geometry: {k: 0.03780, wq: 0.07303}
+  grouped_nmae:
+    ringdown: {k: 0.04847, wq: 0.30928}
+    ringdown_plus_photon_geometry: {k: 0.04573, wq: 0.08745}
+  directional_nmae:
+    ringdown_plus_photon_geometry: {k: 0.13054, wq: 0.20120}
+    source: artifacts/physical_shooting_ml_validation/summary_metrics.csv
+  error_models:
+    source: artifacts/physical_shooting_ml_validation/error_model_results.json
+    log_condition_standardized: {estimate: 0.19694298508813965, ci: [0.18511388203115126, 0.20980972963641006], r2: 0.14408787339811968}
+    training_distance_standardized: {estimate: 0.32998883300259974, ci: [0.31742694710109226, 0.34211251877342236]}
+    extrapolation_standardized: {estimate: 0.2763889181081178, ci: [0.263486771197524, 0.28663584860559704]}
+    negative_log_sigma_min_standardized: {estimate: -0.012297824387190792, ci: [-0.02570807060930231, 0.0013254583195095194], r2: 0.12629109650253434}
+  uncertainty:
+    source: artifacts/physical_shooting_ml_validation/uncertainty_metrics.csv
+    random_coverage: {k: 0.89167, wq: 0.96460}
+    grouped_coverage: {k: 0.72231, wq: 0.85091}
+    extrapolation_coverage: {k: 0.50909, wq: 0.66000}
+  noise:
+    source: artifacts/physical_shooting_ml_validation/noise_metrics.csv
+    selector: "noise=0.01; feature_set=ringdown_plus_photon_geometry; median NMAE"
+    nmae: {k: 0.06992, wq: 0.08533}
+  learning_curve: {source: artifacts/physical_shooting_ml_validation/learning_curve_metrics.csv, conclusion: "NMAE continues to decrease between 62 and 78 training points"}
+  high_resolution:
+    source: artifacts/physical_shooting_ml_validation/high_resolution_robustness.csv
+    max_prediction_change_k: 0.000614
+    max_prediction_change_wq: 0.0999660152036228
+    max_absolute_nmae_change: 0.09293572811346172
+    pass: false
