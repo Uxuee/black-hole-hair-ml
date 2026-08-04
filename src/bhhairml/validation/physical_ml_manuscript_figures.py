@@ -149,6 +149,34 @@ def figure_observable_summary(jac: pd.DataFrame, path: Path) -> None:
     _save(fig,path)
 
 
+def figure_observable_summary_landscape(jac: pd.DataFrame, path: Path) -> None:
+    """Render the same Figure 7 statistics for a one-column journal page."""
+    s = _jacobian_stats(jac, OBSERVABLE_SETS)
+    y = np.arange(len(OBSERVABLE_SETS))
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.15), sharey=True)
+    panels = (
+        ("sigma_min", r"Minimum singular value $\sigma_{\min}$", "higher is better"),
+        ("condition_number", r"Condition number $\kappa$", "lower is better"),
+    )
+    for ax, (metric, label, better) in zip(axes, panels):
+        q = s[s.metric == metric].set_index("observable_set").reindex(OBSERVABLE_SETS)
+        values = q["median"].to_numpy()
+        ax.errorbar(
+            values, y,
+            xerr=np.vstack([values - q.q25.to_numpy(), q.q75.to_numpy() - values]),
+            fmt="o", capsize=3, color="#4477AA",
+        )
+        ax.set_xscale("log")
+        ax.set_title(label, fontsize=9)
+        ax.set_xlabel(f"Median (IQR; {better})", fontsize=8)
+        ax.grid(axis="x", alpha=.25)
+        ax.tick_params(labelsize=7.5)
+    axes[0].set_yticks(y, [DISPLAY[x] for x in OBSERVABLE_SETS])
+    axes[0].invert_yaxis()
+    fig.tight_layout(w_pad=1.2)
+    _save(fig, path)
+
+
 def figure_ml_jacobian(jac: pd.DataFrame, folds: pd.DataFrame, path: Path) -> None:
     js=_jacobian_stats(jac,["ringdown_only"]+PRIMARY[1:]); alias={"ringdown":"ringdown_only"}
     fig,axes=plt.subplots(1,4,figsize=(18,5.2),sharey=True); y=np.arange(len(PRIMARY))
