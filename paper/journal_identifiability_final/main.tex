@@ -12,7 +12,7 @@
 \newcommand{\kappaJ}{\kappa(J)}
 \title{Learning When Black-Hole Hair Is Observable:\\Physical Identifiability, Generalization, and Observable Complementarity}
 \author{Ariadna Uxue Palomino Ylla\\Nagoya University, Nagoya, Japan\\\texttt{ariadnaepy@gmail.com}}
-\date{August 2026}
+\date{September 2026}
 
 \begin{document}
 \maketitle
@@ -59,7 +59,7 @@ Jacobian geometry and inverse-learning behavior \cite{kiselev2003quintessence}.
 
 The study complements rapid gravitational-wave inference based on neural
 posterior estimation and normalizing flows
-\cite{dax2021realtime,green2020autoregressive,gabbard2022cvae,cranmer2020frontier,papamakarios2021normalizing}.
+\cite{dax2021realtime,green2020autoregressive,gabbard2022cvae,cranmer2020frontier,papamakarios2021normalizing,pacilio2024ringdown}.
 Those methods address posterior computation; the present question is whether
 the selected forward observables distinguish the parameters in the first
 place. This distinction parallels structural and practical identifiability
@@ -71,6 +71,15 @@ timelike and null Kiselev geodesic shooting with explicit failure accounting;
 (iii) quantifies physical Jacobian conditioning and observable
 complementarity; and (iv) audits uncertainty, noise, learning curves, and
 81--161--321 phase-resolution robustness under frozen estimators.
+
+The accepted JCAP study in Ref.~\cite{palominoylla2026ringdown} supplies the
+hairy-black-hole and ringdown framework. The present work adds timelike-emitter
+evolution, three-dimensional null-geodesic shooting, photon-geometry
+observables, Jacobian identifiability analysis, leakage-aware random, grouped,
+and directional evaluation, non-learned inverse baselines, numerical-resolution
+audits, and frozen-estimator robustness tests. This boundary distinguishes the
+new inverse-learning and physical-shooting study from its theoretical starting
+point.
 
 The central narrative rests on three distinctions: sensitivity is not
 identifiability, interpolation is not generalization, and forward convergence
@@ -148,6 +157,17 @@ substituting synthetic geodesic proxies. Photon momenta are projected onto the
 static observer tetrad before sky angles are formed. Redshift uses
 $1+z=\omega_{\rm emit}/\omega_{\rm obs}$, and direct arrival time is compared
 with $\int(1+z)d\tau_{\rm emit}$ after removing one common additive constant.
+
+An independently implemented reference solver, which imports no production
+\texttt{bhhairml} physics code, verified the metric and derivative (including
+explicit $M$ dependence), timelike Hamiltonian and turning-point constants,
+Cartesian null Hamiltonian and photon initialization, static-observer tetrad,
+redshift, impact parameter, signed sky coordinates, propagation and arrival
+timing, physical feature extraction, and selected Jacobians. The maximum
+trajectory/observable, full feature-vector, and selected-Jacobian absolute
+differences were $7.633557254893203\times10^{-9}$,
+$7.774758614687016\times10^{-11}$, and
+$2.617905892066119\times10^{-13}$, respectively.
 
 In the Schwarzschild benchmark, all 161 phases succeed for both tested nominal
 $\wq$ values, which agree because $k=0$. The independent radial benchmark
@@ -282,8 +302,8 @@ layouts, and four directional extrapolation tests. All nominal $k=0$ records
 are retained and flagged, but ordinary $\wq$ error excludes them because $\wq$
 is exactly non-identifiable there.
 
-Normalized mean absolute error divides MAE by the full target span. Split-
-conformal intervals target 90\% coverage and are interpreted under their
+Normalized mean absolute error divides MAE by the full target span.
+Split-conformal intervals target 90\% coverage and are interpreted under their
 exchangeability assumptions \cite{vovk2005conformal,tibshirani2019covariate,angelopoulos2021guide}.
 Feature-noise scales and every preprocessing transform are learned on training
 folds. The 81-to-161 and targeted 161-to-321 comparisons apply archived frozen
@@ -326,8 +346,8 @@ property of the physical forward map rather than merely an effect learned by a
 particular estimator; nearest-neighbor inversion is not asserted to be
 optimal.
 
-For ringdown plus photon geometry, the local Jacobian median $k$/identifiable-
-$\wq$ NMAE is 0.0147/0.0259, 0.0184/0.0454, and 0.0661/0.1172 for random,
+For ringdown plus photon geometry, the local Jacobian median
+$k$/identifiable-$\wq$ NMAE is 0.0147/0.0259, 0.0184/0.0454, and 0.0661/0.1172 for random,
 grouped, and directional protocols. However, 1315 of 9950 raw predictions lie
 outside the registered physical domain and were not clipped. Thus strong local
 inversion performance coexists with poor global robustness; favorable median
@@ -341,7 +361,9 @@ model, standardized training distance has estimate 0.330, extrapolation status
 with grouped tree-based $\wq$ performance, but it does not perfectly rank every
 model, target, or protocol. The MLP supplies a counterexample: it can have
 reasonable central metrics while producing catastrophic directional tails.
-The aligned physical and model diagnostics appear in Fig.~\ref{fig:mljac}.
+The traditional-versus-learned comparison appears in
+Fig.~\ref{fig:mljac}; the conditioning associations are retained separately in
+Appendix~\ref{app:traditional}.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.95\textwidth]{traditional_vs_ml_inverse.pdf}
@@ -374,7 +396,7 @@ the median normalized feature change is $7.908\times10^{-4}$ and the maximum is
 0.08069. Across frozen scored predictions, the median normalized shift is
 $9.482\times10^{-4}$ and the 95th percentile is 0.02606. The median aggregate
 NMAE change is $6.880\times10^{-4}$, but the maximum is 16.8497 because of
-un-clipped MLP directional extrapolation outliers.
+unclipped MLP directional extrapolation outliers.
 
 The targeted 321-phase audit selects 35 points deterministically before reading
 their 321-phase outcomes. All complete. Median and 95th-percentile normalized
@@ -405,7 +427,7 @@ Outcome B: the forward map converges, but estimator robustness does not.
 Typical predictions are stable, but the tails are not. The earlier MLP maxima
 are not representative of every estimator, while the targeted tree failures
 show that the remaining issue also cannot be attributed solely to the MLP.
-Journal readiness remains conditional.
+The inverse-estimator robustness conclusions therefore remain conditional.
 
 Figure~\ref{fig:estimator-robustness} separates the estimator mechanisms. Tree
 medians remain exactly unchanged because most perturbations do not cross a
@@ -474,6 +496,13 @@ are necessary before confident inverse claims: the forward features can
 converge while fitted estimators remain fragile. These conclusions motivate
 robust inverse methods and broader physical modeling before observational use.
 
+\section*{Data Availability}
+The analysis code and tracked machine-readable derived results, registered
+split assignments, and reproducibility audits are available in the project
+repository~\cite{palomino2026software}. This work uses simulated theoretical data and no observational
+data. Large intermediate numerical products that are not tracked in the
+repository are available from the author upon reasonable request.
+
 \FloatBarrier
 \appendix
 \section{Historical Synthetic and Proxy Benchmark}
@@ -500,11 +529,48 @@ replace, the validated physical shooting analysis.}
 \end{figure}
 
 \section{Full Split Definitions}
-Random splits partition parameter points before mode-level realization. Grouped
-physical interpolation holds out blocks under both registered $3\times3$
-layouts. Directional extrapolation separately holds high $k$, low $k$, high
-$\wq$, and low $\wq$ sides. Calibration points are disjoint from training and
-test points, and the archived assignments are reused exactly.
+The archived assignment table contains 115 registered split specifications
+over five seeds. For each seed it contains one random interpolation split, 18
+grouped splits (nine held-out blocks for each of two $3\times3$ layouts), and
+four directional splits. Random splitting holds out 20\% of the 121 physical
+systems for test and assigns 20\% of the remainder to calibration. The grouped
+layouts use index shifts $(0,0)$ and $(1,1)$ before forming the nine contiguous
+blocks; each block is held out once and 20\% of the remaining systems calibrate
+the fit. Directional tests separately hold out the highest three $k$ levels,
+lowest three $k$ levels, lowest three $\wq$ levels, and highest three $\wq$
+levels, with 20\% of the complementary pool used for calibration. Training,
+calibration, and test systems are disjoint. All $k=0$ systems remain registered;
+they contribute to $k$ scoring but not ordinary $\wq$ scoring because $\wq$ is
+unidentifiable there. Every scaler, noise scale, feature transform, and model
+is fitted on training data only. No new split was generated for this manuscript.
+
+\section{Feature Definitions}
+Table~\ref{tab:features} lists the registered feature families. Except for the
+two orbital invariants and four ringdown scalars, each phase-resolved quantity
+is represented by its mean, amplitude, reference value where defined, and
+sine/cosine coefficients through the third harmonic.
+
+\begin{center}
+\begin{minipage}{.96\textwidth}
+\captionof{table}{Registered physical feature families and exact dimensions.}
+\label{tab:features}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{.23\linewidth}p{.43\linewidth}p{.18\linewidth}r}
+Family & Physical quantities & Source & Dim. \\
+\hline
+Ringdown & $\Delta r$, photon-sphere radius, $\Omega$, Lyapunov exponent & static metric/eikonal model & 4 \\
+Orbital & radial azimuthal period, apsidal advance; summaries of $r$ and $p_r$ & timelike emitter & 20 \\
+Photon geometry & summaries of impact parameter and signed sky coordinates & direct null rays & 27 \\
+Redshift & summaries of photon redshift & emitter/ray/observer & 9 \\
+Timing & summaries of excess delay and relative arrival time & direct null rays & 17 \\
+All shooting & orbital, photon geometry, redshift, and timing & physical shooting & 73 \\
+Ringdown + photon geometry & union of the corresponding families & combined & 31 \\
+Ringdown + all shooting & union of the corresponding families & combined & 77 \\
+\end{tabular}
+\end{minipage}
+\end{center}
 
 \section{Additional Model-Level Results}
 HGB and RF reproduce the central grouped photon-geometry improvement for
@@ -548,14 +614,16 @@ span zero, and the significant nearest-model associations are negative; these
 mixed results reinforce that local conditioning is not a complete estimator-
 error model.
 
-\begin{figure}[tbp]
-\centering\includegraphics[width=.82\textwidth]{conditioning_vs_wq_recovery.pdf}
-\caption{Spearman association between the change in log minimum singular value
+\begin{center}
+\begin{minipage}{.76\textwidth}
+\centering\includegraphics[width=.92\linewidth]{conditioning_vs_wq_recovery.pdf}
+\captionof{figure}{Spearman association between the change in log minimum singular value
 and the reduction in absolute identifiable-$\wq$ error when photon geometry is
 added to ringdown. Points show method/protocol estimates and bars are 95\%
 bootstrap intervals. Associations are descriptive and do not imply causation.}
 \label{fig:conditioning-recovery}
-\end{figure}
+\end{minipage}
+\end{center}
 
 \section{Four Directional Extrapolation Tests}
 Directions are stored independently in the prediction tables before any median
@@ -613,6 +681,24 @@ geometrically magnified.}
 All 121 points complete in 4473.2 s with zero failed points. The audit preserves
 the exact $k=0$ boundary and uses no mixed-resolution row, interpolation, or
 proxy substitution.
+
+\section{Reproducibility Summary}
+The physical grid contains 121 points. The uniform 161-phase audit completed
+all points, and the targeted 321-phase audit completed all 35 preselected
+points. Exact $k=0$ rank loss is preserved. Registered split assignments are
+reused, preprocessing is fitted on training data only, and the traditional
+inverse numerical audit passed. The independent physics audit passed with the
+launch-angle warning documented below.
+
+\section{Independent Physical-Shooting Audit}
+The independent reference implementation imported no production
+\texttt{bhhairml} physics code and compared against archived production
+outputs rather than rerunning the full 321-phase campaign. Invariant launch
+directions, rays, observer-plane hits, physical observables, extracted features,
+and selected Jacobians agree. The verdict is \texttt{PASS\_WITH\_WARNING}: raw
+launch angles need not be unique because equivalent angular branches encode
+the same unit direction and physical ray. Raw angle equality is therefore not
+a required invariant, and the warning is not a physics discrepancy.
 
 \section{MLP Extrapolation-Failure Audit}
 The machine-readable table contains standardized input magnitude, hidden
