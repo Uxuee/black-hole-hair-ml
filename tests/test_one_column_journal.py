@@ -29,10 +29,10 @@ def test_document_is_journal_neutral_one_column() -> None:
     assert tex.count(r"\FloatBarrier") == 2
 
 
-def test_all_fifteen_figures_exist_and_references_resolve() -> None:
+def test_all_sixteen_figures_exist_and_references_resolve() -> None:
     tex = _text()
     graphics = re.findall(r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}", tex)
-    assert len(graphics) == 15
+    assert len(graphics) == 16
     assert len(graphics) == len(set(graphics))
     for graphic in graphics:
         assert (FINAL / "figures" / graphic).is_file(), graphic
@@ -41,15 +41,15 @@ def test_all_fifteen_figures_exist_and_references_resolve() -> None:
     assert len(labels) == len(set(labels))
     assert set(refs) <= set(labels)
     figure_labels = [label for label in labels if label.startswith("fig:")]
-    assert len(figure_labels) == 15
+    assert len(figure_labels) == 16
 
 
 def test_figure_numbering_and_main_appendix_counts_are_stable() -> None:
     aux = (FINAL / "main.aux").read_text(encoding="utf-8", errors="replace")
     entries = re.findall(r"\\newlabel\{(fig:[^}]+)\}\{\{(\d+)\}\{(\d+)\}\}", aux)
-    assert [int(number) for _, number, _ in entries] == list(range(1, 16))
+    assert [int(number) for _, number, _ in entries] == list(range(1, 17))
     assert len(entries[:12]) == 12
-    assert [int(number) for _, number, _ in entries[12:]] == [13, 14, 15]
+    assert [int(number) for _, number, _ in entries[12:]] == [13, 14, 15, 16]
     assert max(int(page) for _, _, page in entries[:12]) <= 10
     assert min(int(page) for _, _, page in entries[12:]) >= 11
 
@@ -89,7 +89,11 @@ def _scientific_number_tokens(path: Path) -> Counter[str]:
 
 
 def test_scientific_numerical_claims_are_unchanged() -> None:
-    assert _scientific_number_tokens(TEX) == _scientific_number_tokens(ARCHIVED / "main.tex")
+    current = _scientific_number_tokens(TEX)
+    archived = _scientific_number_tokens(ARCHIVED / "main.tex")
+    # The baseline integration adds audited values but must not remove or alter
+    # any pre-existing numerical claim from the archived one-column manuscript.
+    assert all(current[token] >= count for token, count in archived.items())
 
 
 def test_one_column_manuscript_compiles_cleanly() -> None:
@@ -103,5 +107,5 @@ def test_one_column_manuscript_compiles_cleanly() -> None:
     log = (FINAL / "main.log").read_text(encoding="utf-8", errors="replace")
     assert "undefined references" not in log.lower()
     assert "Overfull" not in log
-    assert "15 pages" in log
+    assert "17 pages" in log
     assert (FINAL / "main.pdf").stat().st_size > 500_000

@@ -30,7 +30,9 @@ Jacobian condition number by $2.28\times$. In grouped physical interpolation,
 the corresponding identifiable-$\wq$ normalized mean absolute error decreases
 from 0.309 for ringdown to 0.087 for the combined features. Random splitting is
 more optimistic, while four directional extrapolation tests are substantially
-harder and split-conformal coverage falls under distribution shift. A uniform
+harder and split-conformal coverage falls under distribution shift. Photon
+geometry also improves recovery under a non-learned nearest-model inverse,
+showing that the gain is not architecture-specific. A uniform
 161-phase audit gives a typical normalized prediction shift of
 $9.48\times10^{-4}$ but exposes catastrophic extrapolation tails. A subsequent
 targeted 321-phase audit resolves the remaining forward-feature comparisons,
@@ -269,6 +271,12 @@ Here photon geometry and the other integrated quantities are physical shooting
 observables, distinct from the historical synthetic geodesic proxies.
 Models are histogram gradient boosting (HGB), random forest (RF), and a
 target-scaled multilayer perceptron (MLP) \cite{breiman2001random,friedman2001greedy,pedregosa2011scikit}.
+These heterogeneous standard estimators are retained intentionally rather than
+optimizing one high-capacity architecture: tree models expose piecewise
+split-crossing behavior, while the MLP supplies a smoother perturbation
+response and a distinct extrapolation failure mode. Their purpose is to reveal
+estimator-specific behavior, not to claim that standard models are universally
+preferable.
 The protocols are random interpolation, two blocked $3\times3$ grouped physical
 layouts, and four directional extrapolation tests. All nominal $k=0$ records
 are retained and flagged, but ordinary $\wq$ error excludes them because $\wq$
@@ -298,6 +306,35 @@ separate in the machine-readable source before aggregation.}
 \label{fig:protocols}
 \end{figure}
 
+\subsection{Traditional inverse baselines}
+To separate physical complementarity from architecture-specific learning, we
+evaluate two non-learned inversions under exactly the same registered physical
+holdouts. The nearest physical model fits a standardization transform on the
+training observables only, computes every Euclidean distance to the training
+catalog explicitly, and returns the $(k,\wq)$ pair of the nearest training
+system. The local Jacobian inverse selects its reference from the training
+catalog, constructs a training-only local linear forward map, and applies the
+Moore--Penrose pseudoinverse. Calibration and test systems participate in
+neither construction.
+
+For the nearest baseline, identifiable-$\wq$ NMAE decreases from 0.123810 to
+0.086580 under random interpolation, from 0.220833 to 0.148148 under grouped
+interpolation, and from 0.254161 to 0.195026 under directional extrapolation
+when photon geometry is added to ringdown. These are reductions of 30.1\%,
+32.9\%, and 23.3\%, respectively. Observable complementarity is therefore a
+property of the physical forward map rather than merely an effect learned by a
+particular estimator; nearest-neighbor inversion is not asserted to be
+optimal.
+
+For ringdown plus photon geometry, the local Jacobian median $k$/identifiable-
+$\wq$ NMAE is 0.0147/0.0259, 0.0184/0.0454, and 0.0661/0.1172 for random,
+grouped, and directional protocols. However, 1315 of 9950 raw predictions lie
+outside the registered physical domain and were not clipped. Thus strong local
+inversion performance coexists with poor global robustness; favorable median
+local-linear performance does not establish a reliable global inverse. The
+full method comparison is shown in Fig.~\ref{fig:mljac}, with detailed values
+and conditioning associations retained in Appendix~\ref{app:traditional}.
+
 Conditioning and coverage explain different aspects of error. In the error
 model, standardized training distance has estimate 0.330, extrapolation status
 0.276, and log condition number 0.197. Physical conditioning generally agrees
@@ -307,10 +344,13 @@ reasonable central metrics while producing catastrophic directional tails.
 The aligned physical and model diagnostics appear in Fig.~\ref{fig:mljac}.
 
 \begin{figure}[tbp]
-\centering\includegraphics[width=.95\textwidth]{physical_ml_vs_jacobian_complementarity.png}
-\caption{Aligned physical and empirical diagnostics: median minimum singular
-value, median condition number, grouped identifiable-$\wq$ NMAE, and grouped
-$k$ NMAE. Exact statistics and the feature order are shared across panels.}
+\centering\includegraphics[width=.95\textwidth]{traditional_vs_ml_inverse.pdf}
+\caption{Traditional and learned inverse methods using ringdown plus photon
+geometry. Bars show median NMAE for $k$ and identifiable $\wq$ under random,
+grouped, and directional protocols. The nearest and Jacobian baselines are
+deterministic conditional on each registered split, whereas archived ML
+summaries aggregate the existing folds and seeds. The Jacobian bars must be
+read with the unclipped out-of-domain diagnostic reported in the text.}
 \label{fig:mljac}
 \end{figure}
 
@@ -383,6 +423,16 @@ audit. No predictions are clipped.}
 \end{figure}
 
 \section{Discussion}
+To distinguish improved physical observability from architecture-specific
+learning effects, we also evaluate non-learned nearest-model and local-linear
+inverse baselines under the same physical holdout protocols. The nearest-model
+improvement confirms an estimator-independent geometric contribution. Changes
+in local conditioning, however, do not consistently predict pointwise recovery
+across all models and protocols: Spearman associations have mixed signs and
+broad bootstrap intervals. Jacobian conditioning diagnoses local physical
+distinguishability, but it is not a complete predictor of finite-data error or
+behavior under distribution shift, and no causal relationship is inferred.
+
 Jacobian conditioning answers whether nearby parameter directions are separated
 by the chosen observables. Training distance answers whether a fitted estimator
 has support where it is evaluated. Neither statistic subsumes the other.
@@ -415,7 +465,10 @@ therefore conditional, and no result is an observational constraint.
 \section{Conclusion}
 Physical complementarity is supported: ringdown constrains $k$, while photon
 geometry supplies an independent direction needed for much of the $\wq$
-recovery. Random interpolation overstates recoverability relative to grouped
+recovery. Observable complementarity persists under a non-learned inverse
+baseline, while the local Jacobian inverse demonstrates that strong local
+recoverability can coexist with globally unstable predictions in this Kiselev
+benchmark. Random interpolation overstates recoverability relative to grouped
 and directional validation. Finally, numerical and distribution-shift audits
 are necessary before confident inverse claims: the forward features can
 converge while fitted estimators remain fragile. These conclusions motivate
@@ -457,6 +510,52 @@ test points, and the archived assignments are reused exactly.
 HGB and RF reproduce the central grouped photon-geometry improvement for
 identifiable $\wq$. The MLP is retained as a stress test rather than omitted:
 its catastrophic errors are un-clipped and included in aggregate summaries.
+
+\section{Traditional Inverse Baselines}
+\label{app:traditional}
+Table~\ref{tab:traditional} gives the complete ringdown-plus-photon-geometry
+comparison. Each entry is median $k$/identifiable-$\wq$ NMAE. The nearest and
+local-linear methods are deterministic for a fixed registered split; their
+rows are summarized over the same split assignments, while archived learned
+model rows retain the existing fold/seed aggregation.
+
+\begin{center}
+\begin{minipage}{.82\textwidth}
+\captionof{table}{Traditional and learned inversion with ringdown plus photon
+geometry. NMAE is MAE divided by the full target span; $k=0$ remains in $k$
+scoring but is excluded from identifiable-$\wq$ scoring.}
+\label{tab:traditional}
+\centering
+\small
+\begin{tabular}{lccc}
+Method & Random & Grouped & Directional \\
+\hline
+Nearest physical model & 0.0667/0.0866 & 0.1063/0.1481 & 0.2000/0.1950 \\
+Local Jacobian inverse & 0.0147/0.0259 & 0.0184/0.0454 & 0.0661/0.1172 \\
+HGB & 0.0560/0.0740 & 0.0530/0.0865 & 0.1803/0.2146 \\
+RF & 0.0378/0.0844 & 0.0457/0.1113 & 0.1418/0.2033 \\
+MLP & 0.0206/0.0383 & 0.0344/0.0738 & 0.0966/0.1896 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+The primary Jacobian predictions are raw and unclipped: 1315 of 9950 fall
+outside $0\leq k\leq0.0025$ or $-0.7125\leq\wq\leq-0.45$. Reference
+condition number, reference $\smin$, and local observable-space distance are
+stored for every prediction. Figure~\ref{fig:conditioning-recovery} reports the
+supported pointwise/fold-level conditioning analysis. Most bootstrap intervals
+span zero, and the significant nearest-model associations are negative; these
+mixed results reinforce that local conditioning is not a complete estimator-
+error model.
+
+\begin{figure}[tbp]
+\centering\includegraphics[width=.82\textwidth]{conditioning_vs_wq_recovery.pdf}
+\caption{Spearman association between the change in log minimum singular value
+and the reduction in absolute identifiable-$\wq$ error when photon geometry is
+added to ringdown. Points show method/protocol estimates and bars are 95\%
+bootstrap intervals. Associations are descriptive and do not imply causation.}
+\label{fig:conditioning-recovery}
+\end{figure}
 
 \section{Four Directional Extrapolation Tests}
 Directions are stored independently in the prediction tables before any median
