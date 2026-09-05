@@ -18,4 +18,4 @@ The complete compiled manuscript was rendered page by page after the editorial c
 | Local drive paths or visible TODOs | none observed |
 | Forbidden “journal readiness” wording | absent from visible manuscript |
 
-The final PDF is 19 pages. The two-page increase from the prior 17-page version is attributable to the requested feature/split reproducibility material and independent-audit documentation, not enlarged figures.
+The post-ambiguity-audit PDF is 20 pages. The new appendix figure and two compact tables remain before the references, with no mostly blank page. The finite-domain main-text paragraph flows between physical complementarity and inverse-learning protocols; its appendix figure and captions are readable and attached. Cross-references resolve, appendix numbering is continuous, and the nearest-neighbor ECDF remains a repository artifact rather than a redundant manuscript figure.

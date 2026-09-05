@@ -15,3 +15,19 @@ Every headline claim below was checked against a machine-readable artifact, not 
 | 1315/9950 out-of-domain Jacobian predictions | `artifacts/traditional_baselines/jacobian_local_inverse_predictions.csv`; `run_manifest.json` | raw, unclipped predictions outside registered k-wq domain | PASS |
 
 All audited headline claims pass. The conditional inverse-robustness conclusion is retained because the targeted tree-tail criteria fail; no scientific conclusion was strengthened during this editorial cleanup.
+
+## Finite-domain ambiguity integration
+
+| Claim | Machine-readable source | Check |
+|---|---|---|
+| 121 accepted points; 7,260 total pairs; 5,995 finite-k pairs | `artifacts/global_ambiguity_audit/global_ambiguity_summary.json` | PASS |
+| No nearest observable neighbor beyond d_theta=0.25 | summary JSON, both feature-set nearest-neighbor maxima | PASS |
+| No d_theta>=0.25 pair below fifth-percentile local spacing | `distant_pair_summary.csv`, `count_below_local_p05=0` | PASS |
+| d_theta>=0.5 below-local-median pairs decrease 13 to 6 | `distant_pair_summary.csv` | PASS |
+| Closest distant-pair distance increases 0.02517 to 0.03155 | `distant_pair_summary.csv` | PASS |
+| Maximum nearest-neighbor d_theta decreases 0.23216 to 0.21886 | `global_ambiguity_summary.json` | PASS |
+| Maximum measured combined 161-to-321 RMS change 0.002462; ratio approximately 12.8 | summary JSON `numerical_resolution` | PASS |
+| k=0 combined maximum distance 2.63e-12 | `k0_positive_control.csv` | PASS |
+| Local-neighbor top-1/top-3/top-5: 40.9/71.8/75.5% versus 20.0/48.2/67.3% | summary JSON `local_neighbor_preservation` | PASS |
+
+The integration reports the unfavorable local-ordering result alongside the improved distant-pair result and makes no claim of continuous global injectivity.

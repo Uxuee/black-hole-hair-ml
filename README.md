@@ -33,6 +33,12 @@ identifiability analysis.
 
 The main result is that black-hole-hair inference is an identifiability problem, not merely an ML prediction problem. Dense grouped validation shows that Kiselev parameters are recoverable by interpolation within the assumed analytic model family, but analytic sensitivity reveals a local degeneracy near \(k \approx 0\), where \(w_q\) becomes weakly identifiable. Synthetic independent geodesic observables reduce this near-degenerate error, suggesting that real ray-traced observables such as screen position, propagation time, and redshift may be the next useful step.
 
+Across the sampled 121-point physical grid, no unresolved distant finite-$k$
+observable collisions are found at the tested numerical resolution; this does
+not constitute a proof of continuous global injectivity. Photon geometry
+reduces distant sampled ambiguities while rearranging some local neighbor
+orderings.
+
 ## What this project does
 
 - Generates synthetic leading-eikonal observables for Schwarzschild, Bardeen, Hayward, and Kiselev spacetimes.
@@ -65,7 +71,7 @@ The main result is that black-hole-hair inference is an identifiability problem,
 
 ![Kiselev condition map](docs/images/kiselev_condition_map.png)
 
-*Dense grouped validation shows that the Kiselev inverse problem is globally learnable, but the Jacobian becomes ill-conditioned near the zero-hair limit \(k\approx0\).*
+*Dense grouped validation shows learnability on the sampled synthetic benchmark, but the Jacobian becomes ill-conditioned near the zero-hair limit \(k\approx0\).*
 
 ### Feature realism
 

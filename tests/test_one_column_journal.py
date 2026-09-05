@@ -29,10 +29,10 @@ def test_document_is_journal_neutral_one_column() -> None:
     assert tex.count(r"\FloatBarrier") == 2
 
 
-def test_all_sixteen_figures_exist_and_references_resolve() -> None:
+def test_all_seventeen_figures_exist_and_references_resolve() -> None:
     tex = _text()
     graphics = re.findall(r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}", tex)
-    assert len(graphics) == 16
+    assert len(graphics) == 17
     assert len(graphics) == len(set(graphics))
     for graphic in graphics:
         assert (FINAL / "figures" / graphic).is_file(), graphic
@@ -41,16 +41,16 @@ def test_all_sixteen_figures_exist_and_references_resolve() -> None:
     assert len(labels) == len(set(labels))
     assert set(refs) <= set(labels)
     figure_labels = [label for label in labels if label.startswith("fig:")]
-    assert len(figure_labels) == 16
+    assert len(figure_labels) == 17
 
 
 def test_figure_numbering_and_main_appendix_counts_are_stable() -> None:
     aux = (FINAL / "main.aux").read_text(encoding="utf-8", errors="replace")
     entries = re.findall(r"\\newlabel\{(fig:[^}]+)\}\{\{(\d+)\}\{(\d+)\}\}", aux)
-    assert [int(number) for _, number, _ in entries] == list(range(1, 17))
+    assert [int(number) for _, number, _ in entries] == list(range(1, 18))
     assert len(entries[:12]) == 12
-    assert [int(number) for _, number, _ in entries[12:]] == [13, 14, 15, 16]
-    assert max(int(page) for _, _, page in entries[:12]) <= 10
+    assert [int(number) for _, number, _ in entries[12:]] == [13, 14, 15, 16, 17]
+    assert max(int(page) for _, _, page in entries[:12]) <= 11
     assert min(int(page) for _, _, page in entries[12:]) >= 11
 
 

@@ -284,6 +284,26 @@ Rdown + all shooting & 1.5312 & 4.4974 & -- \\
 \end{tabular}
 \end{figure}
 
+\subsection{Finite-domain ambiguity check}
+Because local Jacobian rank does not establish global injectivity, we also
+tested the sampled physical domain for distant observable near-collisions.
+Across all 121 accepted physical points, no finite-$k$ system had a nearest
+observable neighbor farther than $d_\theta=0.25$ in normalized parameter
+space, and no pair with $d_\theta\geq0.25$ fell below the fifth-percentile
+local observable spacing. For ringdown plus photon geometry, the closest pair
+with $d_\theta\geq0.5$ has RMS standardized observable distance 0.03155. This
+is approximately 12.8 times the largest measured 161-to-321 combined-feature
+RMS forward-resolution change, 0.002462.
+
+At $d_\theta\geq0.5$, photon geometry reduces the number of distant pairs
+below local-median observable spacing from 13 to 6, increases the closest-pair
+distance from 0.02517 to 0.03155, and decreases the maximum nearest-observable-
+neighbor parameter distance from 0.23216 to 0.21886. It therefore reduces the
+most distant sampled ambiguities. It does not preserve every local nearest-
+neighbor ordering and rearranges some nearby systems in observable space, even
+while improving the more consequential distant sampled separation. Full
+finite-grid results and limitations appear in Appendix~\ref{app:ambiguity}.
+
 \section{Leakage-Aware Inverse-Learning Protocols}
 Five primary feature sets are ordered consistently: ringdown, photon geometry,
 all shooting, ringdown plus photon geometry, and ringdown plus all shooting.
@@ -473,6 +493,14 @@ $\wq$. What may generalize is the workflow: establish forward rank, seek
 complementary observables, partition by physical systems, test directional
 shift, and perturb frozen estimators at independently measured numerical scales.
 
+The Jacobian analysis is local by construction. The finite-grid collision
+audit provides a complementary nonlocal check across the sampled parameter
+domain: no unresolved distant finite-$k$ collision is found at the tested
+resolution, although photon geometry rearranges local neighbor ordering.
+Together with the improved nearest-model recovery, this shows that improved
+distant sampled separation need not imply preservation of every local
+observable-space neighborhood.
+
 \section{Limitations}
 The ringdown model is leading-eikonal rather than a dedicated finite-$\ell$
 perturbative spectrum. The spacetime is static. Shooting includes only the
@@ -483,6 +511,9 @@ results remain synthetic. Although the targeted audit resolves higher-harmonic
 forward differences on its selected set, it is not a uniform 321-phase grid and
 tree tail sensitivity persists. MLP extrapolation is unstable. The verdict is
 therefore conditional, and no result is an observational constraint.
+The finite-domain ambiguity audit does not prove continuous global injectivity;
+the 121-point grid can miss isolated or continuous degeneracies between sampled
+parameter values.
 
 \section{Conclusion}
 Physical complementarity is supported: ringdown constrains $k$, while photon
@@ -495,6 +526,9 @@ and directional validation. Finally, numerical and distribution-shift audits
 are necessary before confident inverse claims: the forward features can
 converge while fitted estimators remain fragile. These conclusions motivate
 robust inverse methods and broader physical modeling before observational use.
+Within the sampled physical domain, no unresolved distant finite-$k$
+observable collision is found at the tested numerical resolution, although
+this finite-grid result is not a proof of continuous global identifiability.
 
 \section*{Data Availability}
 The analysis code and tracked machine-readable derived results, registered
@@ -699,6 +733,79 @@ and selected Jacobians agree. The verdict is \texttt{PASS\_WITH\_WARNING}: raw
 launch angles need not be unique because equivalent angular branches encode
 the same unit direction and physical ray. Raw angle equality is therefore not
 a required invariant, and the warning is not a physics discrepancy.
+
+\section{Finite-Domain Observable-Ambiguity Audit}
+\label{app:ambiguity}
+This audit evaluates all pairwise distances on the registered 121-point
+physical grid. It cannot rule out isolated or continuous degeneracies between
+sampled points and therefore does not establish continuous global injectivity.
+For points $i,j$, normalized parameter separation is
+\begin{equation}
+d_\theta(i,j)=\sqrt{\left(\frac{k_i-k_j}{\Delta k}\right)^2+
+\left(\frac{w_{q,i}-w_{q,j}}{\Delta w_q}\right)^2},
+\end{equation}
+where both spans are taken from the registered physical domain. Observable
+differences use the archived grid-wide q95--q05 feature scales. The primary
+cross-set distance is the RMS of standardized feature differences rather than
+a raw Euclidean norm, because the combined set has 31 dimensions while
+ringdown has four.
+
+At $k=0$, the ringdown distance across all 55 nominal-$\wq$ pairs is exactly
+zero. For ringdown plus photon geometry the minimum and median are zero and the
+maximum is $2.63\times10^{-12}$. This is the required positive control and
+reproduces the exact Schwarzschild structural degeneracy to numerical
+precision; these pairs are not counted as undesirable collisions.
+
+\begin{center}
+\begin{minipage}{.88\textwidth}
+\captionof{table}{Closest finite-$k$ RMS standardized observable pair at each
+minimum normalized parameter separation.}
+\label{tab:ambiguity-thresholds}
+\centering
+\small
+\begin{tabular}{lrrrr}
+Feature set & $d_\theta\geq0.10$ & $\geq0.25$ & $\geq0.50$ & $\geq0.75$ \\
+\hline
+Ringdown & 0.005832 & 0.012668 & 0.025170 & 0.041655 \\
+Rdown + photon geom. & 0.007710 & 0.013406 & 0.031550 & 0.072741 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.88\textwidth]{finite_domain_global_ambiguity.pdf}
+\caption{All-pairs finite-domain ambiguity audit. The horizontal axis is
+normalized parameter distance and the vertical axis is RMS standardized
+observable distance. Grey $k=0$ pairs show the required structural degeneracy;
+distant finite-$k$ pairs are the relevant sampled-domain diagnostic. Stars mark
+the closest finite-$k$ pair with $d_\theta\geq0.5$. This plot tests only the
+sampled physical grid and does not establish continuous global injectivity.}
+\label{fig:finite-ambiguity}
+\end{figure}
+
+\begin{center}
+\begin{minipage}{.96\textwidth}
+\captionof{table}{Nearest-observable-neighbor parameter distance and
+preservation of the nearest parameter-space neighbor. Poorer exact local
+neighbor preservation does not imply increased distant ambiguity.}
+\label{tab:ambiguity-neighbors}
+\centering
+\scriptsize
+\begin{tabular}{lrrrrrr}
+Feature set & median $d_\theta$ & p90 & max. & top-1 & top-3 & top-5 \\
+\hline
+Ringdown & 0.09524 & 0.21513 & 0.23216 & 40.9\% & 71.8\% & 75.5\% \\
+Rdown + photon geom. & 0.13171 & 0.21759 & 0.21886 & 20.0\% & 48.2\% & 67.3\% \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+No nearest observable neighbor lies beyond $d_\theta=0.25$ for either set,
+and no pair with $d_\theta\geq0.25$ lies below the fifth-percentile local
+spacing. The closest combined pair at $d_\theta\geq0.5$ is 12.8 times the
+largest measured combined-feature 161-to-321 RMS change. Photon geometry
+improves the distant-pair diagnostics but not every local ordering statistic.
 
 \section{MLP Extrapolation-Failure Audit}
 The machine-readable table contains standardized input magnitude, hidden
