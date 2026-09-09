@@ -51,10 +51,11 @@ and diagnostics.
 
 Every held-out point is joined exactly to its observable-set Jacobian row and retains
 singular values, condition number, cosine, angle, rank, derivative quality, normalized
-nearest-training distance, and extrapolation status. Spearman/Pearson correlations use
-500 bootstrap resamples. The explanatory least-squares model is
-`log(error+1e-8) ~ standardized log(kappa) + standardized training distance + extrapolation`;
-its bootstrap intervals are descriptive, not causal.
+nearest-training and training-region distance, and extrapolation status.
+Spearman/Pearson correlations use 500 bootstrap resamples and save five-bin medians
+and interquartile ranges. Two explanatory least-squares models use either
+`log(kappa)` or `-log(sigma_min)`, with training distance and extrapolation status.
+Raw and standardized coefficients and bootstrap intervals are descriptive, not causal.
 
 Separate split-conformal intervals use a calibration subset and the finite-sample
 absolute-residual quantile at nominal 90% coverage. Test labels never set interval or
@@ -82,4 +83,12 @@ python -m bhhairml.validation.physical_shooting_ml_validation `
   --feature-set ringdown_plus_photon_geometry `
   --feature-set ringdown_plus_all_shooting
 pytest
+```
+
+Fast integrity smoke test (written under an isolated `smoke/` output directory):
+
+```bash
+python -m bhhairml.validation.physical_shooting_ml_validation `
+  --config configs/physical_shooting_ml_validation.yaml --mode smoke `
+  --protocol random_interpolation --model hgb --feature-set ringdown --seed 2026
 ```

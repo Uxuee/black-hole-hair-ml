@@ -7,12 +7,17 @@ not regenerate trajectories. All 121 `(k,wq)` pairs are unique, all 77 required
 features are finite, and every feature row aligns exactly with all eight relevant
 Jacobian-diagnostic sets. Targets span `k=[0,0.0025]` and
 `wq=[-0.7125,-0.45]`.
+The standalone audit in `artifacts/physical_shooting_ml_validation/input_audit.json`
+also verifies 11 exact-rank-loss boundary points, derivative-quality metadata, and
+exact alignment of all 27 high-resolution locations.
 
 The experiment contains 59,700 held-out target predictions from five seeds, three
 model families, five primary feature sets, random interpolation, two complete 3x3
 physical-block layouts, and four separate directional extrapolation tests. There
 were no failed combinations. The end-to-end computational work, including the
 target-scaling correction and grouped-noise rerun, took approximately 66.9 minutes.
+The final checkpointed regeneration with the expanded conditioning audit took
+406.2 seconds; smoke validation took 24.4 seconds.
 
 At `k=0`, all 3,030 held-out `wq` prediction records are retained and flagged, but
 none is included in ordinary `wq` regression scores. This is the exact physical rank
@@ -77,6 +82,12 @@ distance `0.330 [0.317,0.342]`, and extrapolation indicator
 `0.276 [0.263,0.287]`. Conditioning remains predictive after controlling for coverage,
 but training distance is stronger and the low R2 forbids a causal or complete
 explanation.
+
+The alternative model using `-log(sigma_min)` does not reproduce the association
+after coverage control: its standardized coefficient is
+`-0.0123 [-0.0257,0.00133]` and its `R2=0.126`. Condition number captures
+anisotropy between response directions, while the minimum singular value alone
+does not independently predict pooled error in this mixed-protocol dataset.
 
 ## Uncertainty and rejection
 

@@ -10,11 +10,34 @@
 
 ![Pipeline overview](docs/images/pipeline_schematic.png)
 
-*Analytic black-hole models are evaluated with leakage-aware grouped validation and Jacobian sensitivity. The geodesic branch currently uses synthetic proxies; GW150914 supplies only a posterior-scale comparison.*
+*Analytic black-hole models are evaluated with leakage-aware grouped validation and Jacobian sensitivity. Historical proxy results are preserved, and a separate validated physical geodesic-shooting branch supplies timelike-emitter and direct null-geodesic observables. GW150914 supplies only a posterior-scale comparison.*
+
+## Physical geodesic shooting
+
+![Phase-coloured physical photon shooting with near-hole inset](artifacts/shooting_visualizations/refined/phase_coloured_photon_shooting_with_inset.png)
+
+The shooting solver starts a timelike emitter at apocentre, $\phi=\pi$, on an
+$r_p=8M$, $r_a=12M$ orbit and adjusts each direct-branch photon launch direction
+until it reaches the observer at $(0,0,-80M)$. The representative image uses
+$M=1$, $k=10^{-3}$, and $w_q=-0.5$; every plotted path is re-integrated from an
+archived converged launch angle. See the
+[physical visualization validation report](reports/shooting_visualization_validation.md)
+for constraint and hit-error checks. This is a controlled theoretical benchmark,
+not an observational image of a real black hole or a ray-traced accretion flow.
+The shooting algorithm adjusts two initial photon angles at each emitter phase
+until the direct null geodesic reaches the observer. These trajectories generate
+the physical photon-geometry, redshift, and timing observables used in the
+identifiability analysis.
 
 ## Main scientific takeaway
 
 The main result is that black-hole-hair inference is an identifiability problem, not merely an ML prediction problem. Dense grouped validation shows that Kiselev parameters are recoverable by interpolation within the assumed analytic model family, but analytic sensitivity reveals a local degeneracy near \(k \approx 0\), where \(w_q\) becomes weakly identifiable. Synthetic independent geodesic observables reduce this near-degenerate error, suggesting that real ray-traced observables such as screen position, propagation time, and redshift may be the next useful step.
+
+Across the sampled 121-point physical grid, no unresolved distant finite-$k$
+observable collisions are found at the tested numerical resolution; this does
+not constitute a proof of continuous global injectivity. Photon geometry
+reduces distant sampled ambiguities while rearranging some local neighbor
+orderings.
 
 ## What this project does
 
@@ -48,7 +71,7 @@ The main result is that black-hole-hair inference is an identifiability problem,
 
 ![Kiselev condition map](docs/images/kiselev_condition_map.png)
 
-*Dense grouped validation shows that the Kiselev inverse problem is globally learnable, but the Jacobian becomes ill-conditioned near the zero-hair limit \(k\approx0\).*
+*Dense grouped validation shows learnability on the sampled synthetic benchmark, but the Jacobian becomes ill-conditioned near the zero-hair limit \(k\approx0\).*
 
 ### Feature realism
 

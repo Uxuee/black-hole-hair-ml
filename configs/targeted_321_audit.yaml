@@ -1,0 +1,32 @@
+seed: 2026
+base_grid_config: configs/kiselev_identifiability_grid.yaml
+base_ml_config: configs/physical_shooting_ml_validation.yaml
+source_161_directory: artifacts/journal_phase_convergence
+output_directory: artifacts/targeted_321_audit
+phase_count: 321
+max_workers: 4
+minimum_selected_points: 20
+top_points_per_shift_family: 4
+top_catastrophic_mlp_points: 8
+feature_numerical_floor: 1.0e-12
+feature_classification:
+  converged: 0.01
+  marginal: 0.05
+forward_acceptance:
+  median_normalized_change: 0.001
+  p95_normalized_change: 0.01
+  require_no_family_trend: true
+  require_ringdown_unchanged: true
+  require_rank_unchanged: true
+tree_acceptance:
+  median_normalized_prediction_shift: 0.005
+  p95_normalized_prediction_shift: 0.03
+  maximum_identifiable_wq_shift: 0.1
+  aggregate_nmae_change: 0.02
+robust_estimator:
+  perturbation_replicas: 16
+  extra_trees:
+    n_estimators: 160
+    max_depth: 8
+    min_samples_leaf: 4
+    max_features: 0.8

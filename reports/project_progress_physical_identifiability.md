@@ -104,20 +104,73 @@ Relative to ringdown alone, ringdown plus photon geometry improves median (sigma
 - [x] Two-dimensional shooting grid
 - [x] Physical Jacobian maps
 - [x] ML-ready shooting table
-- [ ] Final random/grouped/extrapolation ML validation incorporated into the workshop manuscript
-- [ ] Final calibrated-uncertainty and noise conclusions incorporated into the manuscript
-- [ ] Full manuscript rewrite
+- [x] Final random/grouped/extrapolation ML validation completed
+- [x] Calibrated-uncertainty and grouped-noise analyses completed
+- [x] Final ML results incorporated into the workshop manuscript
+- [x] Generate and validate the uniform 121-point, 161-phase table
+- [ ] Resolve failed inverse robustness after the uniform 161-phase rerun
+- [ ] Full journal-manuscript rewrite
 - [ ] Literature comparison and journal selection
 
-The repository now also contains a subsequent ML-validation working report. Its conclusions, including a high-resolution feature-sensitivity concern, are deliberately not promoted into this workshop update until that follow-up is scientifically resolved.
+### Final physical-feature inverse-ML validation
+
+The completed run contains 59,700 held-out target predictions from five seeds,
+three model families, five primary feature sets, two contiguous-block layouts,
+and four directional extrapolation tests. Median random/grouped NMAE for
+ringdown plus photon geometry is 0.0378/0.0457 for (k) and 0.0730/0.0874
+for identifiable (w_q). Ringdown alone gives 0.0361/0.0485 for (k) but
+0.1688/0.3093 for (w_q). Photon geometry therefore supplies the missing
+(w_q) direction for both tree families, although the MLP and individual
+extrapolation directions provide honest counterexamples to universal improvement.
+
+Directional extrapolation is substantially harder: aggregate ringdown-plus-photon
+NMAE is 0.1305 for (k) and 0.2012 for (w_q), with all four directions
+reported separately. In the pooled coverage-controlled model, standardized
+(logkappa) has coefficient 0.197 with 95% bootstrap interval
+[0.185,0.210], compared with 0.330 [0.317,0.342] for training distance and
+0.276 [0.263,0.287] for extrapolation. The alternative
+(-logsigma_{\min}) coefficient is consistent with zero, so conditioning is
+informative but not reducible to one scalar sensitivity measure.
+
+Nominal 90% conformal coverage is 89.2%/96.5% for random (k/w_q),
+72.2%/85.1% for grouped regions, and 50.9%/66.0% for extrapolation. Interval
+width does not fully recognize distribution shift. At 1% grouped feature noise,
+ringdown plus photon geometry reaches 0.0699/0.0853 NMAE; learning curves are
+still improving at 78 training points, so 121 points are not demonstrably
+saturated.
+
+The follow-up uniform run completed all 121 physical points at 161 phases with
+no failed phases. Forward Jacobian complementarity and exact (k=0) rank loss
+remain stable. Feature convergence is nevertheless incomplete: 240 of 9,317
+feature-point comparisons exceed the predeclared 0.05 normalized threshold,
+with a maximum of 0.08069 in a third-harmonic timing coefficient.
+
+The unchanged inverse protocol is not uniformly robust and remains non-robust
+in a narrow but extreme tail.
+The median scored normalized prediction shift is 0.000948 and the 95th
+percentile is 0.02606, but frozen MLP extrapolations using all-shooting features
+produce maximum normalized shifts of 2562.84 target ranges for (k) and 2054.44
+for identifiable (w_q). The maximum aggregate median-NMAE change is 16.8497,
+although the median absolute change is only 0.000688. The journal-readiness
+verdict therefore remains conditional.
 
 ## 13. Remaining work before submission
 
-The final submission workflow must consolidate random interpolation, held-out physical regions, four directional extrapolation tests, empirical error versus conditioning, distance-to-training control, calibrated uncertainty, rejection behavior, controlled feature noise, learning curves, and manuscript figures. It also requires literature comparison, supervisor/collaborator review, a reproducible release, and an archival version. No synthetic duplication or large unvalidated grid should be used to manufacture performance.
+The remaining submission workflow must resolve the third-harmonic phase
+discretization and evaluate a predeclared training-only robustness-aware
+estimator under the same fixed protocol. It also requires
+literature comparison, supervisor/collaborator review, a reproducible release, and
+an archival version. No synthetic duplication or large unvalidated grid should be
+used to manufacture performance.
 
 ## 14. Publication readiness
 
-The forward-physics validation and physical identifiability/complementarity result are paper-level. The project is ready for final inverse-model validation, but a complete paper should not be submitted until empirical ML behavior is shown to follow—or demonstrably fail to follow—the Jacobian prediction and phase-resolution sensitivity is resolved. This is a controlled theoretical scientific-ML benchmark, not an observational constraint.
+The forward-physics validation and physical identifiability/complementarity result
+are paper-level, and the final inverse-model validation now shows both the predicted
+tree-model complementarity and its limits. The manuscript is scientifically
+complete enough for internal review, but not for final submission: the uniform
+161-phase rerun failed the maximum-shift and maximum-NMAE criteria. This remains a controlled theoretical
+scientific-ML benchmark, not an observational constraint.
 
 ## 15. Repository map
 
@@ -131,3 +184,8 @@ The forward-physics validation and physical identifiability/complementarity resu
 - IEEE manuscript: `paper/ai4s2026/main.tex`
 - Numerical provenance: `reports/project_progress_sources.yaml`
 - Tests: `tests/test_kiselev_shooting.py`, `tests/test_schwarzschild_shooting_validation.py`, `tests/test_kiselev_identifiability_grid.py`
+## Targeted 321-phase robustness audit
+
+The predeclared targeted audit recomputed 35 points at 321 phases in 5,318.2 s. All points completed without interpolation or proxy substitution. Maximum hit, timelike-constraint, null-constraint, and impact-parameter-drift errors were respectively $7.0913\times10^{-8}$, $3.1303\times10^{-13}$, $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
+
+Forward convergence passed: the median and 95th-percentile normalized feature changes were $1.9628\times10^{-4}$ and $7.2342\times10^{-3}$, no comparison remained unresolved, ringdown was exactly unchanged, and Jacobian rank was preserved. Frozen tree tails did not pass: HGB/RF 95th-percentile normalized prediction shifts were 0.08122/0.08509, and maximum identifiable-$w_q$ shifts were 0.30593/0.27053. Neither predeclared robustness-aware alternative passed all stability and grouped-performance criteria. The decision is **Outcome B** and journal readiness remains **CONDITIONAL**; a uniform 321-phase grid is not the next priority because the remaining blocker is estimator sensitivity.

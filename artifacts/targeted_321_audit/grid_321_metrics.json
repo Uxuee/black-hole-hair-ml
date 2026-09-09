@@ -1,0 +1,14 @@
+{
+  "complete": true,
+  "completed_points": 35,
+  "failed_points": 0,
+  "max_hit_error": 7.091295968958788e-08,
+  "max_impact_parameter_drift": 1.793232229374553e-11,
+  "max_null_constraint_error": 7.621382691613832e-12,
+  "max_timelike_constraint_error": 3.1302738179306294e-13,
+  "phase_count": 321,
+  "runtime_seconds": 5318.229499799985,
+  "initial_31_point_pass_runtime_seconds": 4673.097059499996,
+  "incremental_directional_pass_runtime_seconds": 645.132440299989,
+  "selected_points": 35
+}

@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 
 from bhhairml.validation.physical_shooting_ml_validation import (
-    assert_no_preprocessing_leakage, bootstrap_correlation, directional_split,
+    assert_no_preprocessing_leakage, bootstrap_correlation, correlations, directional_split, error_model,
     feature_sets, grouped_splits, joint_error, normalized_metrics,
     physical_groups, point_ids, random_split, split_conformal_radius,
     validate_inputs,
@@ -72,7 +72,7 @@ def test_input_alignment_and_finite_values():
     for c in ["orbital__x","photon_geometry__x","redshift__x","timing__x",*('delta_r','r_photon','Omega','lambda')]: frame[c]=np.arange(121)
     sets=feature_sets(frame); rows=[]
     for name in (*sets.keys(), "ringdown_only"):
-        for r in frame.itertuples(): rows.append({"k":r.k,"wq":r.wq,"observable_set":name})
+        for r in frame.itertuples(): rows.append({"k":r.k,"wq":r.wq,"observable_set":name,"derivative_quality":"central"})
     assert validate_inputs(frame,pd.DataFrame(rows),sets)["aligned"]
 
 
@@ -83,3 +83,18 @@ def test_failed_phase_or_output_inconsistency_is_explicit():
 
 def test_point_ids_complete_and_unique():
     ids=point_ids(grid()); assert len(ids)==121 and len(set(ids))==121
+
+
+def test_conditioning_outputs_include_bins_and_both_coverage_models():
+    n=40
+    frame=pd.DataFrame({"target":["k"]*n,"feature_set":["ringdown"]*n,
+        "protocol":["grouped_physical_interpolation"]*n,"scored":[True]*n,
+        "sigma_min":np.linspace(.1,1,n),"condition_number":np.linspace(2,20,n),
+        "normalized_error":np.linspace(.01,.2,n),"training_distance":np.linspace(0,.3,n),
+        "extrapolation":[False]*n})
+    table=correlations(frame,samples=20)
+    assert {"correlation","binned_error"} <= set(table.statistic)
+    result=error_model(frame,samples=20)
+    assert set(result["models"]) == {"log_condition","negative_log_sigma_min"}
+    for model in result["models"].values():
+        assert "raw_coefficients" in model and "standardized_coefficients" in model

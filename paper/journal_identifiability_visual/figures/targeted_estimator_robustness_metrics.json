@@ -1,0 +1,24 @@
+{
+  "source": "artifacts/targeted_321_audit/journal_readiness_decision.json",
+  "models": {
+    "HGB": {
+      "median_shift": 0.0,
+      "p95_shift": 0.0812207,
+      "max_identifiable_wq_shift": 0.305933
+    },
+    "RF": {
+      "median_shift": 0.0,
+      "p95_shift": 0.0850899,
+      "max_identifiable_wq_shift": 0.270535
+    },
+    "MLP": {
+      "median_shift": 0.00114309,
+      "p95_shift": 0.00822294,
+      "max_identifiable_wq_shift": 0.03819
+    }
+  },
+  "mlp_catastrophic_records": 410,
+  "mlp_already_catastrophic_at_161": 409,
+  "mlp_iteration_limit": 63,
+  "outcome": "B"
+}

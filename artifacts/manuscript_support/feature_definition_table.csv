@@ -1,0 +1,9 @@
+feature_family,physical_quantities_included,source,feature_dimension
+ringdown,"delta_r; photon-sphere radius r_photon; orbital frequency Omega; Lyapunov exponent lambda",static metric / eikonal ringdown model,4
+orbital,"radial azimuthal period; apsidal advance; mean/amplitude/reference and harmonics 1-3 for r_emit and p_r_emit",timelike-emitter solution,20
+photon geometry,"mean/amplitude/reference and harmonics 1-3 for impact parameter, alpha_sky, and beta_sky",direct null-geodesic shooting,27
+redshift,"mean/amplitude/reference and harmonics 1-3 for redshift",emitter/ray/static-observer measurement,9
+timing,"mean/amplitude/reference and harmonics 1-3 for excess delay; mean/amplitude and harmonics 1-3 for relative arrival time",direct null-geodesic shooting,17
+all shooting,"orbital; photon geometry; redshift; timing",physical shooting pipeline,73
+ringdown + photon geometry,"ringdown union photon geometry",combined registered features,31
+ringdown + all shooting,"ringdown union all shooting",combined registered features,77

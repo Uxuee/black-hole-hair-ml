@@ -48,3 +48,93 @@ grid_identifiability:
     ringdown_plus_photon_geometry: {median_sigma_min: 1.232579363188941, median_condition: 4.073123549900778}
     all_shooting: {median_sigma_min: 0.9723200657645921, median_condition: 6.020715190221268}
     gains: {ringdown_plus_geometry_sigma_min: 4.542865176635441, ringdown_plus_geometry_condition: 2.281889432747297}
+physical_ml_validation:
+  input_audit: {source: artifacts/physical_shooting_ml_validation/input_audit.json, keys: [rows, unique_parameter_points, features, k_zero_points, high_resolution_rows]}
+  predictions: {source: artifacts/physical_shooting_ml_validation/all_predictions.csv, rows: 59700}
+  summary: {source: artifacts/physical_shooting_ml_validation/summary_metrics.csv, selector: "metric=NMAE; median across fold/seed/model summaries"}
+  random_nmae:
+    ringdown: {k: 0.03609, wq: 0.16875}
+    ringdown_plus_photon_geometry: {k: 0.03780, wq: 0.07303}
+  grouped_nmae:
+    ringdown: {k: 0.04847, wq: 0.30928}
+    ringdown_plus_photon_geometry: {k: 0.04573, wq: 0.08745}
+  directional_nmae:
+    ringdown_plus_photon_geometry: {k: 0.13054, wq: 0.20120}
+    source: artifacts/physical_shooting_ml_validation/summary_metrics.csv
+  error_models:
+    source: artifacts/physical_shooting_ml_validation/error_model_results.json
+    log_condition_standardized: {estimate: 0.19694298508813965, ci: [0.18511388203115126, 0.20980972963641006], r2: 0.14408787339811968}
+    training_distance_standardized: {estimate: 0.32998883300259974, ci: [0.31742694710109226, 0.34211251877342236]}
+    extrapolation_standardized: {estimate: 0.2763889181081178, ci: [0.263486771197524, 0.28663584860559704]}
+    negative_log_sigma_min_standardized: {estimate: -0.012297824387190792, ci: [-0.02570807060930231, 0.0013254583195095194], r2: 0.12629109650253434}
+  uncertainty:
+    source: artifacts/physical_shooting_ml_validation/uncertainty_metrics.csv
+    random_coverage: {k: 0.89167, wq: 0.96460}
+    grouped_coverage: {k: 0.72231, wq: 0.85091}
+    extrapolation_coverage: {k: 0.50909, wq: 0.66000}
+  noise:
+    source: artifacts/physical_shooting_ml_validation/noise_metrics.csv
+    selector: "noise=0.01; feature_set=ringdown_plus_photon_geometry; median NMAE"
+    nmae: {k: 0.06992, wq: 0.08533}
+  learning_curve: {source: artifacts/physical_shooting_ml_validation/learning_curve_metrics.csv, conclusion: "NMAE continues to decrease between 62 and 78 training points"}
+  high_resolution:
+    source: artifacts/physical_shooting_ml_validation/high_resolution_robustness.csv
+    max_prediction_change_k: 0.000614
+    max_prediction_change_wq: 0.0999660152036228
+    max_absolute_nmae_change: 0.09293572811346172
+    pass: false
+journal_phase_convergence:
+  report: reports/journal_phase_convergence.md
+  config: artifacts/journal_phase_convergence/experiment_config_frozen.yaml
+  audit: artifacts/journal_phase_convergence/input_audit.json
+  physical_grid:
+    source: artifacts/journal_phase_convergence/grid_161_metrics.json
+    completed_points: 121
+    failed_points: 0
+    phases: 161
+    runtime_seconds: 4473.202448700002
+    max_hit_error: 1.3676344451777778e-7
+    max_timelike_constraint_error: 4.322098234865735e-13
+    max_null_constraint_error: 7.630566317695653e-12
+    max_impact_parameter_drift: 1.7989165712606336e-11
+  feature_convergence:
+    source: artifacts/journal_phase_convergence/feature_comparison_81_vs_161.csv
+    converged: 7884
+    marginal: 1193
+    unresolved: 240
+    median_normalized_difference: 0.0007907783009308
+    maximum_normalized_difference: 0.0806924624790291
+  inverse_stability:
+    source: artifacts/journal_phase_convergence/final_journal_readiness.json
+    median_normalized_prediction_change: 0.0009482400571554
+    p95_normalized_prediction_change: 0.026061522458259483
+    maximum_normalized_k_prediction_change: 2562.8408713310214
+    maximum_normalized_wq_prediction_change: 2054.4445967894544
+    median_absolute_nmae_change: 0.0006880177709660505
+    maximum_absolute_nmae_change: 16.849740234879828
+    verdict: conditional
+targeted_321_audit:
+  report: reports/targeted_321_convergence_audit.md
+  decision: artifacts/targeted_321_audit/journal_readiness_decision.json
+  selected_points: 35
+  runtime_seconds: 5318.229499799985
+  physical_validation:
+    completed_points: 35
+    failed_points: 0
+    max_hit_error: 7.091295968958788e-08
+    max_timelike_constraint_error: 3.1302738179306294e-13
+    max_null_constraint_error: 7.621382691613832e-12
+    max_impact_parameter_drift: 1.793232229374553e-11
+  feature_convergence:
+    median_normalized_change: 0.0001962829642914
+    p95_normalized_change: 0.007234221596301265
+    maximum_normalized_change: 0.0201555878694279
+    unresolved_rows: 0
+  frozen_prediction_stability:
+    hgb: {median: 0.0, p95: 0.0812206635024945, maximum_identifiable_wq: 0.305933353209626}
+    random_forest: {median: 0.0, p95: 0.08508988331443604, maximum_identifiable_wq: 0.27053475801095}
+    mlp: {median: 0.0011430868367657502, p95: 0.0082229395332811, maximum: 0.0397027126395575}
+  mlp_catastrophic_records: 410
+  outcome: B
+  verdict: conditional
+  uniform_321_grid_required: false

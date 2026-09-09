@@ -1,0 +1,14 @@
+{
+  "class_counts": {
+    "converged": 2624,
+    "marginal": 71
+  },
+  "family_unresolved": {},
+  "maximum_normalized_change_161_321": 0.020155587869427973,
+  "median_normalized_change_161_321": 0.00019628296429148625,
+  "p95_normalized_change_161_321": 0.007234221596301329,
+  "rank_unchanged": true,
+  "ringdown_exactly_unchanged": true,
+  "rows": 2695,
+  "unresolved_rows": 0
+}
