@@ -30,7 +30,7 @@ def test_machine_readable_claims_are_integrated():
         assert value in source
     assert f"{100*ring['local_neighbor_preservation']['top_1']:.1f}\\%" in source
     assert f"{100*combined['local_neighbor_preservation']['top_1']:.1f}\\%" in source
-    assert "does not preserve every local nearest-" in source
+    assert "does not preserve every local nearest-neighbor ordering" in " ".join(source.split())
 
 
 def test_positive_control_and_figure_are_appendix_only():
