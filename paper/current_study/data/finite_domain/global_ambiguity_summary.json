@@ -1,0 +1,167 @@
+{
+  "verdict": "PASS",
+  "source_table": "artifacts/journal_phase_convergence/ml_ready_features_161.csv",
+  "point_count": 121,
+  "accepted_points": 121,
+  "failed_points": 0,
+  "pair_count": 7260,
+  "finite_k_pair_count": 5995,
+  "k_values": [
+    0.0,
+    0.00025,
+    0.0005,
+    0.00075,
+    0.001,
+    0.00125,
+    0.0015,
+    0.00175,
+    0.002,
+    0.00225,
+    0.0025
+  ],
+  "wq_values": [
+    -0.7125,
+    -0.69,
+    -0.6666666666666666,
+    -0.64,
+    -0.61,
+    -0.58,
+    -0.55,
+    -0.525,
+    -0.5,
+    -0.475,
+    -0.45
+  ],
+  "parameter_scales": {
+    "k": 0.0025,
+    "wq": 0.2625
+  },
+  "observable_scaling": "global valid-grid q95-q05 with absolute floor; parameters scaled by selected-domain span",
+  "distance": "RMS of canonically scaled feature differences",
+  "feature_columns": {
+    "ringdown": [
+      "delta_r",
+      "r_photon",
+      "Omega",
+      "lambda"
+    ],
+    "ringdown_plus_photon_geometry": [
+      "delta_r",
+      "r_photon",
+      "Omega",
+      "lambda",
+      "photon_geometry__impact_parameter__mean",
+      "photon_geometry__impact_parameter__amplitude",
+      "photon_geometry__impact_parameter__reference",
+      "photon_geometry__impact_parameter__cos1",
+      "photon_geometry__impact_parameter__sin1",
+      "photon_geometry__impact_parameter__cos2",
+      "photon_geometry__impact_parameter__sin2",
+      "photon_geometry__impact_parameter__cos3",
+      "photon_geometry__impact_parameter__sin3",
+      "photon_geometry__alpha_sky__mean",
+      "photon_geometry__alpha_sky__amplitude",
+      "photon_geometry__alpha_sky__reference",
+      "photon_geometry__alpha_sky__cos1",
+      "photon_geometry__alpha_sky__sin1",
+      "photon_geometry__alpha_sky__cos2",
+      "photon_geometry__alpha_sky__sin2",
+      "photon_geometry__alpha_sky__cos3",
+      "photon_geometry__alpha_sky__sin3",
+      "photon_geometry__beta_sky__mean",
+      "photon_geometry__beta_sky__amplitude",
+      "photon_geometry__beta_sky__reference",
+      "photon_geometry__beta_sky__cos1",
+      "photon_geometry__beta_sky__sin1",
+      "photon_geometry__beta_sky__cos2",
+      "photon_geometry__beta_sky__sin2",
+      "photon_geometry__beta_sky__cos3",
+      "photon_geometry__beta_sky__sin3"
+    ]
+  },
+  "feature_sets": {
+    "ringdown": {
+      "dimension": 4,
+      "k0_positive_control": {
+        "feature_set": "ringdown",
+        "pair_count": 55,
+        "minimum_distance": 0.0,
+        "median_distance": 0.0,
+        "maximum_distance": 0.0
+      },
+      "local_observable_spacing": {
+        "local_p05": 0.005909649959076182,
+        "local_median": 0.038329871934628834
+      },
+      "nearest_neighbor_d_theta": {
+        "median": 0.09523809523809532,
+        "p90": 0.2151306094871717,
+        "maximum": 0.23216422368093137,
+        "count_ge_0.10": 40,
+        "count_ge_0.25": 0,
+        "count_ge_0.50": 0,
+        "fraction_ge_0.10": 0.36363636363636365,
+        "fraction_ge_0.25": 0.0,
+        "fraction_ge_0.50": 0.0
+      },
+      "local_neighbor_preservation": {
+        "median_observable_rank": 2.0,
+        "top_1": 0.4090909090909091,
+        "top_3": 0.7181818181818181,
+        "top_5": 0.7545454545454545
+      }
+    },
+    "ringdown_plus_photon_geometry": {
+      "dimension": 31,
+      "k0_positive_control": {
+        "feature_set": "ringdown_plus_photon_geometry",
+        "pair_count": 55,
+        "minimum_distance": 0.0,
+        "median_distance": 0.0,
+        "maximum_distance": 2.6299058310198163e-12
+      },
+      "local_observable_spacing": {
+        "local_p05": 0.00913265738884616,
+        "local_median": 0.05356563027546138
+      },
+      "nearest_neighbor_d_theta": {
+        "median": 0.13170777796132715,
+        "p90": 0.2175935173103974,
+        "maximum": 0.21886350670658009,
+        "count_ge_0.10": 79,
+        "count_ge_0.25": 0,
+        "count_ge_0.50": 0,
+        "fraction_ge_0.10": 0.7181818181818181,
+        "fraction_ge_0.25": 0.0,
+        "fraction_ge_0.50": 0.0
+      },
+      "local_neighbor_preservation": {
+        "median_observable_rank": 4.0,
+        "top_1": 0.2,
+        "top_3": 0.4818181818181818,
+        "top_5": 0.6727272727272727
+      }
+    }
+  },
+  "combined_reduces_distant_sampled_ambiguity": true,
+  "local_ordering_warning": "Combined median nearest-neighbor d_theta and nearest-parameter-neighbor observable ranks are worse than ringdown alone; distant-pair metrics improve.",
+  "limitation": "This finite 121-point audit cannot establish continuous global injectivity between sampled grid points.",
+  "numerical_resolution": {
+    "ringdown": {
+      "selected_point_count": 35,
+      "median_rms_change": 0.0,
+      "p95_rms_change": 0.0,
+      "maximum_rms_change": 0.0,
+      "closest_far_pair_distance": 0.02517031465867755,
+      "far_pair_to_max_resolution_ratio": null
+    },
+    "ringdown_plus_photon_geometry": {
+      "selected_point_count": 35,
+      "median_rms_change": 0.002382430720988352,
+      "p95_rms_change": 0.002436856102064349,
+      "maximum_rms_change": 0.00246173068519371,
+      "closest_far_pair_distance": 0.03155005573933886,
+      "far_pair_to_max_resolution_ratio": 12.81620931529975
+    }
+  }
+}

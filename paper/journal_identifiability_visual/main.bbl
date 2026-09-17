@@ -1,0 +1,137 @@
+\begin{thebibliography}{10}
+
+\bibitem{angelopoulos2021guide}
+Anastasios~N. Angelopoulos and Stephen Bates.
+\newblock A gentle introduction to conformal prediction and distribution-free
+  uncertainty quantification, 2021.
+
+\bibitem{berti2006spectroscopy}
+Emanuele Berti, Vitor Cardoso, and Clifford~M. Will.
+\newblock Gravitational-wave spectroscopy of massive black holes with the space
+  interferometer lisa.
+\newblock {\em Physical Review D}, 73:064030, 2006.
+
+\bibitem{bhagwat2019overtones}
+Swetha Bhagwat, Xisco~Jimenez Forteza, Paolo Pani, and Valeria Ferrari.
+\newblock Ringdown overtones, black hole spectroscopy, and no-hair theorem
+  tests.
+\newblock {\em Physical Review D}, 101:044033, 2020.
+
+\bibitem{breiman2001random}
+Leo Breiman.
+\newblock Random forests.
+\newblock {\em Machine Learning}, 45:5--32, 2001.
+
+\bibitem{cardoso2009geodesic}
+Vitor Cardoso, Alex~S. Miranda, Emanuele Berti, Helvi Witek, and Vilson~T.
+  Zanchin.
+\newblock Geodesic stability, lyapunov exponents and quasinormal modes.
+\newblock {\em Physical Review D}, 79:064016, 2009.
+
+\bibitem{cranmer2020frontier}
+Kyle Cranmer, Johann Brehmer, and Gilles Louppe.
+\newblock The frontier of simulation-based inference.
+\newblock {\em Proceedings of the National Academy of Sciences},
+  117:30055--30062, 2020.
+
+\bibitem{dax2021realtime}
+Maximilian Dax, Stephen~R. Green, Jonathan Gair, Jakob~H. Macke, Alessandra
+  Buonanno, and Bernhard Scholkopf.
+\newblock Real-time gravitational-wave science with neural posterior
+  estimation.
+\newblock {\em Physical Review Letters}, 127:241103, 2021.
+
+\bibitem{dreyer2004spectroscopy}
+Olaf Dreyer, Bernard Kelly, Badri Krishnan, Lee~Samuel Finn, David Garrison,
+  and Ramon Lopez-Aleman.
+\newblock Black-hole spectroscopy: testing general relativity through
+  gravitational-wave observations.
+\newblock {\em Classical and Quantum Gravity}, 21:787--804, 2004.
+
+\bibitem{friedman2001greedy}
+Jerome~H. Friedman.
+\newblock Greedy function approximation: A gradient boosting machine.
+\newblock {\em The Annals of Statistics}, 29:1189--1232, 2001.
+
+\bibitem{gabbard2022cvae}
+Hunter Gabbard, Chris Messenger, Ik~Siong Heng, Francesco Tonolini, and
+  Roderick Murray-Smith.
+\newblock Bayesian parameter estimation using conditional variational
+  autoencoders for gravitational-wave astronomy.
+\newblock {\em Nature Physics}, 18:112--117, 2022.
+
+\bibitem{green2020autoregressive}
+Stephen~R. Green, Christine Simpson, and Jonathan Gair.
+\newblock Gravitational-wave parameter estimation with autoregressive neural
+  network flows.
+\newblock {\em Physical Review D}, 102:104057, 2020.
+
+\bibitem{kiselev2003quintessence}
+V.~V. Kiselev.
+\newblock Quintessence and black holes.
+\newblock {\em Classical and Quantum Gravity}, 20:1187--1198, 2003.
+
+\bibitem{koh2021wilds}
+Pang~Wei Koh, Shiori Sagawa, Henrik Marklund, et~al.
+\newblock Wilds: A benchmark of in-the-wild distribution shifts.
+\newblock {\em Proceedings of the 38th International Conference on Machine
+  Learning}, 139:5637--5664, 2021.
+
+\bibitem{konoplya2017correspondence}
+R.~A. Konoplya and Z.~Stuchlik.
+\newblock Are eikonal quasinormal modes linked to the unstable circular null
+  geodesics?
+\newblock {\em Physics Letters B}, 771:597--602, 2017.
+
+\bibitem{ovadia2019uncertainty}
+Yaniv Ovadia, Emily Fertig, Jie Ren, et~al.
+\newblock Can you trust your model's uncertainty? evaluating predictive
+  uncertainty under dataset shift.
+\newblock {\em Advances in Neural Information Processing Systems}, 32, 2019.
+
+\bibitem{papamakarios2021normalizing}
+George Papamakarios, Eric Nalisnick, Danilo~Jimenez Rezende, Shakir Mohamed,
+  and Balaji Lakshminarayanan.
+\newblock Normalizing flows for probabilistic modeling and inference.
+\newblock {\em Journal of Machine Learning Research}, 22:1--64, 2021.
+
+\bibitem{pedregosa2011scikit}
+Fabian Pedregosa, Gael Varoquaux, Alexandre Gramfort, et~al.
+\newblock Scikit-learn: Machine learning in python.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\bibitem{psaros2023uq}
+Apostolos~F. Psaros, Xuhui Meng, Zongren Zou, Ling Guo, and George~Em
+  Karniadakis.
+\newblock Uncertainty quantification in scientific machine learning: Methods,
+  metrics, and comparisons.
+\newblock {\em Journal of Computational Physics}, 477:111902, 2023.
+
+\bibitem{raue2009identifiability}
+Andreas Raue, Clemens Kreutz, Thomas Maiwald, et~al.
+\newblock Structural and practical identifiability analysis of partially
+  observed dynamical models by exploiting the profile likelihood.
+\newblock {\em Bioinformatics}, 25:1923--1929, 2009.
+
+\bibitem{tibshirani2019covariate}
+Ryan~J. Tibshirani, Rina~Foygel Barber, Emmanuel~J. Candes, and Aaditya Ramdas.
+\newblock Conformal prediction under covariate shift.
+\newblock {\em Advances in Neural Information Processing Systems}, 32, 2019.
+
+\bibitem{villaverde2019identifiability}
+Alejandro~F. Villaverde, Antonio Barreiro, and Antonis Papachristodoulou.
+\newblock Structural identifiability of dynamic systems biology models.
+\newblock {\em PLOS Computational Biology}, 12:e1005153, 2016.
+
+\bibitem{vovk2005conformal}
+Vladimir Vovk, Alexander Gammerman, and Glenn Shafer.
+\newblock {\em Algorithmic Learning in a Random World}.
+\newblock Springer, 2005.
+
+\bibitem{palominoylla2026ringdown}
+Ariadna Uxue~Palomino Ylla, Kosuke Makino, Akane Tanaka, Akihiro Ishibashi, and
+  Chul-Moon Yoo.
+\newblock Ringdown waves from hairy black holes, 2026.
+\newblock Accepted for publication in JCAP.
+
+\end{thebibliography}

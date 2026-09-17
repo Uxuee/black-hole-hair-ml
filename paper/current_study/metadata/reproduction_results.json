@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "expensive_forward_shooting_run": false,
+  "n_claims_checked": 20,
+  "results": [
+    {
+      "claim_id": "jacobian_sigma_min_gain",
+      "reproduced_value": 4.542865176635441,
+      "expected_value": 4.542865176635441,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "jacobian_condition_improvement",
+      "reproduced_value": 2.281889432747297,
+      "expected_value": 2.281889432747297,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "nearest_random_interpolation",
+      "reproduced_value": 0.3006993006993005,
+      "expected_value": 0.30069930069930056,
+      "absolute_difference": 5.551115123125783e-17,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "nearest_grouped_physical_interpolation",
+      "reproduced_value": 0.3291404612159329,
+      "expected_value": 0.32914046121593293,
+      "absolute_difference": 5.551115123125783e-17,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "nearest_directional_extrapolation",
+      "reproduced_value": 0.2326646479939443,
+      "expected_value": 0.23266464799394435,
+      "absolute_difference": 5.551115123125783e-17,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "grouped_ringdown_wq_nmae",
+      "reproduced_value": 0.3092754095184649,
+      "expected_value": 0.3092754095184649,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "grouped_combined_wq_nmae",
+      "reproduced_value": 0.087449988100035,
+      "expected_value": 0.087449988100035,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "finite_domain_closest_distant_pair",
+      "reproduced_value": 0.03155005573933886,
+      "expected_value": 0.03155005573933886,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "finite_domain_resolution_ratio",
+      "reproduced_value": 12.81620931529975,
+      "expected_value": 12.81620931529975,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "jacobian_out_of_domain_count",
+      "reproduced_value": 1315,
+      "expected_value": 1315,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "jacobian_prediction_count",
+      "reproduced_value": 9950,
+      "expected_value": 9950,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "phase_161_prediction_shift_median",
+      "reproduced_value": 0.0009482400571554,
+      "expected_value": 0.0009482400571554,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "mlp_catastrophic_total",
+      "reproduced_value": 410,
+      "expected_value": 410,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "mlp_already_catastrophic_161",
+      "reproduced_value": 409,
+      "expected_value": 409,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "mlp_iteration_limit_count",
+      "reproduced_value": 63,
+      "expected_value": 63,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "targeted_321_feature_change_median",
+      "reproduced_value": 0.0001962829642914,
+      "expected_value": 0.0001963,
+      "absolute_difference": 1.7035708600000388e-08,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "targeted_321_feature_change_p95",
+      "reproduced_value": 0.007234221596301265,
+      "expected_value": 0.007234,
+      "absolute_difference": 2.2159630126521168e-07,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "finite_domain_resolution_scale",
+      "reproduced_value": 0.00246173068519371,
+      "expected_value": 0.00246173068519371,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "ringdown_distant_pairs_below_local_median",
+      "reproduced_value": 13,
+      "expected_value": 13,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    },
+    {
+      "claim_id": "combined_distant_pairs_below_local_median",
+      "reproduced_value": 6,
+      "expected_value": 6,
+      "absolute_difference": 0.0,
+      "status": "PASS"
+    }
+  ]
+}

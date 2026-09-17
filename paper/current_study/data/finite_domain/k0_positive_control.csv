@@ -1,0 +1,3 @@
+feature_set,pair_count,minimum_distance,median_distance,maximum_distance
+ringdown,55,0.0,0.0,0.0
+ringdown_plus_photon_geometry,55,0.0,0.0,2.6299058310198163e-12

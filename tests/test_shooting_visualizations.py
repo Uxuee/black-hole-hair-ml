@@ -85,9 +85,16 @@ def test_manifest_is_complete_and_generation_fingerprint_is_current():
     inputs = MANIFEST["fingerprint_inputs"]
     payload = json.dumps(inputs, sort_keys=True).encode()
     assert hashlib.sha256(payload).hexdigest() == MANIFEST["generation_fingerprint"]
-    script_hash = hashlib.sha256((ROOT / MANIFEST["plotting_script"]).read_bytes()).hexdigest()
-    config_hash = hashlib.sha256((ROOT / MANIFEST["configuration"]).read_bytes()).hexdigest()
-    assert script_hash == inputs["script_sha256"] and config_hash == inputs["config_sha256"]
+    def checkout_hashes(path):
+        data = path.read_bytes()
+        normalized = data.replace(b"\r\n", b"\n")
+        return {
+            hashlib.sha256(data).hexdigest(),
+            hashlib.sha256(normalized).hexdigest(),
+            hashlib.sha256(normalized.replace(b"\n", b"\r\n")).hexdigest(),
+        }
+    assert inputs["script_sha256"] in checkout_hashes(ROOT / MANIFEST["plotting_script"])
+    assert inputs["config_sha256"] in checkout_hashes(ROOT / MANIFEST["configuration"])
 
 
 def test_pdfs_are_valid_and_pngs_are_high_resolution():

@@ -1,0 +1,14 @@
+Archived-data reproduction environment
+=====================================
+
+Python: 3.12 compatible
+Package definition: ../../../pyproject.toml
+Runtime dependencies: NumPy 1.26.x, pandas, SciPy 1.11.4, scikit-learn,
+Matplotlib, PyYAML, joblib
+
+Install the project from the repository root with:
+
+    python -m pip install -e .
+
+The compact claim workflow reads archived tables and does not rerun photon
+shooting or train estimators.
