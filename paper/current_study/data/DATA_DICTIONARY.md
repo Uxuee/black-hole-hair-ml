@@ -32,6 +32,11 @@ and `k` scoring but have `wq_identifiable=false` and are excluded from ordinary
 - `jacobian/grid_metrics.json` and `jacobian/jacobian_161_metadata.json`: the
   grid-wide complementarity summaries, scaling convention, feature scales,
   excluded constants, and parameter spans used by the claim workflow.
+- The headline medians $1.2326/4.0731$ (ringdown plus photon geometry) and
+  $1.5312/4.4974$ (ringdown plus all shooting) come from the nominal 81-phase
+  archive at `artifacts/kiselev_identifiability_grid/jacobian_diagnostics.csv`.
+  The 161-phase audit values in this package are distinct resolution checks,
+  not the source silently substituted for those published medians.
 - `ml/*.csv`: fold/seed/model/feature-set/target metrics and conformal summaries.
   Model IDs are `hgb`, `random_forest`, and `mlp`; errors are normalized by the
   registered parameter span.
@@ -59,3 +64,7 @@ apply the same identifiable-`wq` mask and registered splits as learned models.
 Large canonical prediction matrices that are already tracked are not duplicated
 inside this directory: see `artifacts/journal_phase_convergence/all_predictions_161.csv`
 and `artifacts/targeted_321_audit/frozen_prediction_comparison_161_321.csv`.
+The 5,520 serialized frozen estimators used for full 321-phase replay occupy
+approximately 822 MB and are not public Git artifacts. They should be supplied
+as an optional versioned external archive (for example, Zenodo); the tracked
+prediction tables are sufficient for the headline aggregations.

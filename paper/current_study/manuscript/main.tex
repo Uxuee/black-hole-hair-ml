@@ -157,6 +157,17 @@ substituting synthetic geodesic proxies. Photon momenta are projected onto the
 static observer tetrad before sky angles are formed. Redshift uses
 $1+z=\omega_{\rm emit}/\omega_{\rm obs}$, and direct arrival time is compared
 with $\int(1+z)d\tau_{\rm emit}$ after removing one common additive constant.
+For clarity, the reported propagation time is
+$t_{\rm prop}=t_{\rm hit}-t_{\rm emit}$, and the excess delay removes the
+corresponding Euclidean source--observer distance,
+$\Delta t_{\rm excess}=t_{\rm prop}-\lVert\mathbf{x}_{\rm obs}-
+\mathbf{x}_{\rm emit}\rVert$.  Relative arrival time is expressed on the
+static observer's clock as
+$T_{\rm rel}=\sqrt{f_{\rm obs}}[(t_{\rm emit}+t_{\rm prop})-
+(t_{\rm emit}+t_{\rm prop})_{\rm ref}]$.  The separately reported
+$T_z=\int_{\tau_{\rm ref}}^{\tau}(1+z)\,d\tau_{\rm emit}$
+(\texttt{toa\_from\_redshift}) is an independent validation quantity obtained
+by cumulative trapezoidal integration, not a replacement for $T_{\rm rel}$.
 
 An independently implemented reference solver, which imports no production
 \texttt{bhhairml} physics code, verified the metric and derivative (including
@@ -173,7 +184,7 @@ In the Schwarzschild benchmark, all 161 phases succeed for both tested nominal
 $\wq$ values, which agree because $k=0$. The independent radial benchmark
 validates the turning-point period and apsidal advance. The physical 121-point
 grid also preserves the Hamiltonian constraints and exact rank-loss boundary.
-The overlapping arrival curves and their numerical residuals are retained as
+The overlapping arrival-time phase-resolved series and their numerical residuals are retained as
 supporting evidence in Appendix~\ref{app:numerical-thresholds} and
 Fig.~\ref{fig:schwarzschild}.
 
@@ -208,7 +219,7 @@ spacetimes produce distinct phase-resolved response patterns.
 \caption{Physical direct-branch observables over $\phi\in[\pi,3\pi]$ for
 Schwarzschild and $k=10^{-3}$ with $w_q=-0.5,-2/3$, using $M=1$,
 $r_p=8M$, $r_a=12M$, and observer $(0,0,-80M)$. The dashed line marks the
-initial apocentre and diamonds mark numerical pericentres. All curves use the
+initial apocentre and diamonds mark numerical pericentres. All phase-resolved series use the
 same successful matched phases without interpolation. Observable response
 amplitude and independent parameter information are not equivalent.}
 \label{fig:shooting-observables}
@@ -243,12 +254,17 @@ normalized for visibility nor interpolated across failures.}
 \label{fig:sky-residuals}
 \end{figure}
 
-Across the accepted physical grid, ringdown plus photon geometry improves the
+Using the nominal 81-phase Jacobian archive across the accepted physical grid,
+ringdown plus photon geometry improves the
 median $\smin$ by $4.5429\times$ and the median condition number by
 $2.2819\times$ relative to ringdown alone. The medians for the combined set are
 $\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
 $\smin=1.5312$ and $\kappaJ=4.4974$: adding more responsive summaries can raise
 $\smin$ without producing the best conditioning.
+The separate 161-phase resolution audit gives, respectively,
+$(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$ for these two
+combined sets, confirming that the published nominal-resolution summaries are
+stable without changing their provenance.
 Figures~\ref{fig:grid} and \ref{fig:complementarity} show the pointwise maps and
 their grid-wide summaries, respectively.
 
@@ -262,15 +278,17 @@ finite-$k$ color scale.}
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.74\textwidth]{physical_observable_complementarity_landscape.pdf}
-\caption{Grid-wide median and interquartile summaries of $\smin$ and condition
-number. Photon geometry provides the clearest complement to ringdown.}
+\caption{Nominal 81-phase grid-wide median and interquartile summaries of
+$\smin$ and condition number. Photon geometry provides the clearest complement
+to ringdown; the separate 161-phase audit is reported in the text.}
 \label{fig:complementarity}
 \end{figure}
 
 \begin{figure}[tbp]
-\captionof{table}{Primary physical-complementarity summaries. The reported combined-set
-gains are the archived grid-wide improvement statistics relative to ringdown,
-not ratios formed from separately reported medians.}
+\captionof{table}{Primary physical-complementarity summaries from the nominal
+81-phase Jacobian archive. The reported combined-set gains are the archived
+grid-wide improvement statistics relative to ringdown, not ratios formed from
+separately reported medians; the 161-phase audit values are stated in the text.}
 \label{tab:complementarity}
 \centering
 \scriptsize
@@ -682,12 +700,12 @@ null-constraint, and impact-parameter drift errors are respectively
 $7.0913\times10^{-8}$, $3.1303\times10^{-13}$,
 $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
 The Schwarzschild arrival-time comparison in Fig.~\ref{fig:schwarzschild}
-separates the visually overlapping curves from their actual-scale residuals.
+separates the visually overlapping phase-resolved series from their actual-scale residuals.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=.62\textwidth]{schwarzschild_arrival_validation_with_residuals.pdf}
-\caption{Schwarzschild arrival-time validation. Four arrival-time curves are
+\caption{Schwarzschild arrival-time validation. Four arrival-time phase-resolved series are
 plotted. The two nominal $\wq$ cases coincide because the $k=0$ geometry is
 Schwarzschild, while the direct and integrated-redshift constructions agree
 within numerical quadrature error. The lower panel shows direct minus

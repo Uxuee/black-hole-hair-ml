@@ -623,7 +623,7 @@ Points are checkpointed independently and safely skipped after validation. Count
 
 Staticity is checked at the observer, over emitter radii, and along every successful
 photon path. `f>0.1` is labelled safe, `0<f<=0.1` marginal, and non-positive `f`
-invalid. Invalid and failed points retain reasons. Curves are stored as compressed CSV
+invalid. Invalid and failed points retain reasons. Phase-resolved samples are stored as compressed CSV
 without interpolation or proxy replacement.
 
 The fixed schema is documented separately. Three sine/cosine harmonics, fixed summary

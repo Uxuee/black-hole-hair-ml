@@ -25,7 +25,9 @@ python -m pytest -q
 
 The workflow reads archived CSV/JSON files and writes
 `metadata/reproduced_claims.csv` and `metadata/reproduction_results.json`. It
-does **not** run the expensive physical grid. Full forward regeneration is an
+reproduces the headline aggregations from the public machine-readable
+predictions and derived results; it does **not** run the expensive physical
+grid. Full forward regeneration is an
 explicit, separate operation:
 
 ```bash
@@ -39,7 +41,7 @@ are indicative.
 
 ## Layout
 
-- `manuscript/`: journal source, bibliography, and compiled 20-page PDF.
+- `manuscript/`: journal source, bibliography, and compiled 21-page PDF.
 - `data/`: compact physical-grid, feature, split, Jacobian, ML, baseline,
   robustness, and finite-domain tables.
 - `figures/`: publication figures in PDF and PNG.
@@ -50,3 +52,11 @@ are indicative.
 Large phase-resolved trajectories and duplicated full prediction matrices are
 not copied into this package. Canonical archived copies already tracked under
 `artifacts/` are referenced by the data dictionary and workflow.
+
+Full bitwise replay of every frozen 321-phase prediction is a distinct,
+stronger task. It requires 5,520 serialized frozen estimators (approximately
+822 MB), which are not tracked in the public Git repository. They are a large
+optional reproducibility artifact and should be deposited in a versioned
+external archive such as Zenodo rather than ordinary Git history. Without that
+archive, a fresh clone can reproduce the reported aggregations from the public
+prediction tables, but cannot replay every frozen estimator without retraining.

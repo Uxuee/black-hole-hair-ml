@@ -27,8 +27,14 @@ out-of-domain count, and finite-domain ambiguity/resolution quantities.
 This result validates aggregation and provenance from the archived outputs. It
 does not replace the independent physical-shooting audit, whose report and
 machine-readable comparisons are packaged under `../audits/`.
+The public repository includes the machine-readable predictions and derived
+results needed for these headline aggregations. It does not include the 5,520
+serialized frozen estimators (approximately 822 MB), so a fresh clone cannot
+replay every 321-phase frozen prediction without the optional model archive or
+retraining. A versioned external deposit such as Zenodo is preferable to Git
+tracking for that artifact.
 
 The complete repository test run on 2026-09-18 passed with 193 tests and 258
 dependency deprecation warnings. The packaged LaTeX source also compiled to a
-20-page PDF with Tectonic; the only TeX diagnostic was one nonfatal underfull
+21-page PDF with Tectonic; the only TeX diagnostic was one nonfatal underfull
 box warning.
