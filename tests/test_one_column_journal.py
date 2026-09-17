@@ -6,6 +6,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 FINAL = ROOT / "paper" / "journal_identifiability_final"
@@ -15,6 +17,19 @@ TEX = FINAL / "main.tex"
 
 def _text(path: Path = TEX) -> str:
     return path.read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
+def compiled_manuscript() -> Path:
+    """Compile once for tests that inspect generated manuscript artifacts."""
+    tectonic = shutil.which("tectonic")
+    assert tectonic, "tectonic is required for the manuscript build"
+    result = subprocess.run(
+        [tectonic, "main.tex", "--keep-logs", "--keep-intermediates"], cwd=FINAL,
+        capture_output=True, text=True, timeout=120, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    return FINAL
 
 
 def test_document_is_journal_neutral_one_column() -> None:
@@ -44,8 +59,12 @@ def test_all_seventeen_figures_exist_and_references_resolve() -> None:
     assert len(figure_labels) == 17
 
 
-def test_figure_numbering_and_main_appendix_counts_are_stable() -> None:
-    aux = (FINAL / "main.aux").read_text(encoding="utf-8", errors="replace")
+def test_figure_numbering_and_main_appendix_counts_are_stable(
+    compiled_manuscript: Path,
+) -> None:
+    aux = (compiled_manuscript / "main.aux").read_text(
+        encoding="utf-8", errors="replace",
+    )
     entries = re.findall(r"\\newlabel\{(fig:[^}]+)\}\{\{(\d+)\}\{(\d+)\}\}", aux)
     assert [int(number) for _, number, _ in entries] == list(range(1, 18))
     assert len(entries[:12]) == 12
@@ -95,15 +114,10 @@ def test_scientific_numerical_claims_are_unchanged() -> None:
     assert all(current[token] >= count for token, count in archived.items())
 
 
-def test_one_column_manuscript_compiles_cleanly() -> None:
-    tectonic = shutil.which("tectonic")
-    assert tectonic, "tectonic is required for the manuscript build"
-    result = subprocess.run(
-        [tectonic, "main.tex", "--keep-logs"], cwd=FINAL,
-        capture_output=True, text=True, timeout=120, check=False,
+def test_one_column_manuscript_compiles_cleanly(compiled_manuscript: Path) -> None:
+    log = (compiled_manuscript / "main.log").read_text(
+        encoding="utf-8", errors="replace",
     )
-    assert result.returncode == 0, result.stdout + result.stderr
-    log = (FINAL / "main.log").read_text(encoding="utf-8", errors="replace")
     assert "undefined references" not in log.lower()
     assert "Overfull" not in log
-    assert (FINAL / "main.pdf").stat().st_size > 500_000
+    assert (compiled_manuscript / "main.pdf").stat().st_size > 500_000

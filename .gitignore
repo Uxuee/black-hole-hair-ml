@@ -39,6 +39,7 @@ paper/**/*.aux
 paper/**/*.bbl
 paper/**/*.blg
 paper/**/*.out
+paper/**/*.toc
 
 # Keep only curated public-facing report artifacts
 reports/*

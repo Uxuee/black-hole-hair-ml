@@ -5,6 +5,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PAPER = ROOT / "paper" / "journal_identifiability_visual"
@@ -15,24 +17,36 @@ def _text() -> str:
     return TEX.read_text(encoding="utf-8")
 
 
-def test_visual_manuscript_compiles_without_unresolved_references() -> None:
+@pytest.fixture(scope="module")
+def compiled_visual_manuscript() -> Path:
+    """Compile once for tests that inspect generated visual-manuscript files."""
     tectonic = shutil.which("tectonic")
     assert tectonic, "tectonic is required for the manuscript build"
     result = subprocess.run(
-        [tectonic, "main.tex", "--keep-logs"], cwd=PAPER,
+        [tectonic, "main.tex", "--keep-logs", "--keep-intermediates"], cwd=PAPER,
         capture_output=True, text=True, timeout=120, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    log = (PAPER / "main.log").read_text(encoding="utf-8", errors="replace")
+    return PAPER
+
+
+def test_visual_manuscript_compiles_without_unresolved_references(
+    compiled_visual_manuscript: Path,
+) -> None:
+    log = (compiled_visual_manuscript / "main.log").read_text(
+        encoding="utf-8", errors="replace",
+    )
     assert "undefined references" not in log.lower()
     assert "citation" not in "\n".join(
         line.lower() for line in log.splitlines() if "undefined" in line.lower()
     )
     assert "Overfull" not in log
-    assert (PAPER / "main.pdf").stat().st_size > 100_000
+    assert (compiled_visual_manuscript / "main.pdf").stat().st_size > 100_000
 
 
-def test_citations_are_in_database_and_every_printed_entry_is_cited() -> None:
+def test_citations_are_in_database_and_every_printed_entry_is_cited(
+    compiled_visual_manuscript: Path,
+) -> None:
     tex = _text()
     cited = {
         key.strip()
@@ -42,7 +56,7 @@ def test_citations_are_in_database_and_every_printed_entry_is_cited() -> None:
     bib = (PAPER / "references.bib").read_text(encoding="utf-8")
     database = set(re.findall(r"@\w+\{([^,]+),", bib))
     assert cited <= database
-    bbl = (PAPER / "main.bbl").read_text(encoding="utf-8")
+    bbl = (compiled_visual_manuscript / "main.bbl").read_text(encoding="utf-8")
     printed = set(re.findall(r"\\bibitem\{([^}]+)\}", bbl))
     assert printed == cited
 
