@@ -43,8 +43,8 @@ def test_feature_definition_table_matches_registered_dimensions():
     }
 
 
-def test_bibliography_has_internal_jcap_todo_but_no_pdf_visible_todo():
+def test_bibliography_has_final_jcap_metadata_and_no_pdf_visible_todo():
     bib = (FINAL / "references.bib").read_text(encoding="utf-8")
-    assert "TODO(submission)" in bib
-    assert "Accepted for publication in JCAP" in bib
+    assert "10.1088/1475-7516/2026/09/046" in bib
+    assert "Accepted for publication" not in bib
     assert "TODO" not in _visible_tex()

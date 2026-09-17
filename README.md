@@ -1,6 +1,6 @@
-# Machine-learning inference of black-hole hair from leading-eikonal observables
+# Physical identifiability and inverse learning of black-hole hair
 
-> A leakage-aware AI-for-science pipeline for studying inverse black-hole-hair identifiability from ringdown, geodesic observables, analytic sensitivity, and public GW posterior scales.
+> A theoretical benchmark combining timelike-emitter evolution, three-dimensional null-geodesic shooting, physical observables, Jacobian identifiability, and leakage-aware inverse learning.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)
@@ -10,7 +10,7 @@
 
 ![Pipeline overview](docs/images/pipeline_schematic.png)
 
-*Analytic black-hole models are evaluated with leakage-aware grouped validation and Jacobian sensitivity. Historical proxy results are preserved, and a separate validated physical geodesic-shooting branch supplies timelike-emitter and direct null-geodesic observables. GW150914 supplies only a posterior-scale comparison.*
+*The mature workflow evaluates a 121-point physical Kiselev grid using validated direct photon shooting, local and finite-domain identifiability diagnostics, registered random/grouped/directional splits, traditional inverse baselines, and 161/321-phase robustness audits. Historical proxy experiments remain available but are not substituted for the physical results.*
 
 ## Physical geodesic shooting
 
@@ -31,7 +31,9 @@ identifiability analysis.
 
 ## Main scientific takeaway
 
-The main result is that black-hole-hair inference is an identifiability problem, not merely an ML prediction problem. Dense grouped validation shows that Kiselev parameters are recoverable by interpolation within the assumed analytic model family, but analytic sensitivity reveals a local degeneracy near \(k \approx 0\), where \(w_q\) becomes weakly identifiable. Synthetic independent geodesic observables reduce this near-degenerate error, suggesting that real ray-traced observables such as screen position, propagation time, and redshift may be the next useful step.
+The main result is that black-hole-hair inference is an identifiability problem, not merely an ML prediction problem. The exact \(k=0\) boundary is structurally rank deficient because \(w_q\) disappears from the metric. Away from that boundary, physical photon geometry complements ringdown: adding it improves the grid-median minimum singular value by **4.54×** and the median condition number by **2.28×**.
+
+A training-only nearest-physical-model baseline confirms that this benefit is not specific to a learned architecture. Adding photon geometry improves identifiable-\(w_q\) NMAE by **30.1%** under random interpolation, **32.9%** under grouped interpolation, and **23.3%** under directional extrapolation. Forward-feature convergence does not, however, guarantee inverse-estimator robustness; frozen-estimator tail shifts remain a separate diagnostic.
 
 Across the sampled 121-point physical grid, no unresolved distant finite-$k$
 observable collisions are found at the tested numerical resolution; this does
@@ -46,7 +48,11 @@ orderings.
 - Trains inverse regressors, a forward surrogate, and model-family classifiers.
 - Uses grouped physical splits to prevent repeated \((\ell,n)\) observations from leaking across train and test.
 - Computes numerical Jacobians, singular values, and condition maps for local identifiability.
-- Tests replaceable synthetic independent geodesic-observable proxies.
+- Integrates timelike emitter orbits and shoots direct null geodesics in Cartesian coordinates to a static observer.
+- Extracts photon geometry, redshift, propagation-delay, and arrival-time observables with explicit failure accounting.
+- Evaluates registered random, grouped, and directional inverse-learning protocols with training-only preprocessing.
+- Compares learned estimators with nearest-physical-model and local-Jacobian inverse baselines.
+- Audits exact rank loss, finite-domain observable collisions, and 81/161/321-phase numerical robustness.
 - Optionally propagates public GW150914 posterior samples through a Kerr QNM baseline.
 
 ## What this project does **not** do
@@ -54,7 +60,8 @@ orderings.
 - It does **not** detect black-hole hair.
 - It does **not** fit raw gravitational-wave strain.
 - It is **not** a full gravitational QNM solver.
-- The geodesic extension uses synthetic proxies unless a real shooting CSV is supplied.
+- It is a theoretical identifiability benchmark, not an observational constraint on black-hole hair.
+- Direct-branch photon shooting is not a complete imaging or detector-likelihood pipeline.
 - The GW150914 branch propagates a GR posterior; it is not a modified-gravity constraint or non-GR likelihood.
 
 ## Key results
@@ -63,8 +70,10 @@ orderings.
 |---|---|
 | Dense Kiselev grouped CV | \(R^2(k)=0.992\pm0.001\), \(R^2(w_q)=0.994\pm0.002\) |
 | Analytic sensitivity | Local ill-conditioning is strongest near the zero-hair limit \(k\approx0\) |
-| Synthetic geodesic proxies | Mean absolute \(w_q\) error decreases from 0.0225 to 0.0143 |
-| Enlarged Jacobian near \(k=0\) | Median minimum singular value improves by about 12×; condition number by about 2.13× |
+| Physical observable complementarity | Grid-median \(\sigma_{\min}\) improves 4.54×; median condition number improves 2.28× |
+| Nearest-physical-model baseline | Identifiable-\(w_q\) NMAE improves 30.1% random, 32.9% grouped, and 23.3% directional |
+| Numerical audits | Uniform 161-phase grid: 121/121 complete; targeted 321-phase audit: 35/35 complete |
+| Finite-domain audit | No unresolved distant finite-\(k\) collision found on the sampled grid at the tested resolution |
 | GW150914 scale check | \(f_\mathrm{RD}=252.52\) Hz and \(\tau_\mathrm{RD}=4.065\) ms posterior medians |
 
 ### Dense Kiselev identifiability
@@ -198,7 +207,11 @@ This command may download public GWOSC/LVK posterior data. Large posterior files
 | `src/bhhairml/features/` | Leakage-safe PCA and feature construction |
 | `src/bhhairml/models/` | Forward, inverse, and classification estimators |
 | `src/bhhairml/experiments/` | Static MVP, grouped audits, identifiability, and proxy studies |
-| `src/bhhairml/geodesic_observables/` | Synthetic proxies and real shooting-CSV interface |
+| `src/bhhairml/shooting/` | Timelike-emitter and Cartesian null-geodesic integration |
+| `src/bhhairml/geodesic_observables/` | Backward-compatible proxy and physical shooting-CSV interfaces |
+| `src/bhhairml/validation/` | Physical-grid, robustness, independent-check, and ambiguity audits |
+| `experiments/traditional_inverse_baselines/` | Nearest-model and local-Jacobian inverse baselines |
+| `audits/` | Independent physical-shooting reference implementation and walkthrough |
 | `src/bhhairml/realdata/` | GWOSC download, posterior parsing, Kerr baseline, and toy tolerances |
 | `configs/` | Reproducible dataset and experiment settings |
 | `reports/` | Selected manuscript and poster outputs |
@@ -223,13 +236,13 @@ This creates paired PNG/PDF illustrations in
 analytic static-metric illustrations, and the geodesic improvement uses
 synthetic proxies—not full physical ray tracing or detector-level inference.
 
-Poster-ready research prototype. **Not yet a journal-ready observational analysis.**
+Research-grade theoretical identifiability benchmark. **Not an observational analysis or constraint on black-hole hair.**
 
 ## Limitations
 
 - Leading-eikonal/geodesic approximation only.
 - Synthetic analytic formulas, not detector-level inference.
-- Geodesic observables are proxies unless a validated shooting CSV is supplied.
+- The physical study uses the validated direct shooting branch; secondary photon branches and detector response are not modeled.
 - The GW150914 branch propagates a GR posterior and does not fit strain.
 - The current Kerr fallback is an approximate dominant-mode fitting formula when `qnm` is unavailable.
 - No claim of modified-gravity constraints, exclusions, or hair detection is made.
@@ -244,7 +257,7 @@ If you use this research prototype, please cite the repository through [`CITATIO
 
 This repository builds on the leading-eikonal QNM/geodesic framework used in *Ringdown waves from hairy black holes* by Ariadna Uxue Palomino Ylla et al.
 
-[arXiv link / journal link to be added]
+[Journal of Cosmology and Astroparticle Physics 2026(09), 046 (2026)](https://doi.org/10.1088/1475-7516/2026/09/046).
 
 ## License
 

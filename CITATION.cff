@@ -1,11 +1,31 @@
 cff-version: 1.2.0
-message: "If you use this research prototype, please cite the repository and the associated black-hole ringdown work."
-title: "Machine-learning inference of black-hole hair from leading-eikonal observables"
+message: "If you use this software, cite this repository and the related JCAP ringdown study."
+title: "Learning When Black-Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity"
 type: software
 authors:
   - given-names: "Ariadna Uxue"
     family-names: "Palomino Ylla"
-version: 0.1.0
-date-released: 2026-07-26
+version: 1.0.0
+date-released: 2026-09-18
 repository-code: "https://github.com/Uxuee/black-hole-hair-ml"
 license: MIT
+references:
+  - type: article
+    title: "Ringdown waves from hairy black holes"
+    authors:
+      - given-names: "Ariadna Uxue"
+        family-names: "Palomino Ylla"
+      - given-names: "Kosuke"
+        family-names: "Makino"
+      - given-names: "Akane"
+        family-names: "Tanaka"
+      - given-names: "Akihiro"
+        family-names: "Ishibashi"
+      - given-names: "Chul-Moon"
+        family-names: "Yoo"
+    journal: "Journal of Cosmology and Astroparticle Physics"
+    year: 2026
+    volume: "2026"
+    issue: "09"
+    start: "046"
+    doi: "10.1088/1475-7516/2026/09/046"
