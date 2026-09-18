@@ -64,6 +64,16 @@ def test_protocol_plot_never_pools_targets_or_directions():
     assert set(values.target) == {"k", "wq"}
 
 
+def test_figure_5_aggregation_audit_documents_rejected_alternative():
+    audit = (
+        ROOT / "paper/current_study/metadata/figure5_aggregation_audit.md"
+    ).read_text(encoding="utf-8")
+    assert "changes 26 of 30 central values" in audit
+    assert "0.309275 and 0.087450" in audit
+    assert "0.257678 and 0.090090" in audit
+    assert "retains its current points and intervals" in audit
+
+
 def test_k_zero_rank_loss_is_exact_and_interior_map_values_are_finite():
     jac = pd.read_csv(ROOT / "artifacts/kiselev_identifiability_grid/jacobian_diagnostics.csv")
     boundary = jac[jac.k == 0]

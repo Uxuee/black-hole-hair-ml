@@ -112,13 +112,13 @@ def build_local_sensitivity_figure(output: Path) -> None:
     axes[0].scatter(LOCAL_SMIN, y, marker="D", s=42, label=r"$\sigma_{\min}$", color="#dc7f2a")
     axes[0].set_xscale("log")
     axes[0].set_xlabel("Standardized singular value")
-    axes[0].set_title("Response and weakest direction")
+    axes[0].set_title(r"Strongest $\sigma_{\max}$ / weakest $\sigma_{\min}$")
     axes[0].legend(frameon=False, fontsize=9)
     axes[1].scatter(LOCAL_ANGLE, y, s=58, color="#6f4ca1")
     axes[1].axvline(180, color="#555555", linestyle="--", linewidth=1)
     axes[1].set_xlim(155, 181)
     axes[1].set_xlabel(r"Sensitivity-vector angle (degrees)")
-    axes[1].set_title("Farther from 180 degrees is better")
+    axes[1].set_title("Farther from 0 or 180 degrees is better")
     axes[2].scatter(LOCAL_CONDITION, y, marker="s", s=55, color="#3a9668")
     axes[2].set_xscale("log")
     axes[2].set_xlabel(r"Condition number $\kappa(J)$")
@@ -127,7 +127,10 @@ def build_local_sensitivity_figure(output: Path) -> None:
         ax.set_yticks(y, LOCAL_NAMES)
         ax.grid(axis="x", alpha=0.25, linewidth=0.7)
         ax.invert_yaxis()
-    fig.suptitle("Local observable sensitivity and parameter-direction complementarity", fontsize=12)
+    fig.suptitle(
+        r"Representative finite-difference response anchored at $k=10^{-3},\ w_q=-0.5$",
+        fontsize=12,
+    )
     fig.tight_layout()
     fig.savefig(output / "physical_local_sensitivity_comparison.pdf", bbox_inches="tight")
     fig.savefig(output / "physical_local_sensitivity_comparison.png", dpi=320, bbox_inches="tight")

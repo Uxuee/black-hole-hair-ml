@@ -10,7 +10,7 @@ import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
@@ -76,9 +76,12 @@ def figure_protocol(summary: pd.DataFrame, folds: pd.DataFrame, path: Path) -> N
         ax.set_title(title); ax.set_xlabel("Median normalized MAE (lower is better)")
         ax.grid(axis="x", alpha=.25)
     axes[0].set_yticks(y, [DISPLAY[x] for x in PRIMARY]); axes[0].invert_yaxis()
-    axes[1].legend(frameon=False, loc="lower right")
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, loc="lower center", ncol=3,
+               bbox_to_anchor=(.5, .01))
     fig.suptitle("Validation protocol comparison (fold/seed/model/direction IQR)")
-    fig.tight_layout(); _save(fig, path)
+    fig.subplots_adjust(left=.23, right=.98, top=.86, bottom=.18, wspace=.18)
+    _save(fig, path)
 
 
 def figure_directional(summary: pd.DataFrame, path: Path) -> None:
@@ -117,11 +120,13 @@ def figure_sigma_maps(jac: pd.DataFrame, path: Path) -> None:
         mappable=ax.scatter(interior.k,interior.wq,c=np.log10(interior.sigma_min),marker="s",s=55,
                             cmap="viridis",vmin=vmin,vmax=vmax,edgecolors="none")
         boundary=g[g.k==0]
-        ax.scatter(boundary.k,boundary.wq,color="0.72",marker="s",s=55,edgecolors="0.45",linewidths=.3)
+        ax.scatter(boundary.k,boundary.wq,color="0.72",marker="x",s=38,
+                   linewidths=.9)
         ax.set_title(DISPLAY[name],fontsize=9); ax.set_xlabel(r"$k$"); ax.set_ylabel(r"$w_q$")
     cb=fig.colorbar(mappable,ax=axes.ravel().tolist(),shrink=.88)
     cb.set_label(r"$\log_{10}(\sigma_{\min})$ (shared finite $k>0$ scale)")
-    fig.legend(handles=[Patch(facecolor="0.72",edgecolor="0.45",label=r"$k=0$: exact rank loss")],
+    fig.legend(handles=[Line2D([], [], color="0.55", marker="x", linestyle="None",
+                              label=r"exact structural rank loss ($k=0$)")],
                loc="lower center",frameon=False)
     _save(fig,path)
 
@@ -168,12 +173,14 @@ def figure_observable_summary_landscape(jac: pd.DataFrame, path: Path) -> None:
         )
         ax.set_xscale("log")
         ax.set_title(label, fontsize=9)
-        ax.set_xlabel(f"Median (IQR; {better})", fontsize=8)
+        ax.set_xlabel(f"Grid statistic ({better})", fontsize=8)
         ax.grid(axis="x", alpha=.25)
         ax.tick_params(labelsize=7.5)
     axes[0].set_yticks(y, [DISPLAY[x] for x in OBSERVABLE_SETS])
     axes[0].invert_yaxis()
-    fig.tight_layout(w_pad=1.2)
+    fig.text(.5, .01, "dot = grid median; bar = 25th-75th percentile across physical grid points",
+             ha="center", fontsize=8)
+    fig.tight_layout(rect=(0, .07, 1, 1), w_pad=1.2)
     _save(fig, path)
 
 

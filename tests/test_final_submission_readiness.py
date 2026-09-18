@@ -24,7 +24,7 @@ def test_all_figure_and_table_references_resolve():
 def test_required_submission_content_is_present():
     text = _visible_tex()
     assert r"\section*{Data Availability}" in text
-    assert "imports no production" in text
+    assert "without\nimporting production" in text
     assert "115 registered split specifications" in text
     assert "preprocessing is fitted on training data only" in text
     assert "journal readiness" not in text.lower()

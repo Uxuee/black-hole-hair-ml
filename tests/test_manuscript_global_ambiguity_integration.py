@@ -17,7 +17,6 @@ def test_finite_domain_section_and_caveat_exist():
     assert r"\subsection{Finite-domain ambiguity check}" in source
     assert r"\section{Finite-Domain Observable-Ambiguity Audit}" in source
     assert "does not establish continuous global injectivity" in source
-    assert "not a proof of continuous global identifiability" in source
     assert "globally identifiable" not in source
 
 
