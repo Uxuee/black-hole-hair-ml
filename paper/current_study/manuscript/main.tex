@@ -21,7 +21,9 @@
 High interpolation accuracy does not establish that physical parameters are
 identifiable. We study this distinction in a controlled Kiselev black-hole
 benchmark with a validated timelike-emitter and three-dimensional null-geodesic
-shooting calculation. The forward analysis shows that ringdown is informative
+shooting calculation. Its exact $k=0$ non-identifiable boundary provides an
+analytically known null control for the identifiability analysis. The forward
+analysis shows that ringdown is informative
 for the deformation amplitude $k$, whereas photon geometry supplies an
 independent response direction that resolves much of the state-parameter
 $\wq$ degeneracy. Relative to ringdown alone, ringdown plus photon geometry
@@ -54,9 +56,14 @@ multiple physical effects remains difficult \cite{dreyer2004spectroscopy,berti20
 
 Kiselev spacetimes provide a controlled two-parameter setting. They do not
 stand in for a detector likelihood or a generic beyond-Kerr theory. Their value
-here is methodological: exact loss of $\wq$ dependence at $k=0$ supplies a known
-rank-deficient boundary, while nonzero $k$ permits direct comparison of forward
-Jacobian geometry and inverse-learning behavior \cite{kiselev2003quintessence}.
+here is methodological. Most inverse problems do not supply an exact known
+degeneracy against which to check the identifiability diagnostic; here the loss
+of $\wq$ dependence at $k=0$ supplies precisely that null case. It tests whether
+the diagnostic recovers the analytically required rank-deficient boundary
+before any inverse model is fitted, while nonzero $k$ permits direct comparison
+of forward Jacobian geometry and inverse-learning behavior
+\cite{kiselev2003quintessence}. This control validates the diagnostic on the
+present benchmark, not inverse-learning systems in general.
 
 The study complements rapid gravitational-wave inference based on neural
 posterior estimation and normalizing flows
@@ -108,10 +115,15 @@ $\boldsymbol\theta=(k,\wq)$, the local Jacobian is
  J_{ij}=\frac{\partial\tilde O_i}{\partial\theta_j}.
 \end{equation}
 Higher $\smin(J)$ and lower $\kappaJ=\sigma_{\max}/\smin$ are favorable. At
-$k=0$, $f(r)$ is Schwarzschild for every $\wq$, so the $\wq$ Jacobian column
-vanishes exactly. Nonzero rank away from that boundary does not by itself imply
-practical recoverability at finite precision. Exact $k=0$ rank loss is
-structural, while small nonzero $k$ can be practically ill-conditioned.
+$k=0$, the deformation term vanishes, so $f(r)$ is Schwarzschild and independent
+of $\wq$. Every physical observable is therefore independent of $\wq$, the
+$\wq$ column of $J$ vanishes, and the two-parameter Jacobian has rank one with
+$\smin=0$ in the analytic limit. We treat this chain as a ground-truth null
+control, not merely an edge case: any inferred physical $\wq$ information there
+would be spurious. Nonzero rank away from that boundary does not by itself
+imply practical recoverability at finite precision. Exact $k=0$ rank loss is
+structural, while small nonzero $k$ can be full-rank yet practically
+ill-conditioned.
 Historical synthetic and proxy results are kept separate in
 Appendix~\ref{app:historical}. Having defined the inverse problem and its exact
 rank-deficient boundary, we next construct the physical observables used to
@@ -349,8 +361,8 @@ preferable.
 The increasingly demanding protocols are random interpolation, two blocked
 $3\times3$ grouped physical layouts, and four directional extrapolation tests.
 All nominal $k=0$ records
-are retained and flagged, but ordinary $\wq$ error excludes them because $\wq$
-is exactly non-identifiable there.
+are retained and flagged. They contribute to $k$ scoring, but ordinary $\wq$
+error excludes them because $\wq$ is exactly non-identifiable there.
 
 Normalized mean absolute error divides MAE by the full target span.
 Split-conformal intervals target 90\% coverage and are interpreted under their
@@ -535,9 +547,14 @@ general scientific-ML risk: a converged forward simulator does not ensure a
 stable inverse surrogate \cite{ovadia2019uncertainty,koh2021wilds,psaros2023uq}.
 
 What is specific to Kiselev is the metric deformation and exact $k=0$ loss of
-$\wq$. What may generalize is the workflow: establish forward rank, seek
-complementary observables, partition by physical systems, test directional
-shift, and perturb frozen estimators at independently measured numerical scales.
+$\wq$. Methodologically, this boundary is useful because the correct
+identifiability answer is known analytically before any inverse model is fitted:
+the pipeline must return no physical $\wq$ information at $k=0$. Recovering that
+ground-truth null control checks the diagnostic in this controlled benchmark,
+but does not establish universal validity. What may generalize is the workflow:
+establish forward rank, seek complementary observables, partition by physical
+systems, test directional shift, and perturb frozen estimators at independently
+measured numerical scales.
 
 The Jacobian analysis is local by construction. The finite-grid collision
 audit provides a complementary nonlocal check across the sampled parameter
@@ -568,10 +585,13 @@ recovery. Observable complementarity persists under a non-learned inverse
 baseline, while the local Jacobian inverse demonstrates that strong local
 recoverability can coexist with globally unstable predictions in this Kiselev
 benchmark. Random interpolation overstates recoverability relative to grouped
-and directional validation. Finally, numerical and distribution-shift audits
-are necessary before confident inverse claims: the forward features can
-converge while fitted estimators remain fragile. These conclusions motivate
-robust inverse methods and broader physical modeling before observational use.
+and directional validation. The exact $k=0$ boundary is structurally
+non-identifiable, whereas small nonzero $k$ can be full-rank but only weakly
+identifiable because of practical ill-conditioning. Finally, numerical and
+distribution-shift audits are necessary before confident inverse claims: the
+forward features can converge while fitted estimators remain fragile. These
+conclusions motivate robust inverse methods and broader physical modeling
+before observational use.
 
 \section*{Data Availability}
 The analysis code and tracked machine-readable derived results, registered
