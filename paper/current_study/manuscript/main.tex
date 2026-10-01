@@ -464,19 +464,40 @@ guaranteed under distribution shift.}
 \section{Numerical Convergence and Estimator Robustness}
 We first ask whether the physical forward calculation converges as phase
 resolution increases. Figure~\ref{fig:resolution} addresses that question.
+For feature $i$ at resolutions $N_1$ and $N_2$, the frozen comparison is
+\begin{equation}
+ \delta_i=\frac{|F_i^{(N_2)}-F_i^{(N_1)}|}{\max(s_i,10^{-12})},
+\end{equation}
+where $s_i$ is the global q95--q05 scale computed on the archived 81-phase
+training domain. The floor prevents division by numerical zero and is not
+fitted to either higher-resolution result. A feature--point comparison is
+classified as converged for $\delta_i\leq0.01$, marginal for
+$0.01<\delta_i\leq0.05$, and unresolved for $\delta_i>0.05$; non-finite,
+missing, or schema-mismatched values are also unresolved by protocol. Here
+``unresolved'' denotes failure of this predeclared numerical-resolution
+criterion, not a failed physical shooting phase.
+
 The uniform 161-phase study completes all 121 physical points. From 9317
-feature--point comparisons, 240 are unresolved under the frozen criterion;
-the median normalized feature change is $7.908\times10^{-4}$ and the maximum is
+feature--point comparisons, 240 exceed the 0.05 normalized-change threshold
+and are therefore unresolved under the frozen criterion; no failed physical
+point is implied. The median normalized feature change is
+$7.908\times10^{-4}$ and the maximum is
 0.08069. Across frozen scored predictions, the median normalized shift is
 $9.482\times10^{-4}$ and the 95th percentile is 0.02606. The median aggregate
 NMAE change is $6.880\times10^{-4}$, but the maximum is 16.8497 because of
 unclipped MLP directional extrapolation outliers.
 
 The targeted 321-phase audit selects 35 points deterministically before reading
-their 321-phase outcomes. All complete. Median and 95th-percentile normalized
-161-to-321 feature changes are $1.963\times10^{-4}$ and $7.234\times10^{-3}$;
-no comparison remains unresolved, ringdown is exactly unchanged, and Jacobian
-rank is preserved. Forward convergence therefore passes.
+their 321-phase outcomes. Its forward acceptance conditions, recorded before
+any 321-phase trajectory was evaluated, require median normalized change below
+0.001, 95th-percentile change below 0.01, unchanged ringdown, no systematic
+family-wide trend, and unchanged Jacobian rank behavior. All selected points
+complete. Median and 95th-percentile normalized 161-to-321 feature changes are
+$1.963\times10^{-4}$ and $7.234\times10^{-3}$; no comparison remains
+unresolved, ringdown is exactly unchanged, no systematic family-wide trend is
+found, and Jacobian rank is preserved. The targeted forward audit therefore
+passes its predeclared criteria. This is not a uniform 321-phase proof over the
+full 121-point grid.
 \begin{center}
 \begin{minipage}{.86\textwidth}
 \centering\includegraphics[width=.91\linewidth]{resolution_robustness_compact.pdf}
@@ -490,6 +511,15 @@ criterion but does not by itself certify inverse estimators.}
 We next ask whether the previously trained estimators remain stable after the
 forward map has converged. Figure~\ref{fig:estimator-robustness} applies those
 frozen estimators to the refined features; no model is retrained.
+
+Forward acceptance and inverse-estimator acceptance are separate. For HGB and
+RF individually, the predeclared inverse criteria require median normalized
+prediction shift below 0.005, 95th-percentile shift below 0.03, maximum
+identifiable-$\wq$ shift below 0.1, aggregate NMAE change below 0.02, and
+unchanged grouped complementarity. The written protocol permits an
+identifiable-$\wq$ exceedance of the 0.1 scale only when it is traced to an
+unresolved feature; because no targeted feature comparison remains unresolved,
+that caveat does not relax the criterion here.
 
 Frozen trees remain tail-sensitive: HGB and RF 95th-percentile normalized
 shifts are 0.08122 and 0.08509, and their largest identifiable-$\wq$ shifts are
@@ -778,6 +808,17 @@ bootstrap intervals. Associations are descriptive and do not imply causation.}
 \section{Numerical Validation and Reproducibility}
 \label{app:numerical-thresholds}
 \subsection{Numerical-validation thresholds}
+The frozen resolution protocol uses the archived 81-phase q95--q05 feature
+scales and the $10^{-12}$ denominator floor defined in Section~7. Its
+feature-level boundaries are 0.01 (converged) and 0.05 (marginal); values above
+0.05 are unresolved. Targeted forward acceptance uses median/p95 boundaries of
+0.001/0.01 together with unchanged ringdown, no family-wide systematic trend,
+and unchanged rank behavior. Frozen-tree acceptance is assessed separately
+using median/p95 prediction-shift boundaries of 0.005/0.03, maximum
+identifiable-$\wq$ shift 0.1 subject to the unresolved-feature caveat,
+aggregate NMAE change 0.02, and preserved grouped complementarity. All these
+criteria were recorded before evaluation of the 321-phase trajectories.
+
 The 35-point 321-phase run takes 5318.2 s. Maximum hit, timelike-constraint,
 null-constraint, and impact-parameter drift errors are respectively
 $7.0913\times10^{-8}$, $3.1303\times10^{-13}$,
