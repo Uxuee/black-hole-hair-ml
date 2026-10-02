@@ -488,8 +488,13 @@ NMAE change is $6.880\times10^{-4}$, but the maximum is 16.8497 because of
 unclipped MLP directional extrapolation outliers.
 
 The targeted 321-phase audit selects 35 points deterministically before reading
-their 321-phase outcomes. Its forward acceptance conditions, recorded before
-any 321-phase trajectory was evaluated, require median normalized change below
+their 321-phase outcomes. The selection is the deduplicated union of pre-321
+signals: the four largest 81-to-161 shifts in each of the feature, HGB, and RF
+rankings; the eight largest MLP shifts; fixed boundary and center points; four
+directional representatives; three points at each conditioning extreme; and one
+representative from each of nine grouped blocks. Its forward acceptance
+conditions, recorded before any 321-phase trajectory was evaluated, require
+median normalized change below
 0.001, 95th-percentile change below 0.01, unchanged ringdown, no systematic
 family-wide trend, and unchanged Jacobian rank behavior. All selected points
 complete. Median and 95th-percentile normalized 161-to-321 feature changes are
@@ -498,6 +503,16 @@ unresolved, ringdown is exactly unchanged, no systematic family-wide trend is
 found, and Jacobian rank is preserved. The targeted forward audit therefore
 passes its predeclared criteria. This is not a uniform 321-phase proof over the
 full 121-point grid.
+
+Within the selected set, the earlier resolution ranking remains informative.
+Across the 35 systems, Spearman correlations between 81-to-161 and 161-to-321
+point-level changes are $\rho=1.000$ for the maximum (two-sided
+$p=6.65\times10^{-255}$; bootstrap 95\% CI $[1.000,1.000]$) and
+$\rho=0.9972$ for the 95th percentile ($p=9.74\times10^{-39}$; 95\% CI
+$[0.9820,1.000]$). All top-five and top-ten systems are retained under the
+later maximum-change ranking. Because 321-phase values exist only for these 35
+systems, this result cannot establish that they contain the largest
+161-to-321 changes over the full grid.
 \begin{center}
 \begin{minipage}{.86\textwidth}
 \centering\includegraphics[width=.91\linewidth]{resolution_robustness_compact.pdf}
@@ -818,6 +833,15 @@ using median/p95 prediction-shift boundaries of 0.005/0.03, maximum
 identifiable-$\wq$ shift 0.1 subject to the unresolved-feature caveat,
 aggregate NMAE change 0.02, and preserved grouped complementarity. All these
 criteria were recorded before evaluation of the 321-phase trajectories.
+
+The 35 systems are the deduplicated union of ranked 161-phase stress signals,
+fixed boundary/center cases, directional representatives, conditioning
+extremes, and grouped-block representatives; the exact per-point reasons are
+archived in the reviewer analysis. Point-level maximum and 95th-percentile
+81-to-161 rankings are strongly preserved at 161-to-321 resolution
+($\rho=1.000$ and $0.9972$, respectively), with top-five and top-ten maximum
+membership unchanged. This selected-set check does not rank the 86 systems for
+which no 321-phase calculation exists.
 
 The 35-point 321-phase run takes 5318.2 s. Maximum hit, timelike-constraint,
 null-constraint, and impact-parameter drift errors are respectively

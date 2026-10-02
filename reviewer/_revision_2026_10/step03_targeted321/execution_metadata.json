@@ -1,0 +1,44 @@
+{
+  "analysis": "reviewer revision step 03 targeted 321 selection audit",
+  "bootstrap_replicates": 10000,
+  "bootstrap_seed": 20261002,
+  "canonical_outputs_modified": false,
+  "git_head_before_step03_commit": "8e589b5a59fb093df399a64a85f71f851d48bad3",
+  "inputs": {
+    "artifacts\\journal_phase_convergence\\feature_comparison_81_vs_161.csv": "b2c8fc08bb5fd49ca25d60b08e39dbf724df1cc74826db8e518a19790bd4cacb",
+    "artifacts\\targeted_321_audit\\feature_convergence_81_161_321.csv": "a3fa6183fca89868a06a9a4823b8097a285a264cf41455503bed671e7d3afd56",
+    "artifacts\\targeted_321_audit\\input_audit.json": "eeb1a95a520b727f92031736a3ad2d362e5589ad4c5e74dc862f28bf546e0156",
+    "artifacts\\targeted_321_audit\\selected_points.csv": "a3fc4f3fa3297cc100253b255a1476c8509453eaa83a873dfeec26e63a6e6891",
+    "configs\\targeted_321_audit.yaml": "66584ad91f5ea75aa8defbf617fba49230c03c20e897305177ddf1dae8d1e98e",
+    "paper\\current_study\\data\\robustness\\feature_convergence_81_161_321.csv": "a3fa6183fca89868a06a9a4823b8097a285a264cf41455503bed671e7d3afd56",
+    "paper\\current_study\\data\\robustness\\selected_points.csv": "a3fc4f3fa3297cc100253b255a1476c8509453eaa83a873dfeec26e63a6e6891",
+    "reports\\targeted_321_protocol.md": "40e21e58a6de3546d8a0295b35233d70ede60f262794a624570a57c7040c424c",
+    "src\\bhhairml\\validation\\targeted_321_audit.py": "3590dfe12bf679284437d3adba2e1d6b6dd2074d00e8ea7266605a065c1ee619"
+  },
+  "outputs": [
+    "selection_reason_audit.csv",
+    "point_level_resolution_summary.csv",
+    "rank_correlation_summary.json",
+    "execution_metadata.json"
+  ],
+  "physical_simulation_or_model_training_run": false,
+  "python_packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "scipy": "1.11.4"
+  },
+  "selection_logic": {
+    "best_conditioned": 3,
+    "directional_representatives": 4,
+    "fixed_boundary_and_centre_points": 6,
+    "grouped_block_representatives": 9,
+    "ranked_quotas": {
+      "maximum_81_161_feature_change": 4,
+      "maximum_hgb_prediction_shift": 4,
+      "maximum_mlp_prediction_shift": 8,
+      "maximum_rf_prediction_shift": 4
+    },
+    "union_deduplicated_unique_systems": 35,
+    "worst_conditioned": 3
+  }
+}

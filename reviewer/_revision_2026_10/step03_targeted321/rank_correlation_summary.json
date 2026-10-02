@@ -1,0 +1,70 @@
+{
+  "delta_verification": {
+    "absolute_tolerance": 5e-13,
+    "features_with_nonzero_scale_check": 64,
+    "matched_feature_point_rows": 2695,
+    "maximum_81_161_difference_from_uniform_archive": 1.6379952949563403e-13,
+    "maximum_internal_reconstruction_error": 1.2590622988639666e-14,
+    "unique_points": 35
+  },
+  "maximum_change_spearman": {
+    "bootstrap_95_ci": [
+      0.9999999999999998,
+      1.0
+    ],
+    "bootstrap_replicates_requested": 10000,
+    "bootstrap_replicates_valid": 10000,
+    "bootstrap_seed": 20261002,
+    "n": 35,
+    "rho": 0.9999999999999998,
+    "two_sided_p_value": 6.647404910594103e-255,
+    "x": "max_change_81_161",
+    "y": "max_change_161_321"
+  },
+  "p95_change_spearman": {
+    "bootstrap_95_ci": [
+      0.9820072462917487,
+      1.0
+    ],
+    "bootstrap_replicates_requested": 10000,
+    "bootstrap_replicates_valid": 10000,
+    "bootstrap_seed": 20261002,
+    "n": 35,
+    "rho": 0.9971949509116412,
+    "two_sided_p_value": 9.738650958205664e-39,
+    "x": "p95_change_81_161",
+    "y": "p95_change_161_321"
+  },
+  "scope": "selected 35 systems only; no inference for the other 86 systems",
+  "top_rank_overlap": {
+    "maximum_top10": {
+      "count": 10,
+      "n": 10,
+      "point_ids": [
+        "k0p000500000_wqm0p712500000",
+        "k0p001250000_wqm0p712500000",
+        "k0p001500000_wqm0p610000000",
+        "k0p002000000_wqm0p712500000",
+        "k0p002250000_wqm0p666666667",
+        "k0p002250000_wqm0p690000000",
+        "k0p002250000_wqm0p712500000",
+        "k0p002500000_wqm0p580000000",
+        "k0p002500000_wqm0p690000000",
+        "k0p002500000_wqm0p712500000"
+      ],
+      "tie_break": "descending metric, then ascending k and wq"
+    },
+    "maximum_top5": {
+      "count": 5,
+      "n": 5,
+      "point_ids": [
+        "k0p001250000_wqm0p712500000",
+        "k0p002000000_wqm0p712500000",
+        "k0p002250000_wqm0p712500000",
+        "k0p002500000_wqm0p690000000",
+        "k0p002500000_wqm0p712500000"
+      ],
+      "tie_break": "descending metric, then ascending k and wq"
+    }
+  }
+}
