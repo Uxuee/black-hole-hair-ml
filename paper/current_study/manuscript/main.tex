@@ -114,6 +114,14 @@ $\boldsymbol\theta=(k,\wq)$, the local Jacobian is
 \begin{equation}
  J_{ij}=\frac{\partial\tilde O_i}{\partial\theta_j}.
 \end{equation}
+The registered dimensionless row is
+$J_i=(\Delta k\,\partial_k O_i/s_i,
+\Delta\wq\,\partial_{\wq}O_i/s_i)$, where $s_i$ is the global q95--q05
+range over the accepted 121-point nominal grid and $\Delta k=0.0025$ and
+$\Delta\wq=0.2625$ are the full science-domain spans. Features with non-finite
+values or $s_i\leq10^{-12}$ are excluded rather than divided by the floor.
+These choices fix the units of the SVD and therefore condition the numerical
+values of $\smin$ and $\kappaJ$.
 Higher $\smin(J)$ and lower $\kappaJ=\sigma_{\max}/\smin$ are favorable. At
 $k=0$, the deformation term vanishes, so $f(r)$ is Schwarzschild and independent
 of $\wq$. Every physical observable is therefore independent of $\wq$, the
@@ -285,8 +293,8 @@ and residuals are provided in Appendix~\ref{app:numerical-thresholds}.
 
 Using the nominal 81-phase Jacobian archive across the accepted physical grid,
 ringdown plus photon geometry gives a median pointwise $\smin$ gain of
-$4.5429\times$ and a median pointwise condition-number improvement of
-$2.2819\times$ relative to ringdown alone. These are medians of pointwise
+$4.54\times$ and a median pointwise condition-number improvement of
+$2.28\times$ relative to ringdown alone. These are medians of pointwise
 improvement ratios, not ratios of the displayed grid medians. The grid medians
 for the combined set are
 $\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
@@ -296,6 +304,15 @@ The separate 161-phase resolution audit gives, respectively,
 $(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$ for these two
 combined sets, confirming that the published nominal-resolution summaries are
 stable without changing their provenance.
+As expected for non-uniform observable rescaling, the gain magnitudes change
+under alternative normalizations. Nevertheless, the median $\smin$/conditioning
+improvements remain above one for IQR scaling ($5.88/1.87$), population-standard-
+deviation scaling ($3.76/2.40$), and a secondary feature-family-count-balanced
+stress test ($2.95/2.22$). Every finite-$k$ point has $\smin$ gain above one;
+conditioning improves pointwise for 68.2--89.1\% of points across the tested
+schemes, and no numerical rank changes. Appendix~\ref{app:scaling-sensitivity}
+gives the complete sensitivity summary. Thus the qualitative median ordering
+is stable, but the numerical factors are not scale invariant.
 Does the representative complementarity seen at the reference point persist across the
 physical parameter grid? Figure~\ref{fig:complementarity} gives the primary
 grid-wide comparison. The pointwise maps show that complementarity varies
@@ -584,6 +601,14 @@ has support where it is evaluated. Neither statistic subsumes the other.
 Consequently, $\smin$ can predict broad observable-set ordering without ranking
 every empirical model or protocol.
 
+The Jacobian SVD magnitudes also depend on the declared observable and parameter
+normalizations. The registered q95--q05/full-span convention remains the
+primary analysis; IQR, population-standard-deviation, and feature-count-balanced
+checks preserve the median ringdown-plus-photon-geometry ordering but alter its
+magnitude. Pointwise conditioning is spatially nonuniform under every scheme,
+so this sensitivity check supports qualitative complementarity rather than a
+scale-invariant gain factor.
+
 Tree ensembles are piecewise and can show zero median response followed by
 large split-crossing tails. The MLP is smoother under the targeted feature
 substitution but extrapolates to physically unreasonable values in archived
@@ -849,6 +874,42 @@ $7.0913\times10^{-8}$, $3.1303\times10^{-13}$,
 $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
 The Schwarzschild arrival-time comparison in Fig.~\ref{fig:schwarzschild}
 separates the visually overlapping phase-resolved series from their actual-scale residuals.
+
+\subsection{Jacobian normalization sensitivity}
+\label{app:scaling-sensitivity}
+The registered nominal 81-phase Jacobian was recomputed from the archived
+feature grid using unchanged finite-difference stencils and parameter spans.
+Table~\ref{tab:scaling-sensitivity} reports medians of pointwise finite-$k$
+ratios with their interquartile ranges; exact $k=0$ rank-loss points are kept as
+a separate control and excluded from ratios involving zero $\smin$.
+
+\begin{center}
+\begin{minipage}{.96\textwidth}
+\captionof{table}{Observable-normalization sensitivity. Fractions give finite-$k$
+points with improvement greater than one; ``balanced'' is the secondary
+$1/\sqrt{n_{\rm family}}$ row-block stress test.}
+\label{tab:scaling-sensitivity}
+\centering
+\scriptsize
+\begin{tabular}{lcccc}
+Scheme & $\smin$ gain, median [IQR] & gain $>1$ & $\kappa$ improvement, median [IQR] & improve $>1$ \\
+\hline
+Registered q95--q05 & 4.543 [3.845, 6.201] & 100\% & 2.282 [1.207, 3.455] & 80.0\% \\
+IQR & 5.882 [4.415, 7.798] & 100\% & 1.870 [0.590, 3.031] & 68.2\% \\
+Population std. & 3.763 [3.071, 5.223] & 100\% & 2.401 [1.368, 2.954] & 83.6\% \\
+Family-count balanced & 2.954 [2.425, 3.942] & 100\% & 2.225 [1.881, 2.755] & 89.1\% \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+All four schemes retain 110 eligible finite-$k$ points, preserve all 11 exact
+$k=0$ rank-one controls, and produce no finite-$k$ numerical-rank change. Raw
+ringdown/combined grid medians of $(\smin,\kappa)$ are respectively
+$(0.2782,6.6112)/(1.2326,4.0731)$ for the registered scheme,
+$(0.5553,6.6688)/(2.7467,5.0306)$ for IQR,
+$(0.8841,6.6075)/(3.5168,3.8107)$ for population standard deviation, and
+$(0.1391,6.6112)/(0.4117,3.3974)$ for the balanced stress test. No relevant
+feature scale required flooring or exclusion.
 
 \begin{center}
 \begin{minipage}{.72\textwidth}
