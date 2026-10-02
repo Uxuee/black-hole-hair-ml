@@ -29,13 +29,14 @@ independent response direction that resolves much of the state-parameter
 $\wq$ degeneracy. Relative to ringdown alone, ringdown plus photon geometry
 gives a median pointwise $4.54\times$ gain in minimum singular value and a
 median pointwise $2.28\times$ improvement in Jacobian condition number. In
-grouped physical interpolation,
+grouped physical interpolation, these normalization-dependent Jacobian gains
+retain their qualitative ordering under the tested alternative scalings, and
 the corresponding identifiable-$\wq$ normalized mean absolute error decreases
 from 0.309 for ringdown to 0.087 for the combined features. Random splitting is
 more optimistic, while four directional extrapolation tests are substantially
 harder and split-conformal coverage falls under distribution shift. Photon
 geometry also improves recovery under a non-learned nearest-model inverse,
-showing that the gain is not architecture-specific. A uniform
+showing that the gain is not confined to the tested learned architectures. A uniform
 161-phase audit gives a typical normalized prediction shift of
 $9.48\times10^{-4}$ but exposes catastrophic extrapolation tails. A subsequent
 targeted 321-phase audit resolves the remaining forward-feature comparisons,
@@ -661,17 +662,21 @@ observable-space neighborhood.
 
 \section{Limitations}
 The ringdown model is leading-eikonal rather than a dedicated finite-$\ell$
-perturbative spectrum. The spacetime is static. Shooting includes only the
+perturbative spectrum. The study covers one static spherical Kiselev family. Shooting includes only the
 direct photon branch, a point emitter and point observer, and no radiative
 transfer, detector response, secondary images, strain likelihood, calibration
-error, or model discrepancy. The physical grid is finite. Historical proxy
+error, observational measurement-noise model, or model discrepancy; the
+reported feature-noise tests are synthetic perturbations. The physical grid is finite. Historical proxy
 results remain synthetic. Although the targeted audit resolves higher-harmonic
 forward differences on its selected set, it is not a uniform 321-phase grid and
 tree tail sensitivity persists, and MLP extrapolation is unstable. These
 limitations preclude interpreting the results as an observational constraint.
 The finite-domain ambiguity audit does not prove continuous global injectivity;
 the 121-point grid can miss isolated or continuous degeneracies between sampled
-parameter values.
+parameter values. Conformal coverage is sensitive to the representation of the
+exact $k=0$ equivalence class, and the collapsed sensitivity design does not
+separate reduced Schwarzschild multiplicity from removal of non-identifiable
+nominal $\wq$ labels.
 
 \section{Conclusion}
 Physical complementarity is supported: ringdown constrains $k$, while photon
@@ -680,13 +685,17 @@ recovery. Observable complementarity persists under a non-learned inverse
 baseline, while the local Jacobian inverse demonstrates that strong local
 recoverability can coexist with globally unstable predictions in this Kiselev
 benchmark. Random interpolation overstates recoverability relative to grouped
-and directional validation. The exact $k=0$ boundary is structurally
+and directional validation, and shifted conformal coverage is degraded and
+heterogeneous. The exact $k=0$ boundary is structurally
 non-identifiable, whereas small nonzero $k$ can be full-rank but only weakly
 identifiable because of practical ill-conditioning. Finally, numerical and
 distribution-shift audits are necessary before confident inverse claims: the
 forward features can converge while fitted estimators remain fragile. These
-conclusions motivate robust inverse methods and broader physical modeling
-before observational use.
+conclusions hold within the registered finite Kiselev grid and tested
+normalizations; they do not establish observational constraints, continuous
+global injectivity, generic beyond-Kerr validity, a uniform 321-phase result
+over all 121 systems, or universal scientific-ML guarantees. They motivate
+robust inverse methods and broader physical modeling before observational use.
 
 \section*{Data Availability}
 The analysis code and tracked machine-readable derived results, registered
