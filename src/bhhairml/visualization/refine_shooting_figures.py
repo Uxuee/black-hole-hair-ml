@@ -148,7 +148,7 @@ def sky_with_residuals(frames, refined, journal, dpi):
                 xytext=(base.alpha_sky.iloc[q]-.012, base.beta_sky.iloc[q]+.024),
                 arrowprops={"arrowstyle": "->"})
     ax.set(xlabel=r"signed $\alpha_{\rm sky}$", ylabel=r"signed $\beta_{\rm sky}$",
-           title="Observer-tetrad sky tracks")
+           title="A. Sky tracks")
     ax.set_aspect("equal", adjustable="datalim"); ax.legend(frameon=False, fontsize=8)
     ax.text(.02, .02, "open circle: apocentre\ndiamond: numerical pericentre", transform=ax.transAxes, fontsize=8)
     for case in CASE_ORDER[1:]:
@@ -158,7 +158,7 @@ def sky_with_residuals(frames, refined, journal, dpi):
         axb.plot(frame.phi, frame.beta_sky - base.beta_sky, color=style["color"], ls=style["ls"])
     axa.axhline(0, color=".45", lw=.8); axb.axhline(0, color=".45", lw=.8)
     axa.set_ylabel(r"$\Delta\alpha_{\rm sky}$"); axb.set_ylabel(r"$\Delta\beta_{\rm sky}$")
-    axb.set_xlabel(r"physical phase $\phi$"); axa.set_title("Matched-phase residuals from Schwarzschild")
+    axb.set_xlabel(r"physical phase $\phi$"); axa.set_title("B. Residuals")
     axa.legend(frameon=False, fontsize=8)
     for residual_ax in (axa, axb): residual_ax.grid(alpha=.2)
     fig.tight_layout()
@@ -185,7 +185,6 @@ def observables_refined(frames, refined, journal, dpi):
     axes[-1].legend(*axes[0].get_legend_handles_labels(), loc="center", frameon=False)
     axes[-1].text(.5, .18, "dashed vertical line: apocentre\ndiamonds: numerical pericentre",
                   ha="center", transform=axes[-1].transAxes, fontsize=9)
-    fig.suptitle("Physical shooting observables respond differently to the same spacetime parameters", y=.995)
     fig.tight_layout()
     _save(fig, "shooting_observables_vs_phase_refined", refined, journal, dpi)
 

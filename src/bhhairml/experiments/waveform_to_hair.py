@@ -389,7 +389,6 @@ def _figures(metrics, class_metrics, predictions, class_predictions, noise, meta
         sc = ax.scatter(cp.k, cp.wq, c=values, cmap="coolwarm", vmin=0, vmax=1, s=15)
         ax.axvline(0, color="white", ls="--"); ax.set(xlabel="k", ylabel=r"$w_q$", title=title)
     cbar = fig.colorbar(sc, ax=axes, ticks=[0, 1]); cbar.ax.set_yticklabels(["identifiable", "weak"])
-    fig.suptitle("Learning when Kiselev hair is observable")
     save_figure(fig, poster/"learning_when_hair_is_observable"); plt.close(fig)
     for name in ("waveform_to_hair_true_vs_pred", "waveform_to_hair_feature_comparison",
                  "waveform_to_hair_noise_robustness", "learning_when_hair_is_observable"):

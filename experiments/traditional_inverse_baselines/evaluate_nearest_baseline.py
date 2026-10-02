@@ -117,7 +117,13 @@ def make_figure(aggregate, root):
             vals=[q[col].get(m,np.nan) for m in methods]; ax.bar(x+(j-1)*width,vals,width,label=labels[protocol])
     for ax,title in zip(axs,["A. k recovery","B. identifiable-wq recovery"]):
         ax.set_xticks(x,methods,rotation=25,ha="right"); ax.set_ylabel("NMAE (MAE / full target span)"); ax.set_title(title); ax.grid(axis="y",alpha=.2)
-    axs[0].legend(frameon=False,ncol=3,loc="upper center",bbox_to_anchor=(1.05,1.18)); fig.tight_layout()
+    fig.subplots_adjust(left=.09,right=.98,top=.91,bottom=.30,wspace=.20)
+    fig.canvas.draw()
+    positions=[ax.get_position() for ax in axs]
+    legend_center_x=(min(p.x0 for p in positions)+max(p.x1 for p in positions))/2
+    handles,legend_labels=axs[0].get_legend_handles_labels()
+    fig.legend(handles,legend_labels,frameon=False,ncol=3,loc="lower center",
+               bbox_to_anchor=(legend_center_x,.02),bbox_transform=fig.transFigure)
     for ext,dpi in [("pdf",None),("png",320)]: fig.savefig(root/f"figures/traditional_vs_ml_inverse.{ext}",bbox_inches="tight",dpi=dpi)
     plt.close(fig)
 
