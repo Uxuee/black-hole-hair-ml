@@ -492,8 +492,9 @@ grouped, and directional $k$ NMAE changes from 0.0471/0.0528/0.1714 to
 0.0387/0.0594/0.1567; identifiable-$\wq$ NMAE changes only from
 0.0621/0.0875/0.2038 to 0.0623/0.0859/0.2032. Coverage is more sensitive:
 identifiable-$\wq$ values become 0.929/0.763/0.509. Thus the primary qualitative
-error and complementarity conclusions are unchanged, while the shifted-
-coverage warning is strengthened. The registered results are not replaced.
+recovery and complementarity conclusions are stable under this sensitivity
+analysis, while conformal coverage is more sensitive to the representation of
+the $k=0$ equivalence class. The registered results are not replaced.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.82\textwidth]{physical_ml_uncertainty_calibration.png}
@@ -902,7 +903,10 @@ positive identifiable-$\wq$ reduction from photon geometry in every protocol;
 the MLP remains the documented counterexample. Shifted conformal coverage stays
 degraded and heterogeneous, and the frozen-estimator robustness audit is
 unchanged. This majority-role collapse is a least-change sensitivity design,
-not a unique equivalence-aware resampling protocol.
+not a unique equivalence-aware resampling protocol. It changes both the
+multiplicity of the Schwarzschild equivalence class and the removal of
+non-identifiable nominal $\wq$ labels from fitting and calibration, so these
+two effects are not separately identified.
 
 \subsection{Noise and learning curves}
 Grouped one-percent feature noise yields ringdown-plus-photon-geometry NMAE
