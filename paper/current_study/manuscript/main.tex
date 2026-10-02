@@ -81,14 +81,12 @@ validated timelike and null Kiselev geodesics with Jacobian diagnostics,
 leakage-aware random, grouped, and directional evaluation, non-learned inverse
 baselines, and frozen-estimator resolution audits.
 
-The published JCAP study in Ref.~\cite{palominoylla2026ringdown} supplies the
-hairy-black-hole and ringdown framework. The present work adds timelike-emitter
+The hairy-black-hole and ringdown framework follows
+Ref.~\cite{palominoylla2026ringdown}. The present work adds timelike-emitter
 evolution, three-dimensional null-geodesic shooting, photon-geometry
 observables, Jacobian identifiability analysis, leakage-aware random, grouped,
 and directional evaluation, non-learned inverse baselines, numerical-resolution
-audits, and frozen-estimator robustness tests. This boundary distinguishes the
-new inverse-learning and physical-shooting study from its theoretical starting
-point.
+audits, and frozen-estimator robustness tests.
 
 \section{Physical Model and Identifiability Framework}
 The static spherical line element is
@@ -102,7 +100,7 @@ unstable circular null orbit, with the limitations of the geodesic--QNM
 correspondence kept explicit
 \cite{cardoso2009geodesic,konoplya2017correspondence,palominoylla2026ringdown}.
 
-The mature physical study evaluates an $11\times11$ registered grid: 121
+We evaluate an $11\times11$ analysis grid: 121
 systems with $k\in[0,0.0025]$ and
 $\wq\in[-0.7125,-0.45]$. The $k=0$ systems are retained deliberately because
 their Schwarzschild metric is independent of $\wq$ and therefore supplies the
@@ -115,7 +113,7 @@ $\boldsymbol\theta=(k,\wq)$, the local Jacobian is
 \begin{equation}
  J_{ij}=\frac{\partial\tilde O_i}{\partial\theta_j}.
 \end{equation}
-The registered dimensionless row is
+The fixed dimensionless row is
 $J_i=(\Delta k\,\partial_k O_i/s_i,
 \Delta\wq\,\partial_{\wq}O_i/s_i)$, where $s_i$ is the global q95--q05
 range over the accepted 121-point nominal grid and $\Delta k=0.0025$ and
@@ -139,7 +137,7 @@ rank-deficient boundary, we next construct the physical observables used to
 evaluate it.
 
 \section{Physical Geodesic Shooting and Numerical Validation}
-For each registered pair $(k,\wq)$, we construct the Kiselev spacetime and
+For each analysis-grid pair $(k,\wq)$, we construct the Kiselev spacetime and
 integrate one timelike emitter orbit with $M=1$, $r_p=8M$, $r_a=12M$, and
 physical coordinate azimuth $\phi\in[\pi,3\pi]$. The emitter starts at
 apocentre at $\phi=\pi$. We then select a finite set of emission phases. At
@@ -250,7 +248,7 @@ reference value where defined, and sine/cosine coefficients through the third
 harmonic. The Fourier coefficients compress the successful computed samples;
 they are never used to fill a failed phase.
 
-The registered families are defined before any comparison: \emph{ringdown}
+The feature families are defined before any comparison: \emph{ringdown}
 contains four leading-eikonal scalar features; \emph{orbital} contains the
 radial azimuthal period, apsidal advance, and summaries of $r$ and $p_r$ (20
 features); \emph{photon geometry} summarizes impact parameter and the two
@@ -258,7 +256,7 @@ signed observer-tetrad sky coordinates (27); \emph{redshift} contains 9
 summaries; and \emph{timing} summarizes excess delay and relative arrival time
 (17). \emph{All shooting} is orbital plus photon geometry, redshift, and
 timing (73). Ringdown plus photon geometry has 31 features, and ringdown plus
-all shooting has 77. Appendix~\ref{app:features} gives the exact registered
+all shooting has 77. Appendix~\ref{app:features} gives the exact predefined
 table.
 
 \section{Physical Observable Complementarity}
@@ -298,8 +296,8 @@ $4.54\times$ (finite-grid bootstrap 95\% interval $[4.28,4.94]$) and a median
 pointwise condition-number improvement of $2.28\times$ ($[1.84,2.63]$)
 relative to ringdown alone. These are medians of pointwise improvement ratios,
 not ratios of the displayed grid medians. The intervals resample the 110
-eligible finite-$k$ physical systems and quantify stability of this registered
-finite-grid summary; they are not observational or astrophysical-population
+eligible finite-$k$ physical systems and quantify stability of this finite-grid
+summary; they are not observational or astrophysical-population
 confidence intervals. The grid medians
 for the combined set are
 $\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
@@ -307,12 +305,12 @@ $\smin=1.5312$ and $\kappaJ=4.4974$: adding more responsive summaries can raise
 $\smin$ without producing the best conditioning.
 The separate 161-phase resolution audit gives, respectively,
 $(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$ for these two
-combined sets, confirming that the published nominal-resolution summaries are
-stable without changing their provenance.
+combined sets, showing that the nominal-resolution summaries are numerically
+stable under phase refinement.
 As expected for non-uniform observable rescaling, the gain magnitudes change
 under alternative normalizations. Nevertheless, the median $\smin$/conditioning
-improvements remain above one for IQR scaling ($5.88/1.87$), population-standard-
-deviation scaling ($3.76/2.40$), and a secondary feature-family-count-balanced
+improvements remain above one for IQR scaling ($5.88/1.87$),
+population-standard-deviation scaling ($3.76/2.40$), and a secondary feature-family-count-balanced
 stress test ($2.95/2.22$). Every finite-$k$ point has $\smin$ gain above one;
 conditioning improves pointwise for 68.2--89.1\% of points across the tested
 schemes, and no numerical rank changes. Appendix~\ref{app:scaling-sensitivity}
@@ -386,8 +384,8 @@ All nominal $k=0$ records
 are retained and flagged. They contribute to $k$ scoring, but ordinary $\wq$
 error excludes them because $\wq$ is exactly non-identifiable there. Although
 their nominal $\wq$ labels differ, these 11 records form one physical
-Schwarzschild equivalence class. The registered analysis remains primary; a
-post-review collapsed-equivalence sensitivity check is reported below and in
+Schwarzschild equivalence class. A collapsed-equivalence sensitivity analysis
+is reported below and in
 Appendix~\ref{app:k0-equivalence}.
 
 Normalized mean absolute error divides MAE by the full target span.
@@ -411,7 +409,7 @@ extrapolation.
 \begin{figure}[tbp]
 \centering\includegraphics[width=.84\textwidth]{physical_ml_protocol_comparison.png}
 \caption{NMAE for the five primary feature sets under random, grouped physical
-interpolation, and directional extrapolation. Each dot preserves the registered
+interpolation, and directional extrapolation. Each dot preserves the predefined
 table statistic: the median of archived summary-row medians. To expose
 lower-level dispersion rather than suppress it through that hierarchy, each
 horizontal bar spans the 25th--75th percentile of the underlying NMAE records
@@ -424,7 +422,7 @@ directions remain separate in the machine-readable source before aggregation.}
 \subsection{Traditional inverse baselines}
 To test whether the photon-geometry benefit belongs to the physical forward
 map rather than to one ML architecture, we evaluate non-learned nearest-model
-and local Jacobian inversions under exactly the same registered physical
+and local Jacobian inversions under exactly the same fixed physical
 holdouts. The nearest physical model fits a standardization transform on the
 training observables only, computes every Euclidean distance to the training
 catalog explicitly, and returns the $(k,\wq)$ pair of the nearest training
@@ -445,7 +443,7 @@ optimal.
 For ringdown plus photon geometry, the local Jacobian median
 $k$/identifiable-$\wq$ NMAE is 0.0147/0.0259, 0.0184/0.0454, and 0.0661/0.1172 for random,
 grouped, and directional protocols. However, 1315 of 9950 raw predictions lie
-outside the registered physical domain and were not clipped. Thus strong local
+outside the analysis domain and were not clipped. Thus strong local
 inversion performance coexists with poor global robustness; favorable median
 local-linear performance does not establish a reliable global inverse. The
 full method comparison is shown in Fig.~\ref{fig:mljac}, with detailed values
@@ -466,7 +464,7 @@ Appendix~\ref{app:traditional}.
 \caption{Traditional and learned inverse methods using ringdown plus photon
 geometry. Bars show median NMAE for $k$ and identifiable $\wq$ under random,
 grouped, and directional protocols. The nearest and Jacobian baselines are
-deterministic conditional on each registered split, whereas archived ML
+deterministic conditional on each predefined split, whereas archived ML
 summaries aggregate the existing folds and seeds. The Jacobian bars must be
 read with the unclipped out-of-domain diagnostic reported in the text.}
 \label{fig:mljac}
@@ -476,7 +474,7 @@ Nominal 90\% conformal coverage is 0.892/0.965 for random $k/\wq$, but falls to
 0.722/0.851 under grouped interpolation and 0.509/0.660 under extrapolation.
 Each value is the median of archived model--feature-set coverage rows (15 rows
 for random and grouped protocols; 60 direction--model--feature-set rows for
-extrapolation), after each row pools its registered fold/seed prediction
+extrapolation), after each row pools its fixed fold/seed prediction
 indicators. The corresponding row-level IQRs are 0.833--0.908/0.951--0.973,
 0.676--0.747/0.840--0.863, and 0.311--0.689/0.585--0.844. Because models,
 features, seeds, and layouts reuse physical systems, these rows are not
@@ -495,7 +493,8 @@ grouped, and directional $k$ NMAE changes from 0.0471/0.0528/0.1714 to
 identifiable-$\wq$ values become 0.929/0.763/0.509. Thus the primary qualitative
 recovery and complementarity conclusions are stable under this sensitivity
 analysis, while conformal coverage is more sensitive to the representation of
-the $k=0$ equivalence class. The registered results are not replaced.
+the $k=0$ equivalence class. The collapsed analysis is treated as a sensitivity
+analysis rather than as a replacement for the primary analysis.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.82\textwidth]{physical_ml_uncertainty_calibration.png}
@@ -628,7 +627,7 @@ Consequently, $\smin$ can predict broad observable-set ordering without ranking
 every empirical model or protocol.
 
 The Jacobian SVD magnitudes also depend on the declared observable and parameter
-normalizations. The registered q95--q05/full-span convention remains the
+normalizations. The nominal q95--q05/full-span convention remains the
 primary analysis; IQR, population-standard-deviation, and feature-count-balanced
 checks preserve the median ringdown-plus-photon-geometry ordering but alter its
 magnitude. Pointwise conditioning is spatially nonuniform under every scheme,
@@ -691,20 +690,20 @@ non-identifiable, whereas small nonzero $k$ can be full-rank but only weakly
 identifiable because of practical ill-conditioning. Finally, numerical and
 distribution-shift audits are necessary before confident inverse claims: the
 forward features can converge while fitted estimators remain fragile. These
-conclusions hold within the registered finite Kiselev grid and tested
+conclusions hold within the predefined finite Kiselev grid and tested
 normalizations; they do not establish observational constraints, continuous
 global injectivity, generic beyond-Kerr validity, a uniform 321-phase result
 over all 121 systems, or universal scientific-ML guarantees. They motivate
 robust inverse methods and broader physical modeling before observational use.
 
 \section*{Data Availability}
-The analysis code and tracked machine-readable derived results, registered
+The analysis code, machine-readable derived results included in the repository, fixed
 split assignments, and reproducibility audits are available in the project
 repository~\cite{palomino2026software}. This work uses simulated theoretical data and no observational
-data. A fresh clone can reproduce the headline aggregations from the tracked
+data. A standard repository checkout can reproduce the headline aggregations from the included
 prediction tables without rerunning the physical grid. Full bitwise replay of
 the frozen-estimator audit additionally requires 5,520 serialized estimators
-(approximately 822 MB), which are not tracked in the ordinary Git repository
+(approximately 822 MB), which are not included in the repository
 and do not yet have a permanent public archive; they are available from the
 author upon reasonable request.
 
@@ -751,7 +750,7 @@ replace, the validated physical shooting analysis.}
 \end{center}
 
 \section{Full Split Definitions}
-The archived assignment table contains 115 registered split specifications
+The assignment table contains 115 predefined split specifications
 over five seeds. For each seed it contains one random interpolation split, 18
 grouped splits (nine held-out blocks for each of two $3\times3$ layouts), and
 four directional splits. Random splitting holds out 20\% of the 121 physical
@@ -761,21 +760,22 @@ blocks; each block is held out once and 20\% of the remaining systems calibrate
 the fit. Directional tests separately hold out the highest three $k$ levels,
 lowest three $k$ levels, lowest three $\wq$ levels, and highest three $\wq$
 levels, with 20\% of the complementary pool used for calibration. Training,
-calibration, and test systems are disjoint. All $k=0$ systems remain registered;
+calibration, and test systems are disjoint. All $k=0$ systems remain included;
 they contribute to $k$ scoring but not ordinary $\wq$ scoring because $\wq$ is
 unidentifiable there. Every scaler, noise scale, feature transform, and model
-is fitted on training data only. No new split was generated for this manuscript.
+is fitted on training data only. The same predefined split assignments are used
+throughout.
 
 \section{Feature Definitions}
 \label{app:features}
-Table~\ref{tab:features} lists the registered feature families. Except for the
+Table~\ref{tab:features} lists the predefined feature families. Except for the
 two orbital invariants and four ringdown scalars, each phase-resolved quantity
 is represented by its mean, amplitude, reference value where defined, and
 sine/cosine coefficients through the third harmonic.
 
 \begin{center}
 \begin{minipage}{.96\textwidth}
-\captionof{table}{Registered physical feature families and exact dimensions.}
+\captionof{table}{Predefined physical feature families and exact dimensions.}
 \label{tab:features}
 \centering
 \scriptsize
@@ -800,7 +800,7 @@ Ringdown + all shooting & union of the corresponding families & combined & 77 \\
 The grid-wide medians and interquartile ranges in the main text summarize the
 overall observable-family ordering. Figure~\ref{fig:grid} retains the
 corresponding pointwise structure: it shows where local identifiability is
-strong or weak within the registered domain without interpolating missing or
+strong or weak within the analysis domain without interpolating missing or
 invalid systems.
 
 \begin{center}
@@ -817,7 +817,7 @@ interpolated, and all panels use one finite-$k$ color scale.}
 \subsection{Additional model-level results}
 HGB and RF reproduce the central grouped photon-geometry improvement for
 identifiable $\wq$. The MLP is retained as a stress test rather than omitted:
-its catastrophic errors are un-clipped and included in aggregate summaries.
+its catastrophic errors are unclipped and included in aggregate summaries.
 
 \subsection{Four directional extrapolation tests}
 Directions are stored independently in the prediction tables before any median
@@ -832,8 +832,8 @@ distribution shift.
 
 \subsection{Finite-grid and coverage uncertainty}
 \label{app:conformal-uncertainty}
-Table~\ref{tab:uncertainty-summary} records the uncertainty summaries added for
-the finite registered grid. The Jacobian percentile intervals use 10,000 paired
+Table~\ref{tab:uncertainty-summary} reports uncertainty summaries for
+the finite analysis grid. The Jacobian percentile intervals use 10,000 paired
 physical-system bootstrap resamples (seed 20261002). Coverage entries are the
 median [IQR] across the archived rows that define the manuscript headline; the
 evaluation-unit count is given in parentheses. At the lower level, each unit is
@@ -870,28 +870,28 @@ $\kappaJ$: 2.2819 [1.8382, 2.6254] ($n=110$)} \\
 
 \subsection{Equivalent Schwarzschild-record sensitivity}
 \label{app:k0-equivalence}
-The 11 registered $k=0$ rows have different nominal $\wq$ labels but identical
-values for all 77 registered physical features. Their maximum absolute and
+The 11 nominal $k=0$ rows have different nominal $\wq$ labels but identical
+values for all 77 predefined physical features. Their maximum absolute and
 q95--q05-standardized feature differences are both exactly zero in the
-archived table. Because registered splitting treats nominal rows separately,
+archived table. Because the predefined splits treat nominal rows separately,
 physically equivalent Schwarzschild records cross train/test in 45 of 115
 split specifications and train/calibration in 96. This is nominal-record
 separation but not physical-equivalence separation.
 
 As a secondary check, the 11 rows are collapsed to one equivalence record whose
-partition is the majority registered $k=0$ role in each split; ties prefer
+partition is the majority nominal $k=0$ role in each split; ties prefer
 training, then calibration, then test. This minimizes assignment changes
 without selecting a nominal $\wq$. All 110 finite-$k$ assignments remain
 unchanged, and the collapsed record is excluded from $\wq$ fitting,
 calibration, testing, and scoring. Table~\ref{tab:k0-equivalence} compares the
-registered and collapsed medians across learned model--feature protocol
-summaries. Secondary models use the registered classes, hyperparameters, and
+nominal and collapsed medians across learned model--feature protocol
+summaries. Secondary models use the predefined classes, hyperparameters, and
 seeds with training-only preprocessing.
 
 \begin{center}
 \begin{minipage}{.94\textwidth}
-\captionof{table}{Registered (R) versus collapsed-equivalence (C) sensitivity.
-Each cell is R $\rightarrow$ C; ordinary $\wq$ quantities use finite $k$ only.}
+\captionof{table}{Nominal (N) versus collapsed-equivalence (C) sensitivity.
+Each cell is N $\rightarrow$ C; ordinary $\wq$ quantities use finite $k$ only.}
 \label{tab:k0-equivalence}
 \centering
 \scriptsize
@@ -905,7 +905,7 @@ Directional & 0.1714 $\to$ 0.1567 & 0.2038 $\to$ 0.2032 & 0.509 $\to$ 0.479 & 0.
 \end{minipage}
 \end{center}
 
-In the registered predictions, 147 distinct $k=0$ split/test-system cases have
+In the nominal predictions, 147 distinct $k=0$ split/test-system cases have
 an equivalent Schwarzschild training record and 55 do not. Their mean $k$ NMAE
 is respectively 0.0355 and 0.2792, with empirical coverage 0.990 and 0.160;
 equivalent training support therefore makes this boundary test locally easier.
@@ -930,7 +930,7 @@ points, so data limitation remains part of the interpretation.
 \label{app:traditional}
 Table~\ref{tab:traditional} gives the complete ringdown-plus-photon-geometry
 comparison. Each entry is median $k$/identifiable-$\wq$ NMAE. The nearest and
-local-linear methods are deterministic for a fixed registered split; their
+local-linear methods are deterministic for a fixed predefined split; their
 rows are summarized over the same split assignments, while archived learned
 model rows retain the existing fold/seed aggregation.
 
@@ -990,8 +990,8 @@ criteria were recorded before evaluation of the 321-phase trajectories.
 
 The 35 systems are the deduplicated union of ranked 161-phase stress signals,
 fixed boundary/center cases, directional representatives, conditioning
-extremes, and grouped-block representatives; the exact per-point reasons are
-archived in the reviewer analysis. Point-level maximum and 95th-percentile
+extremes, and grouped-block representatives. Machine-readable point-selection
+metadata are provided with the repository. Point-level maximum and 95th-percentile
 81-to-161 rankings are strongly preserved at 161-to-321 resolution
 ($\rho=1.000$ and $0.9972$, respectively), with top-five and top-ten maximum
 membership unchanged. This selected-set check does not rank the 86 systems for
@@ -1006,7 +1006,7 @@ separates the visually overlapping phase-resolved series from their actual-scale
 
 \subsection{Jacobian normalization sensitivity}
 \label{app:scaling-sensitivity}
-The registered nominal 81-phase Jacobian was recomputed from the archived
+The nominal 81-phase Jacobian was recomputed from the archived
 feature grid using unchanged finite-difference stencils and parameter spans.
 Table~\ref{tab:scaling-sensitivity} reports medians of pointwise finite-$k$
 ratios with their interquartile ranges; exact $k=0$ rank-loss points are kept as
@@ -1023,7 +1023,7 @@ $1/\sqrt{n_{\rm family}}$ row-block stress test.}
 \begin{tabular}{lcccc}
 Scheme & $\smin$ gain, median [IQR] & gain $>1$ & $\kappa$ improvement, median [IQR] & improve $>1$ \\
 \hline
-Registered q95--q05 & 4.543 [3.845, 6.201] & 100\% & 2.282 [1.207, 3.455] & 80.0\% \\
+Nominal q95--q05 & 4.543 [3.845, 6.201] & 100\% & 2.282 [1.207, 3.455] & 80.0\% \\
 IQR & 5.882 [4.415, 7.798] & 100\% & 1.870 [0.590, 3.031] & 68.2\% \\
 Population std. & 3.763 [3.071, 5.223] & 100\% & 2.401 [1.368, 2.954] & 83.6\% \\
 Family-count balanced & 2.954 [2.425, 3.942] & 100\% & 2.225 [1.881, 2.755] & 89.1\% \\
@@ -1034,7 +1034,7 @@ Family-count balanced & 2.954 [2.425, 3.942] & 100\% & 2.225 [1.881, 2.755] & 89
 All four schemes retain 110 eligible finite-$k$ points, preserve all 11 exact
 $k=0$ rank-one controls, and produce no finite-$k$ numerical-rank change. Raw
 ringdown/combined grid medians of $(\smin,\kappa)$ are respectively
-$(0.2782,6.6112)/(1.2326,4.0731)$ for the registered scheme,
+$(0.2782,6.6112)/(1.2326,4.0731)$ for the nominal scheme,
 $(0.5553,6.6688)/(2.7467,5.0306)$ for IQR,
 $(0.8841,6.6075)/(3.5168,3.8107)$ for population standard deviation, and
 $(0.1391,6.6112)/(0.4117,3.3974)$ for the balanced stress test. No relevant
@@ -1094,15 +1094,15 @@ proxy substitution.
 \subsection{Reproducibility summary}
 The physical grid contains 121 points. The uniform 161-phase audit completed
 all points, and the targeted 321-phase audit completed all 35 preselected
-points. Exact $k=0$ rank loss is preserved. Registered split assignments are
+points. Exact $k=0$ rank loss is preserved. The predefined split assignments are
 reused, preprocessing is fitted on training data only, and the traditional
 inverse numerical audit passed. The independent physics cross-check reported
-in Section~3 also passed; full implementation and provenance details remain in
-the repository audit files.
+in Section~3 also passed. Additional implementation and reproducibility details
+are provided in the repository.
 
 \section{Finite-Domain Observable-Ambiguity Audit}
 \label{app:ambiguity}
-This audit evaluates all pairwise distances on the registered 121-point
+This audit evaluates all pairwise distances on the predefined 121-point
 physical grid. It cannot rule out isolated or continuous degeneracies between
 sampled points and therefore does not establish continuous global injectivity.
 For points $i,j$, normalized parameter separation is
@@ -1110,7 +1110,7 @@ For points $i,j$, normalized parameter separation is
 d_\theta(i,j)=\sqrt{\left(\frac{k_i-k_j}{\Delta k}\right)^2+
 \left(\frac{w_{q,i}-w_{q,j}}{\Delta w_q}\right)^2},
 \end{equation}
-where both spans are taken from the registered physical domain. Observable
+where both spans are taken from the analysis domain. Observable
 differences use the archived grid-wide q95--q05 feature scales. The primary
 cross-set distance is the RMS of standardized feature differences rather than
 a raw Euclidean norm, because the combined set has 31 dimensions while
@@ -1118,7 +1118,7 @@ ringdown has four.
 
 At $k=0$, the ringdown distance across all 55 nominal-$\wq$ pairs is exactly
 zero. For ringdown plus photon geometry the minimum and median are zero and the
-maximum is $2.63\times10^{-12}$. This is the required positive control and
+maximum is $2.63\times10^{-12}$. This is the expected $k=0$ null control and
 reproduces the exact Schwarzschild structural degeneracy to numerical
 precision; these pairs are not counted as undesirable collisions.
 

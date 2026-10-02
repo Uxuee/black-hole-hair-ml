@@ -162,7 +162,7 @@ def make_figures(pairs, nearest, distant, output: Path):
     fig,axs=plt.subplots(1,2,figsize=(8.2,3.3),sharex=True,sharey=True)
     for ax,name,title in zip(axs,names,titles):
         col=f"d_O_{name}"; ax.scatter(finite.d_theta,finite[col],s=7,alpha=.22,color="#3569a8",rasterized=True,label="finite-k pairs")
-        ax.scatter(k0.d_theta,k0[col],s=12,alpha=.7,color="#777777",label="k=0 positive control")
+        ax.scatter(k0.d_theta,k0[col],s=12,alpha=.7,color="#777777",label="k=0 null control")
         best=distant[(distant.feature_set==name)&np.isclose(distant.d_theta_threshold,.5)].iloc[0]
         ax.scatter(best.minimum_d_theta,best.minimum_distance,s=55,marker="*",color="#d65f35",zorder=5,label="closest pair, dθ≥0.5")
         ax.set(title=title,xlabel=r"normalized parameter distance $d_\theta$"); ax.grid(axis="y",alpha=.18)

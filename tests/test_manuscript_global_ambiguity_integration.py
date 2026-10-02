@@ -36,7 +36,7 @@ def test_positive_control_and_figure_are_appendix_only():
     source=text(); appendix=source.index(r"\appendix"); section=source.index(r"\label{app:ambiguity}")
     assert section>appendix
     assert "$2.63\\times10^{-12}$" in source[section:]
-    assert "required positive control" in source[section:]
+    assert "expected $k=0$ null control" in source[section:]
     figure="finite_domain_global_ambiguity.pdf"
     assert source.index(figure)>appendix
     assert (FINAL/"figures"/figure).is_file()
