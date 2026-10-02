@@ -1,0 +1,23 @@
+{
+  "interpretation": "Percentile intervals quantify stability of the registered finite-grid median under paired resampling of physical systems; they are not observational, measurement, posterior, or astrophysical-population confidence intervals.",
+  "eligible_physical_systems": 110,
+  "bootstrap_seed": 20261002,
+  "bootstrap_replicates": 10000,
+  "resampling_unit": "paired finite-k physical system (k, wq)",
+  "sigma_min_gain": {
+    "median": 4.542865176635442,
+    "q25": 3.8453293410863854,
+    "q75": 6.201082443157596,
+    "bootstrap_ci_95_low": 4.2840052170441485,
+    "bootstrap_ci_95_high": 4.943987791047768,
+    "bootstrap_standard_error": 0.19682412201857555
+  },
+  "condition_number_improvement": {
+    "median": 2.281889432747297,
+    "q25": 1.207418179703122,
+    "q75": 3.4554963556431066,
+    "bootstrap_ci_95_low": 1.8382013822990486,
+    "bootstrap_ci_95_high": 2.625419485725444,
+    "bootstrap_standard_error": 0.20463356660929022
+  }
+}

@@ -293,9 +293,13 @@ and residuals are provided in Appendix~\ref{app:numerical-thresholds}.
 
 Using the nominal 81-phase Jacobian archive across the accepted physical grid,
 ringdown plus photon geometry gives a median pointwise $\smin$ gain of
-$4.54\times$ and a median pointwise condition-number improvement of
-$2.28\times$ relative to ringdown alone. These are medians of pointwise
-improvement ratios, not ratios of the displayed grid medians. The grid medians
+$4.54\times$ (finite-grid bootstrap 95\% interval $[4.28,4.94]$) and a median
+pointwise condition-number improvement of $2.28\times$ ($[1.84,2.63]$)
+relative to ringdown alone. These are medians of pointwise improvement ratios,
+not ratios of the displayed grid medians. The intervals resample the 110
+eligible finite-$k$ physical systems and quantify stability of this registered
+finite-grid summary; they are not observational or astrophysical-population
+confidence intervals. The grid medians
 for the combined set are
 $\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
 $\smin=1.5312$ and $\kappaJ=4.4974$: adding more responsive summaries can raise
@@ -465,7 +469,16 @@ read with the unclipped out-of-domain diagnostic reported in the text.}
 
 Nominal 90\% conformal coverage is 0.892/0.965 for random $k/\wq$, but falls to
 0.722/0.851 under grouped interpolation and 0.509/0.660 under extrapolation.
-This is empirical coverage under shift, not a retained finite-sample guarantee.
+Each value is the median of archived model--feature-set coverage rows (15 rows
+for random and grouped protocols; 60 direction--model--feature-set rows for
+extrapolation), after each row pools its registered fold/seed prediction
+indicators. The corresponding row-level IQRs are 0.833--0.908/0.951--0.973,
+0.676--0.747/0.840--0.863, and 0.311--0.689/0.585--0.844. Because models,
+features, seeds, and layouts reuse physical systems, these rows are not
+independent Bernoulli trials and no single pooled binomial interval is assigned
+to their median. Wilson intervals for each individual evaluation unit and all
+four directional summaries are retained in Appendix~\ref{app:conformal-uncertainty}.
+Shifted coverage remains empirical, not a retained finite-sample guarantee.
 Figure~\ref{fig:coverage} separates coverage by target and protocol.
 
 \begin{figure}[tbp]
@@ -791,6 +804,44 @@ Split-conformal residual quantiles are fitted on calibration subsets. The
 exchangeability guarantee applies to matching distributions; shifted coverage
 is reported empirically. Rejection curves rank uncertainty but do not repair
 distribution shift.
+
+\subsection{Finite-grid and coverage uncertainty}
+\label{app:conformal-uncertainty}
+Table~\ref{tab:uncertainty-summary} records the uncertainty summaries added for
+the finite registered grid. The Jacobian percentile intervals use 10,000 paired
+physical-system bootstrap resamples (seed 20261002). Coverage entries are the
+median [IQR] across the archived rows that define the manuscript headline; the
+evaluation-unit count is given in parentheses. At the lower level, each unit is
+a single fold/seed/model/feature/target evaluation on distinct held-out systems.
+Its covered numerator, eligible denominator, and 95\% Wilson interval are
+archived machine-readably. Units overlap across models, features, seeds, and
+layouts, so their Wilson intervals are diagnostics rather than ingredients of
+a falsely pooled confidence interval.
+
+\begin{center}
+\begin{minipage}{.94\textwidth}
+\captionof{table}{Finite-grid stability and empirical-coverage dispersion.
+Coverage is shown for $k$/identifiable $\wq$; $k=0$ remains in $k$ scoring and
+is excluded from ordinary $\wq$ scoring.}
+\label{tab:uncertainty-summary}
+\centering
+\scriptsize
+\begin{tabular}{lcc}
+Summary & $k$ & identifiable $\wq$ \\
+\hline
+Random coverage & 0.892 [0.833, 0.908] (75) & 0.965 [0.951, 0.973] (75) \\
+Grouped coverage & 0.722 [0.676, 0.747] (1350) & 0.851 [0.840, 0.863] (1350) \\
+Directional aggregate & 0.509 [0.311, 0.689] (300) & 0.660 [0.585, 0.844] (300) \\
+High $k$ to low $k$ & 0.315 [0.042, 0.600] (75) & 0.582 [0.509, 0.659] (75) \\
+Low $k$ to high $k$ & 0.297 [0.012, 0.448] (75) & 0.939 [0.894, 0.973] (75) \\
+High $\wq$ to low $\wq$ & 0.709 [0.515, 0.891] (75) & 0.647 [0.580, 0.710] (75) \\
+Low $\wq$ to high $\wq$ & 0.564 [0.461, 0.742] (75) & 0.627 [0.587, 0.680] (75) \\
+\hline
+Jacobian median gain & \multicolumn{2}{c}{$\smin$: 4.5429 [4.2840, 4.9440];
+$\kappaJ$: 2.2819 [1.8382, 2.6254] ($n=110$)} \\
+\end{tabular}
+\end{minipage}
+\end{center}
 
 \subsection{Noise and learning curves}
 Grouped one-percent feature noise yields ringdown-plus-photon-geometry NMAE
