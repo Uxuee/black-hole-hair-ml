@@ -383,7 +383,11 @@ The increasingly demanding protocols are random interpolation, two blocked
 $3\times3$ grouped physical layouts, and four directional extrapolation tests.
 All nominal $k=0$ records
 are retained and flagged. They contribute to $k$ scoring, but ordinary $\wq$
-error excludes them because $\wq$ is exactly non-identifiable there.
+error excludes them because $\wq$ is exactly non-identifiable there. Although
+their nominal $\wq$ labels differ, these 11 records form one physical
+Schwarzschild equivalence class. The registered analysis remains primary; a
+post-review collapsed-equivalence sensitivity check is reported below and in
+Appendix~\ref{app:k0-equivalence}.
 
 Normalized mean absolute error divides MAE by the full target span.
 Split-conformal intervals target 90\% coverage and are interpreted under their
@@ -480,6 +484,16 @@ to their median. Wilson intervals for each individual evaluation unit and all
 four directional summaries are retained in Appendix~\ref{app:conformal-uncertainty}.
 Shifted coverage remains empirical, not a retained finite-sample guarantee.
 Figure~\ref{fig:coverage} separates coverage by target and protocol.
+
+In the collapsed-equivalence check, the 11 identical Schwarzschild rows are
+replaced by one class without a nominal $\wq$ target, while all finite-$k$
+assignments remain unchanged. Across learned model--feature summaries, random,
+grouped, and directional $k$ NMAE changes from 0.0471/0.0528/0.1714 to
+0.0387/0.0594/0.1567; identifiable-$\wq$ NMAE changes only from
+0.0621/0.0875/0.2038 to 0.0623/0.0859/0.2032. Coverage is more sensitive:
+identifiable-$\wq$ values become 0.929/0.763/0.509. Thus the primary qualitative
+error and complementarity conclusions are unchanged, while the shifted-
+coverage warning is strengthened. The registered results are not replaced.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.82\textwidth]{physical_ml_uncertainty_calibration.png}
@@ -839,6 +853,56 @@ $\kappaJ$: 2.2819 [1.8382, 2.6254] ($n=110$)} \\
 \end{tabular}
 \end{minipage}
 \end{center}
+
+\subsection{Equivalent Schwarzschild-record sensitivity}
+\label{app:k0-equivalence}
+The 11 registered $k=0$ rows have different nominal $\wq$ labels but identical
+values for all 77 registered physical features. Their maximum absolute and
+q95--q05-standardized feature differences are both exactly zero in the
+archived table. Because registered splitting treats nominal rows separately,
+physically equivalent Schwarzschild records cross train/test in 45 of 115
+split specifications and train/calibration in 96. This is nominal-record
+separation but not physical-equivalence separation.
+
+As a secondary check, the 11 rows are collapsed to one equivalence record whose
+partition is the majority registered $k=0$ role in each split; ties prefer
+training, then calibration, then test. This minimizes assignment changes
+without selecting a nominal $\wq$. All 110 finite-$k$ assignments remain
+unchanged, and the collapsed record is excluded from $\wq$ fitting,
+calibration, testing, and scoring. Table~\ref{tab:k0-equivalence} compares the
+registered and collapsed medians across learned model--feature protocol
+summaries. Secondary models use the registered classes, hyperparameters, and
+seeds with training-only preprocessing.
+
+\begin{center}
+\begin{minipage}{.94\textwidth}
+\captionof{table}{Registered (R) versus collapsed-equivalence (C) sensitivity.
+Each cell is R $\rightarrow$ C; ordinary $\wq$ quantities use finite $k$ only.}
+\label{tab:k0-equivalence}
+\centering
+\scriptsize
+\begin{tabular}{lcccc}
+Protocol & $k$ NMAE & identifiable $\wq$ NMAE & $k$ coverage & identifiable $\wq$ coverage \\
+\hline
+Random & 0.0471 $\to$ 0.0387 & 0.0621 $\to$ 0.0623 & 0.892 $\to$ 0.903 & 0.965 $\to$ 0.929 \\
+Grouped & 0.0528 $\to$ 0.0594 & 0.0875 $\to$ 0.0859 & 0.722 $\to$ 0.725 & 0.851 $\to$ 0.763 \\
+Directional & 0.1714 $\to$ 0.1567 & 0.2038 $\to$ 0.2032 & 0.509 $\to$ 0.479 & 0.660 $\to$ 0.509 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+In the registered predictions, 147 distinct $k=0$ split/test-system cases have
+an equivalent Schwarzschild training record and 55 do not. Their mean $k$ NMAE
+is respectively 0.0355 and 0.2792, with empirical coverage 0.990 and 0.160;
+equivalent training support therefore makes this boundary test locally easier.
+Nevertheless, the collapsed aggregate changes have mixed signs rather than a
+uniform optimistic bias. Random interpolation remains easier than grouped and
+directional testing. HGB, RF, and the nearest-physical-model check retain a
+positive identifiable-$\wq$ reduction from photon geometry in every protocol;
+the MLP remains the documented counterexample. Shifted conformal coverage stays
+degraded and heterogeneous, and the frozen-estimator robustness audit is
+unchanged. This majority-role collapse is a least-change sensitivity design,
+not a unique equivalence-aware resampling protocol.
 
 \subsection{Noise and learning curves}
 Grouped one-percent feature noise yields ringdown-plus-photon-geometry NMAE
