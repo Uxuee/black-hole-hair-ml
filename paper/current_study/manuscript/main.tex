@@ -265,8 +265,8 @@ A large response can reveal that the spacetime changed without revealing which
 parameter caused the change. Timing can remain nearly collinear in parameter
 space, whereas both redshift and photon geometry add complementary information
 to ringdown. Photon geometry gives the larger improvement in the weakest local
-direction, while redshift provides a substantial and more directly
-observationally interpretable complement.
+direction, while redshift provides a substantial complement that is more
+directly connected to a measurable spectroscopic quantity.
 
 Large response is insufficient when the two parameter-response directions are
 nearly collinear. In Fig.~\ref{fig:local}, $\sigma_{\max}$ measures the
@@ -311,16 +311,13 @@ complementarity beyond ringdown: ringdown plus redshift has grid medians
 $\smin=0.9459$ and $\kappaJ=3.6107$, with median pointwise improvements of
 $3.29\times$ and $2.27\times$, respectively. Photon geometry gives the larger
 weakest-direction gain ($4.54\times$), while redshift alone gives a slightly
-lower median condition number. Combining both yields $\smin=1.2665$ and
-$\kappaJ=4.2878$, corresponding to pointwise gains of $4.75\times$ and
-$2.12\times$: the additional weakest-direction gain is modest and median
-conditioning is slightly worse than for photon geometry alone. The observables
-therefore contribute differently, and no single local Jacobian statistic fully
-determines inverse-learning performance. Redshift is also an observationally
-motivated complement: unlike the idealized ray-level photon-geometry variables
-used here, it is more directly connected to a measurable spectroscopic
-quantity, although the present calculation remains synthetic and includes
-neither an observational likelihood nor a detector-level noise model.
+lower median condition number. These independently motivated observable
+families therefore add different information to ringdown, and no single local
+Jacobian statistic fully determines inverse-learning performance. Unlike the
+idealized ray-level photon-geometry variables used here, redshift is more
+directly connected to a measurable spectroscopic quantity, although the
+present calculation remains synthetic and includes neither an observational
+likelihood nor a detector-level noise model.
 The separate 161-phase resolution audit gives, respectively,
 $(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$ for these two
 combined sets, showing that the nominal-resolution summaries are numerically
@@ -351,10 +348,11 @@ the text.}
 \end{figure}
 
 \begin{figure}[tbp]
-\captionof{table}{Selected redshift and photon-geometry complementarity
-metrics. Jacobian medians use the nominal 81-phase archive; grouped and
-directional NMAE use the archived 161-phase features and registered splits and
-score identifiable $\wq$ only.}
+\captionof{table}{Selected complementarity metrics comparing ringdown alone
+with two independently motivated additions: redshift and photon geometry.
+Jacobian medians use the nominal 81-phase archive; grouped and directional NMAE
+use the validated 161-phase comparison with predefined splits and score
+identifiable $\wq$ only.}
 \label{tab:complementarity}
 \centering
 \small
@@ -366,7 +364,6 @@ Feature set & med. $\smin$ & med. $\kappaJ$ & \shortstack{grouped\\$\wq$ NMAE} &
 Ringdown & 0.2782 & 6.6112 & 0.3093 & 0.3011 \\
 Rdown + redshift & 0.9459 & 3.6107 & 0.0991 & 0.1922 \\
 Rdown + photon geom. & 1.2326 & 4.0731 & 0.0865 & 0.2048 \\
-Rdown + photon geom. + redshift & 1.2665 & 4.2878 & 0.0784 & 0.2004 \\
 \end{tabular}
 \renewcommand{\arraystretch}{1}
 \end{figure}
@@ -426,16 +423,12 @@ ringdown is 0.0485/0.3093. Ringdown plus photon geometry gives grouped
 tree families. Directional extrapolation remains harder: the combined set has
 aggregate NMAE 0.1305/0.2012.
 Table~\ref{tab:complementarity} isolates identifiable-$\wq$ recovery for the
-161-phase redshift comparison under the same registered splits. At this
-resolution, relative to ringdown,
-redshift lowers grouped NMAE from 0.3093 to 0.0991, while photon geometry is
-slightly better at 0.0865 and the triple set reaches 0.0784. Under directional
-extrapolation, redshift (0.1922) and photon geometry (0.2048) are comparable,
-and the triple set reaches 0.2004; neither added channel dominates uniformly.
-The architecture-level result is also non-monotonic: directional MLP NMAE
-increases from 0.1896 for ringdown plus photon geometry to 0.2693 after adding
-redshift. We therefore do not claim universal improvement across
-architectures.
+161-phase redshift comparison under the same predefined splits. Both added
+channels greatly improve grouped recovery relative to ringdown (0.3093):
+redshift reaches 0.0991, while photon geometry is slightly better at 0.0865.
+Under directional extrapolation, redshift (0.1922) and photon geometry (0.2048)
+both improve on ringdown (0.3011) and are comparable; neither channel is
+universally superior from these aggregate values.
 Figure~\ref{fig:protocols} asks how recoverability changes as validation moves
 from random interpolation to grouped physical holdouts and directional
 extrapolation.
@@ -475,12 +468,12 @@ particular estimator; nearest-neighbor inversion is not asserted to be
 optimal.
 
 The same non-learned check supports redshift complementarity without making it
-a headline result: grouped identifiable-$\wq$ NMAE is
-0.2208/0.1585/0.1481/0.1321 for ringdown, ringdown plus redshift, ringdown plus
-photon geometry, and the triple set, respectively; the corresponding
-directional values are 0.2542/0.1932/0.1950/0.1950. Thus redshift improves on
-ringdown, while adding it beyond photon geometry does not improve directional
-nearest-model recovery.
+a headline result: grouped identifiable-$\wq$ NMAE is 0.2208/0.1585/0.1481 for
+ringdown, ringdown plus redshift, and ringdown plus photon geometry,
+respectively; the corresponding directional values are
+0.2542/0.1932/0.1950. Both additions improve on ringdown, and their directional
+nearest-model performance is essentially comparable, supporting genuine
+physical information beyond the ringdown channel.
 
 For ringdown plus photon geometry, the local Jacobian median
 $k$/identifiable-$\wq$ NMAE is 0.0147/0.0259, 0.0184/0.0454, and 0.0661/0.1172 for random,

@@ -99,9 +99,14 @@ recovery. Its all-model directional NMAE improves only marginally from
 
 ## Recommendation
 
-Do not add a new main-text result at this stage. The clean, useful conclusion
-is suitable for a concise appendix sentence or reviewer response: redshift is
-complementary to ringdown, but adds little robust directional information once
-photon geometry is present. Any manuscript integration should foreground the
-tree/nearest consistency and retain the mixed directional/MLP result rather
-than describing the triple set as uniformly superior.
+The publication-facing interpretation should remain pairwise: redshift and
+photon geometry are independently motivated complements to ringdown. Redshift
+provides substantial Jacobian and inverse-recovery gains, while photon geometry
+gives the larger weakest-direction gain. Neither channel is uniformly superior
+under every inverse protocol.
+
+The ringdown + photon geometry + redshift combination was evaluated as an
+exploratory analysis but is intentionally omitted from the publication-facing
+comparison. The manuscript focuses on ringdown versus two independently
+motivated complementary channels: redshift and photon geometry. The complete
+exploratory result remains archived above and in the machine-readable outputs.

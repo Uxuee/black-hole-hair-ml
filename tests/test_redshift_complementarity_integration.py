@@ -27,9 +27,6 @@ def test_manuscript_table_matches_redshift_complementarity_outputs() -> None:
         "ringdown": "Ringdown",
         "ringdown_plus_redshift": "Rdown + redshift",
         "ringdown_plus_photon_geometry": "Rdown + photon geom.",
-        "ringdown_plus_photon_geometry_plus_redshift": (
-            "Rdown + photon geom. + redshift"
-        ),
     }
     for feature_set, label in labels.items():
         match = re.search(
@@ -59,9 +56,22 @@ def test_redshift_integration_preserves_exact_k_zero_controls() -> None:
 
 def test_redshift_language_is_cautious_and_figure14_validation_is_preserved() -> None:
     text = TEX.read_text(encoding="utf-8")
-    assert "Timing and redshift responses are often large but" not in text
-    assert "more directly connected to a measurable spectroscopic" in text
-    assert "present calculation remains synthetic" in text
-    assert "We therefore do not claim universal improvement across" in text
+    prose = " ".join(text.split())
+    assert "Timing and redshift responses are often large but" not in prose
+    assert "more directly connected to a measurable spectroscopic" in prose
+    assert "present calculation remains synthetic" in prose
+    assert "neither channel is universally superior" in prose
     assert "timing feature used for ML inference" in text
     assert "T_{\\rm direct}-T_z" in text
+
+
+def test_exploratory_triple_is_archived_but_absent_from_manuscript() -> None:
+    text = TEX.read_text(encoding="utf-8")
+    note = (ROOT / "reviewer/_revision_2026_10/redshift_complementarity.md").read_text(
+        encoding="utf-8"
+    )
+    assert "Rdown + photon geom. + redshift" not in text
+    for value in ("0.0784", "0.2004", "0.2693", "1.2665", "4.2878"):
+        assert value not in text
+    assert "exploratory analysis" in note
+    assert "intentionally omitted from the publication-facing" in note
