@@ -318,10 +318,10 @@ idealized ray-level photon-geometry variables used here, redshift is more
 directly connected to a measurable spectroscopic quantity, although the
 present calculation remains synthetic and includes neither an observational
 likelihood nor a detector-level noise model.
-The separate 161-phase resolution audit gives, respectively,
-$(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$ for these two
-combined sets, showing that the nominal-resolution summaries are numerically
-stable under phase refinement.
+For ringdown plus photon geometry and ringdown plus all shooting, the separate
+161-phase resolution audit gives, respectively,
+$(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$, showing that the
+nominal-resolution summaries are numerically stable under phase refinement.
 As expected for non-uniform observable rescaling, the gain magnitudes change
 under alternative normalizations. Nevertheless, the median $\smin$/conditioning
 improvements remain above one for IQR scaling ($5.88/1.87$),
@@ -416,6 +416,9 @@ folds. The 81-to-161 and targeted 161-to-321 comparisons apply archived frozen
 estimators; they do not retrain on higher-resolution test features.
 
 \section{Inverse-Learning Results}
+The secondary 161-phase NMAE values in Table~\ref{tab:complementarity} are used
+only for the matched redshift comparison and do not replace the primary
+protocol summary reported below.
 Random splitting is optimistic. For HGB, RF, and MLP considered together,
 random ringdown NMAE is 0.0361/0.1688 for $k$/identifiable $\wq$, while grouped
 ringdown is 0.0485/0.3093. Ringdown plus photon geometry gives grouped

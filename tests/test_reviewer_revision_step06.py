@@ -72,4 +72,7 @@ def test_k0_support_diagnostic_and_manuscript_integration():
     text = (ROOT / "paper/current_study/manuscript/main.tex").read_text(encoding="utf-8")
     assert "one physical\nSchwarzschild equivalence class" in text
     assert "app:k0-equivalence" in text
-    assert "The registered results are not replaced" in text
+    assert (
+        "treated as a sensitivity\nanalysis rather than as a replacement for the primary analysis"
+        in text
+    )
