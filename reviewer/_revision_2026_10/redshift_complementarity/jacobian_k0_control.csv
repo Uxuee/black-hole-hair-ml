@@ -1,0 +1,45 @@
+k,wq,feature_set,feature_label,feature_count,sigma_max,sigma_min,condition_number,numerical_rank,rank_tolerance,derivative_quality,exact_k_zero
+0.0,-0.7125,ringdown,Ringdown,4,2.357520548745424,0.0,inf,1,2.357520548745424e-10,one_sided,True
+0.0,-0.7125,ringdown_plus_redshift,Ringdown + redshift,13,5.452514530200713,0.0,inf,1,5.452514530200714e-10,one_sided,True
+0.0,-0.7125,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,10.493444552558714,0.0,inf,1,1.0493444552558715e-09,one_sided,True
+0.0,-0.7125,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,11.588114175391832,0.0,inf,1,1.1588114175391831e-09,one_sided,True
+0.0,-0.69,ringdown,Ringdown,4,2.270259125253172,0.0,inf,1,2.270259125253172e-10,one_sided,True
+0.0,-0.69,ringdown_plus_redshift,Ringdown + redshift,13,4.391261457791758,0.0,inf,1,4.3912614577917586e-10,one_sided,True
+0.0,-0.69,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,8.23474955027617,0.0,inf,1,8.234749550276171e-10,one_sided,True
+0.0,-0.69,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,9.05208268028224,0.0,inf,1,9.05208268028224e-10,one_sided,True
+0.0,-0.6666666666666666,ringdown,Ringdown,4,2.1821068426303762,0.0,inf,1,2.1821068426303764e-10,one_sided,True
+0.0,-0.6666666666666666,ringdown_plus_redshift,Ringdown + redshift,13,3.5813819641493794,0.0,inf,1,3.5813819641493797e-10,one_sided,True
+0.0,-0.6666666666666666,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,6.445125441376565,0.0,inf,1,6.445125441376565e-10,one_sided,True
+0.0,-0.6666666666666666,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,7.043035457496975,0.0,inf,1,7.043035457496976e-10,one_sided,True
+0.0,-0.64,ringdown,Ringdown,4,2.084026162619351,0.0,inf,1,2.084026162619351e-10,one_sided,True
+0.0,-0.64,ringdown_plus_redshift,Ringdown + redshift,13,2.926945561776894,0.0,inf,1,2.926945561776894e-10,one_sided,True
+0.0,-0.64,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,4.926433777865749,0.0,inf,1,4.926433777865749e-10,one_sided,True
+0.0,-0.64,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,5.337939213106506,0.0,inf,1,5.337939213106507e-10,one_sided,True
+0.0,-0.61,ringdown,Ringdown,4,1.9768824110735688,0.0,inf,1,1.9768824110735688e-10,one_sided,True
+0.0,-0.61,ringdown_plus_redshift,Ringdown + redshift,13,2.4354512583254517,0.0,inf,1,2.435451258325452e-10,one_sided,True
+0.0,-0.61,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,3.7201577546041937,0.0,inf,1,3.720157754604194e-10,one_sided,True
+0.0,-0.61,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,3.9828297080855326,0.0,inf,1,3.9828297080855327e-10,one_sided,True
+0.0,-0.58,ringdown,Ringdown,4,1.8730248659652464,0.0,inf,1,1.8730248659652465e-10,one_sided,True
+0.0,-0.58,ringdown_plus_redshift,Ringdown + redshift,13,2.1140571499749843,0.0,inf,1,2.1140571499749844e-10,one_sided,True
+0.0,-0.58,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,2.900915631934069,0.0,inf,1,2.900915631934069e-10,one_sided,True
+0.0,-0.58,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,3.0620788671155523,0.0,inf,1,3.0620788671155524e-10,one_sided,True
+0.0,-0.55,ringdown,Ringdown,4,1.7724422400746807,0.0,inf,1,1.7724422400746808e-10,one_sided,True
+0.0,-0.55,ringdown_plus_redshift,Ringdown + redshift,13,1.896191775999985,0.0,inf,1,1.896191775999985e-10,one_sided,True
+0.0,-0.55,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,2.354566215432679,0.0,inf,1,2.354566215432679e-10,one_sided,True
+0.0,-0.55,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,2.449076115563988,0.0,inf,1,2.449076115563988e-10,one_sided,True
+0.0,-0.525,ringdown,Ringdown,4,1.6911542041048688,0.0,inf,1,1.6911542041048688e-10,one_sided,True
+0.0,-0.525,ringdown_plus_redshift,Ringdown + redshift,13,1.7616635041600686,0.0,inf,1,1.7616635041600686e-10,one_sided,True
+0.0,-0.525,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,2.0436438883465757,0.0,inf,1,2.0436438883465758e-10,one_sided,True
+0.0,-0.525,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,2.1023644075669354,0.0,inf,1,2.1023644075669356e-10,one_sided,True
+0.0,-0.5,ringdown,Ringdown,4,1.6122065416511788,0.0,inf,1,1.6122065416511788e-10,one_sided,True
+0.0,-0.5,ringdown_plus_redshift,Ringdown + redshift,13,1.6526606488503064,0.0,inf,1,1.6526606488503064e-10,one_sided,True
+0.0,-0.5,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,1.821466555560668,0.0,inf,1,1.821466555560668e-10,one_sided,True
+0.0,-0.5,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,1.8573684880339456,0.0,inf,1,1.8573684880339456e-10,one_sided,True
+0.0,-0.475,ringdown,Ringdown,4,1.5356401218551843,0.0,inf,1,1.5356401218551844e-10,one_sided,True
+0.0,-0.475,ringdown_plus_redshift,Ringdown + redshift,13,1.5594249167466516,0.0,inf,1,1.5594249167466516e-10,one_sided,True
+0.0,-0.475,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,1.6583422501257612,0.0,inf,1,1.6583422501257613e-10,one_sided,True
+0.0,-0.475,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,1.680391176384555,0.0,inf,1,1.680391176384555e-10,one_sided,True
+0.0,-0.45,ringdown,Ringdown,4,1.461493501912448,0.0,inf,1,1.461493501912448e-10,one_sided,True
+0.0,-0.45,ringdown_plus_redshift,Ringdown + redshift,13,1.4761447763582045,0.0,inf,1,1.4761447763582046e-10,one_sided,True
+0.0,-0.45,ringdown_plus_photon_geometry,Ringdown + photon geometry,31,1.5332143307126784,0.0,inf,1,1.5332143307126785e-10,one_sided,True
+0.0,-0.45,ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,40,1.5471865849147053,0.0,inf,1,1.5471865849147052e-10,one_sided,True
