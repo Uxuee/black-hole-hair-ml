@@ -1,0 +1,119 @@
+{
+  "bootstrap_samples": 500,
+  "canonical_sources_unchanged": true,
+  "family_count_balancing": "skipped: partial-family weighting is ambiguous",
+  "feature_counts": {
+    "rd_obs": 2,
+    "rd_obs_redshift": 11,
+    "rd_obs_redshift_sky": 29,
+    "rd_obs_sky": 20
+  },
+  "feature_sets": {
+    "rd_obs": [
+      "Omega",
+      "lambda"
+    ],
+    "rd_obs_redshift": [
+      "Omega",
+      "lambda",
+      "redshift__redshift__mean",
+      "redshift__redshift__amplitude",
+      "redshift__redshift__reference",
+      "redshift__redshift__cos1",
+      "redshift__redshift__sin1",
+      "redshift__redshift__cos2",
+      "redshift__redshift__sin2",
+      "redshift__redshift__cos3",
+      "redshift__redshift__sin3"
+    ],
+    "rd_obs_redshift_sky": [
+      "Omega",
+      "lambda",
+      "redshift__redshift__mean",
+      "redshift__redshift__amplitude",
+      "redshift__redshift__reference",
+      "redshift__redshift__cos1",
+      "redshift__redshift__sin1",
+      "redshift__redshift__cos2",
+      "redshift__redshift__sin2",
+      "redshift__redshift__cos3",
+      "redshift__redshift__sin3",
+      "photon_geometry__alpha_sky__mean",
+      "photon_geometry__alpha_sky__amplitude",
+      "photon_geometry__alpha_sky__reference",
+      "photon_geometry__alpha_sky__cos1",
+      "photon_geometry__alpha_sky__sin1",
+      "photon_geometry__alpha_sky__cos2",
+      "photon_geometry__alpha_sky__sin2",
+      "photon_geometry__alpha_sky__cos3",
+      "photon_geometry__alpha_sky__sin3",
+      "photon_geometry__beta_sky__mean",
+      "photon_geometry__beta_sky__amplitude",
+      "photon_geometry__beta_sky__reference",
+      "photon_geometry__beta_sky__cos1",
+      "photon_geometry__beta_sky__sin1",
+      "photon_geometry__beta_sky__cos2",
+      "photon_geometry__beta_sky__sin2",
+      "photon_geometry__beta_sky__cos3",
+      "photon_geometry__beta_sky__sin3"
+    ],
+    "rd_obs_sky": [
+      "Omega",
+      "lambda",
+      "photon_geometry__alpha_sky__mean",
+      "photon_geometry__alpha_sky__amplitude",
+      "photon_geometry__alpha_sky__reference",
+      "photon_geometry__alpha_sky__cos1",
+      "photon_geometry__alpha_sky__sin1",
+      "photon_geometry__alpha_sky__cos2",
+      "photon_geometry__alpha_sky__sin2",
+      "photon_geometry__alpha_sky__cos3",
+      "photon_geometry__alpha_sky__sin3",
+      "photon_geometry__beta_sky__mean",
+      "photon_geometry__beta_sky__amplitude",
+      "photon_geometry__beta_sky__reference",
+      "photon_geometry__beta_sky__cos1",
+      "photon_geometry__beta_sky__sin1",
+      "photon_geometry__beta_sky__cos2",
+      "photon_geometry__beta_sky__sin2",
+      "photon_geometry__beta_sky__cos3",
+      "photon_geometry__beta_sky__sin3"
+    ]
+  },
+  "inverse_resolution": 161,
+  "jacobian_resolution": 81,
+  "mlp_convergence_warning_count": 93,
+  "models": [
+    "hgb",
+    "random_forest",
+    "mlp"
+  ],
+  "outcome_classification": "A",
+  "physics_simulation_ran": false,
+  "protocols": [
+    "random_interpolation",
+    "grouped_physical_interpolation",
+    "directional_extrapolation"
+  ],
+  "registered_split_specifications_used": 115,
+  "registered_role_order": "point identifiers sorted before row-index conversion",
+  "resolution_layers": {
+    "combined_as_common_table": false,
+    "inverse": "validated matched 161-phase representation with predefined splits",
+    "jacobian": "canonical nominal 81-phase archive with registered scaling/stencils"
+  },
+  "runtime_seconds": 371.4756982000108,
+  "scaling_schemes": [
+    "q95_q05",
+    "iqr",
+    "population_std"
+  ],
+  "source_files": {
+    "artifacts\\journal_phase_convergence\\ml_ready_features_161.csv": "2e07670b32282038d8d172f1af790c7851b290b001c2268862f7db0d857e5068",
+    "artifacts\\journal_phase_convergence\\split_assignments_161.csv": "54285265ccb2187e98d7d6a2e9a184c65454ebd0a28a4d92bcbbb92a179573ec",
+    "artifacts\\kiselev_identifiability_grid\\combined_features.csv": "c04bcab87f65534b4d6e26fbb3cee3aba2f9df05203ac5458ad8c0dc48df5eea",
+    "configs\\kiselev_identifiability_grid.yaml": "b4659b6fae92c2d8cc5ffe113a4fd063b0a2d03c0926196c4b35371e1259a050",
+    "configs\\physical_shooting_ml_validation.yaml": "e51de4edf171504618056fa2f42913fbc1a56173e362fdb8b8b03dfea2ec63e1"
+  },
+  "status": "completed"
+}
