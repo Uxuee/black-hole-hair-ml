@@ -662,6 +662,23 @@ connected to a measurable spectroscopic quantity than the idealized ray-level
 photon-geometry variables used here, but the present synthetic benchmark has no
 detector likelihood, radiative-transfer model, or observational noise model.
 
+As a secondary observation-facing sensitivity analysis, we repeated the
+comparison after restricting ringdown to the leading-eikonal quantities
+$\Omega$ and $\lambda$, excluding $\Delta r$ and $r_{\rm ph}$, and restricting
+the sky channel to signed $\alpha$ and $\beta$, excluding impact parameter
+$b$. Ringdown-only local identifiability is substantially weaker under this
+restriction: the finite-$k$ grid medians are $\smin=0.0097$ and
+$\kappaJ=136.69$. Nevertheless, adding redshift or the signed sky coordinates
+raises the median $\smin$ to 0.6215 or 0.6999 and lowers the median $\kappaJ$
+to 4.47 or 4.89. Grouped and directional inverse tests, together with the
+non-learned nearest-model baseline, independently support the same qualitative
+conclusion: the latent photon-orbit quantities strengthen ringdown-only
+identifiability, but the central complementarity result does not depend on
+them. We call these features observation-facing, not detector-level;
+$\alpha$ and $\beta$ remain idealized ray-level observer-sky coordinates.
+Appendix~\ref{app:observation-facing} gives the definitions, resolution
+provenance, scaling checks, and complete secondary results.
+
 Jacobian conditioning answers whether nearby parameter directions are separated
 by the chosen observables. Training distance answers whether a fitted estimator
 has support where it is evaluated. Neither statistic subsumes the other.
@@ -718,7 +735,9 @@ parameter values. Conformal coverage is sensitive to the representation of the
 exact $k=0$ equivalence class, and the collapsed sensitivity design does not
 separate reduced Schwarzschild multiplicity from removal of non-identifiable
 nominal $\wq$ labels.
-The present photon-geometry variables are idealized ray-level quantities. A
+The present photon-geometry variables are idealized ray-level quantities;
+calling the restricted subset observation-facing does not make it
+detector-level or observational. A
 natural next step is to replace them with detector-level imaging or astrometric
 observables and realistic likelihoods, while retaining redshift as a directly
 interpretable spectroscopic channel.
@@ -752,6 +771,10 @@ the frozen-estimator audit additionally requires 5,520 serialized estimators
 (approximately 822 MB), which are not included in the repository
 and do not yet have a permanent public archive; they are available from the
 author upon reasonable request.
+The secondary observation-facing sensitivity tables, model-specific metrics,
+figure, script, and canonical-input SHA256 hashes are included under
+\texttt{artifacts/observation\_facing\_sensitivity/} and
+\texttt{scripts/observation\_facing\_sensitivity.py}.
 
 \FloatBarrier
 \appendix
@@ -840,6 +863,128 @@ Ringdown + all shooting & union of the corresponding families & combined & 77 \\
 \end{tabular}
 \end{minipage}
 \end{center}
+
+\section{Observation-Facing Feature Sensitivity}
+\label{app:observation-facing}
+This secondary analysis tests whether the complementarity conclusion depends
+on latent theoretical or ray-geometric descriptors. The restricted ringdown
+set, denoted RD$_{\rm obs}$, contains only $\Omega$ and $\lambda$; it excludes
+$\Delta r$ and $r_{\rm ph}$. The redshift addition contains all nine existing
+phase summaries of $z$. The sky addition contains the nine summaries of signed
+$\alpha$ and the nine summaries of signed $\beta$, while excluding all impact-
+parameter summaries. The optional union contains redshift and sky together.
+Orbital and timing features are absent from every restricted set. These names
+describe observation-facing information only: $\Omega$ and $\lambda$ remain
+leading-eikonal quantities, and $\alpha$ and $\beta$ remain idealized ray-level
+observer-sky coordinates rather than detector-level measurements.
+
+The two numerical layers deliberately follow the primary manuscript protocol.
+The Jacobian columns in Table~\ref{tab:observation-facing} use the canonical
+nominal 81-phase archive, q95--q05 feature scaling, unchanged parameter spans
+and finite-difference stencils, and analytic $k=0$ null handling. The inverse
+columns use the separately validated matched 161-phase representation and the
+same 115 predefined train/calibration/test splits, seeds, training-only
+preprocessing, model hyperparameters, and identifiable-$\wq$ scoring rule.
+They are not quantities extracted from one common-resolution feature table.
+
+\begin{center}
+\begin{minipage}{.99\textwidth}
+\captionof{table}{Observation-facing sensitivity summary. Jacobian medians use
+the nominal 81-phase archive; inverse NMAE uses the validated 161-phase
+representation. ``Near.'' is the non-learned nearest-physical-model baseline.
+All $\wq$ scores exclude $k=0$.}
+\label{tab:observation-facing}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{lrrrrrrr}
+Feature set & Dim. & med. $\smin$ & med. $\kappaJ$ & Grouped & Directional & Near. grp. & Near. dir. \\
+\hline
+RD$_{\rm obs}$ & 2 & 0.0097 & 136.69 & 0.3886 & 0.4239 & 0.4238 & 0.4377 \\
++ redshift & 11 & 0.6215 & 4.47 & 0.0985 & 0.1750 & 0.1417 & 0.1932 \\
++ signed sky & 20 & 0.6999 & 4.89 & 0.0904 & 0.2179 & 0.1308 & 0.1950 \\
++ redshift + sky & 29 & 0.7310 & 5.59 & 0.0807 & 0.1949 & 0.1190 & 0.1934 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+Redshift and sky improve $\smin$ at every eligible finite-$k$ grid point under
+the nominal scaling. Their median pointwise $\smin$ gains relative to
+RD$_{\rm obs}$ are $56.80\times$ (paired-bootstrap 95\% interval
+$[43.99,64.10]$) and $72.11\times$ ($[60.54,83.60]$), respectively; these
+ratios are secondary to the absolute values in
+Table~\ref{tab:observation-facing}. The ordering is qualitatively stable under
+IQR and population-standard-deviation scaling, as shown in
+Table~\ref{tab:observation-facing-scaling}. Feature-family balancing is not
+reported because partially selecting the ringdown and photon families makes
+the earlier whole-family weighting convention ambiguous.
+
+\begin{center}
+\begin{minipage}{.84\textwidth}
+\captionof{table}{Scaling sensitivity of median pointwise gains relative to
+RD$_{\rm obs}$. Each entry is $\smin$ gain / conditioning improvement.}
+\label{tab:observation-facing-scaling}
+\centering
+\small
+\begin{tabular}{lcc}
+Scaling & + redshift & + signed sky \\
+\hline
+q95--q05 & 56.80 / 33.10 & 72.11 / 25.47 \\
+IQR & 81.85 / 37.63 & 96.42 / 26.66 \\
+Population standard deviation & 51.50 / 34.09 & 62.49 / 32.27 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{.96\textwidth}
+\centering
+\includegraphics[width=.96\linewidth]{../../../artifacts/observation_facing_sensitivity/observation_facing_feature_sensitivity.pdf}
+\captionof{figure}{Observation-facing sensitivity. Panels A and B show nominal
+81-phase finite-$k$ medians and interquartile ranges; the conditioning axis is
+logarithmic to show the large baseline and the two restricted additions
+without compressing the latter. Panels C and D show grouped identifiable-$\wq$
+NMAE from the 161-phase learned-model aggregate and non-learned nearest-model
+baseline. Higher $\smin$ and lower $\kappaJ$/NMAE are favorable.}
+\label{fig:observation-facing}
+\end{minipage}
+\end{center}
+
+The learned-model medians retain the improvement for each architecture, as
+shown in Table~\ref{tab:observation-facing-models}.
+
+\begin{center}
+\begin{minipage}{.74\textwidth}
+\captionof{table}{Model-specific identifiable-$\wq$ NMAE for the three primary
+restricted comparisons.}
+\label{tab:observation-facing-models}
+\centering
+\small
+\begin{tabular}{llccc}
+Protocol & Model & RD$_{\rm obs}$ & + redshift & + signed sky \\
+\hline
+Grouped & HGB & 0.3886 & 0.0985 & 0.0904 \\
+ & RF & 0.4592 & 0.1011 & 0.1108 \\
+ & MLP & 0.3862 & 0.0714 & 0.0710 \\
+Directional & HGB & 0.3935 & 0.1983 & 0.2162 \\
+ & RF & 0.4236 & 0.2023 & 0.2040 \\
+ & MLP & 0.4361 & 0.1655 & 0.2613 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+The combined redshift-plus-sky set has
+the best grouped aggregate NMAE (0.0807) but not the best directional aggregate
+(0.1949 versus 0.1750 for redshift), reinforcing that more features do not
+universally improve extrapolation.
+
+This sensitivity check does not implement radiative transfer, image
+reconstruction, a point-spread function, a detector likelihood, or an
+observational noise model. It therefore supports robustness of the theoretical
+complementarity conclusion, not an observational constraint. Complete
+model-specific, nearest-model, pointwise-Jacobian, scaling, and provenance
+tables are stored in
+\texttt{artifacts/observation\_facing\_sensitivity/}.
 
 \section{Pointwise Finite-Grid Identifiability Maps}
 \label{app:grid-maps}

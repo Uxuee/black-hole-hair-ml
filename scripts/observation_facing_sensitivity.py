@@ -273,7 +273,8 @@ def figure(summary: pd.DataFrame, inverse: pd.DataFrame, nearest: pd.DataFrame, 
     axes[0, 0].errorbar(x, shown.median_sigma_min, yerr=[shown.median_sigma_min-shown.sigma_min_q25, shown.sigma_min_q75-shown.median_sigma_min], fmt="o", capsize=4)
     axes[0, 0].set_ylabel(r"median $\sigma_{\min}$ (IQR)"); axes[0, 0].set_title("A. Local identifiability")
     axes[0, 1].errorbar(x, shown.median_kappa, yerr=[shown.median_kappa-shown.kappa_q25, shown.kappa_q75-shown.median_kappa], fmt="o", capsize=4)
-    axes[0, 1].set_ylabel(r"median $\kappa(J)$ (IQR)"); axes[0, 1].set_title("B. Conditioning")
+    axes[0, 1].set_yscale("log")
+    axes[0, 1].set_ylabel(r"median $\kappa(J)$ (IQR; log scale)"); axes[0, 1].set_title("B. Conditioning")
     group = inverse[(inverse.protocol == "grouped_physical_interpolation") & (inverse.target == "wq") & (inverse.model == "all_models")].set_index("feature_set").loc[list(PRIMARY)]
     axes[1, 0].bar(x, group.median_NMAE); axes[1, 0].set_ylabel(r"grouped identifiable-$w_q$ NMAE"); axes[1, 0].set_title("C. Learned inverse")
     near = nearest[(nearest.protocol == "grouped_physical_interpolation") & (nearest.target == "wq")].set_index("feature_set").loc[list(PRIMARY)]
