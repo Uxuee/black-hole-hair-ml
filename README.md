@@ -240,7 +240,7 @@ This repository builds on the leading-eikonal QNM/geodesic framework in:
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-A versioned archival DOI for this repository will be added for the journal release.
+Archived on Zenodo: [https://doi.org/10.5281/zenodo.23191840](https://doi.org/10.5281/zenodo.23191840)
 
 ---
 
