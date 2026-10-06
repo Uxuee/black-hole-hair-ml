@@ -41,7 +41,7 @@ are indicative.
 
 ## Layout
 
-- `manuscript/`: journal source, bibliography, and compiled 21-page PDF.
+- `manuscript/`: journal source, bibliography, and compiled 30-page PDF.
 - `data/`: compact physical-grid, feature, split, Jacobian, ML, baseline,
   robustness, and finite-domain tables.
 - `figures/`: publication figures in PDF and PNG.
