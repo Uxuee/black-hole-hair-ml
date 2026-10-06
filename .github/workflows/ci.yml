@@ -24,6 +24,8 @@ jobs:
           tar --extract --gzip --file /tmp/tectonic.tar.gz --directory /tmp tectonic
           sudo install -m 0755 /tmp/tectonic /usr/local/bin/tectonic
           tectonic --version
+      - name: Generate observation facing sensitivity artifacts
+        run: python scripts/observation_facing_sensitivity.py
       - name: Unit tests
         run: python -m pytest -m "not smoke"
       - name: Smoke tests
