@@ -1,0 +1,9 @@
+feature_set,feature_label,protocol,median_identifiable_wq_NMAE,q25_identifiable_wq_NMAE,q75_identifiable_wq_NMAE,n_registered_rows
+ringdown,Ringdown,directional_extrapolation,0.25416065416065414,0.2307936507936507,0.3027417027417028,20
+ringdown_plus_redshift,Ringdown + redshift,directional_extrapolation,0.19322751322751308,0.16753246753246745,0.2463059163059164,20
+ringdown_plus_photon_geometry,Ringdown + photon geometry,directional_extrapolation,0.195026455026455,0.16464646464646454,0.2274314574314575,20
+ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,directional_extrapolation,0.195026455026455,0.16392496392496383,0.2212842712842713,20
+ringdown,Ringdown,grouped_physical_interpolation,0.22083333333333344,0.19345238095238088,0.24735449735449738,90
+ringdown_plus_redshift,Ringdown + redshift,grouped_physical_interpolation,0.15853174603174608,0.11498015873015874,0.19047619047619058,90
+ringdown_plus_photon_geometry,Ringdown + photon geometry,grouped_physical_interpolation,0.1481481481481482,0.09973544973544973,0.17738095238095247,90
+ringdown_plus_photon_geometry_plus_redshift,Ringdown + photon geometry + redshift,grouped_physical_interpolation,0.13214285714285712,0.0988095238095238,0.17242063492063484,90

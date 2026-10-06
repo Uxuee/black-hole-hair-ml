@@ -1,0 +1,48 @@
+{
+  "analysis": "Reviewer Revision Step 6 equivalent k=0 Schwarzschild-record audit",
+  "sensitivity_design": "Collapsed representative: all 11 physically identical k=0 rows become one k=0 equivalence record. Its split role is the majority registered k=0 role in each split (ties prefer train, then calibration, then test), which minimizes assignment changes without using nominal wq. The equivalence record is excluded entirely from wq training, calibration, testing, and scoring.",
+  "registered_analysis_changed": false,
+  "physical_simulation_or_geodesic_run": false,
+  "retraining_performed": true,
+  "retraining_scope": "secondary collapsed-equivalence sensitivity only; registered model classes, hyperparameters, and seeds",
+  "software": {
+    "python": "3.12.14",
+    "numpy": "1.26.4",
+    "pandas": "2.1.4",
+    "sklearn": "1.4.2"
+  },
+  "inputs": {
+    "features": {
+      "name": "ml_ready_features.csv",
+      "sha256": "c04bcab87f65534b4d6e26fbb3cee3aba2f9df05203ac5458ad8c0dc48df5eea"
+    },
+    "assignments": {
+      "name": "split_assignments.csv",
+      "sha256": "54285265ccb2187e98d7d6a2e9a184c65454ebd0a28a4d92bcbbb92a179573ec"
+    },
+    "predictions": {
+      "name": "all_predictions.csv",
+      "sha256": "df460f23521069618e223dc1a827a05a09c3a4b6351009a7f3bae63c9d7c0bf0"
+    },
+    "config": {
+      "path": "configs\\physical_shooting_ml_validation.yaml",
+      "sha256": "e51de4edf171504618056fa2f42913fbc1a56173e362fdb8b8b03dfea2ec63e1"
+    }
+  },
+  "checks": {
+    "nominal_k0_records": 11,
+    "registered_features_checked": 77,
+    "maximum_absolute_difference": 0.0,
+    "maximum_standardized_difference": 0.0,
+    "all_exactly_equal": true,
+    "registered_split_units": 115,
+    "registered_train_test_equivalence_crossings": 45,
+    "registered_train_calibration_equivalence_crossings": 96,
+    "registered_calibration_test_equivalence_crossings": 33,
+    "sensitivity_rows_per_split": 111,
+    "sensitivity_equivalence_records_per_split": 1,
+    "nonzero_k_assignments_unchanged": true,
+    "k0_wq_scored_or_fitted": false,
+    "learned_sensitivity_model_fits": 3450
+  }
+}

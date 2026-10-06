@@ -1,0 +1,41 @@
+{
+  "analysis": "Reviewer Revision Step 5 finite-grid and finite-test-set uncertainty",
+  "python": "3.12.14",
+  "numpy": "1.26.4",
+  "pandas": "2.1.4",
+  "inputs": {
+    "jacobian": {
+      "path": "artifacts\\kiselev_identifiability_grid\\jacobian_diagnostics.csv",
+      "sha256": "f5b99c3b0a6b2f1d2105a62a17ed5235c589a85f4fbd0f76b40c908d417a7b8e"
+    },
+    "conformal_summary": {
+      "path": "artifacts\\physical_shooting_ml_validation\\uncertainty_metrics.csv",
+      "sha256": "3423a5a776e5b74d12611d274fe59a2302e705c0591ebaab117b86f36e6a9fd6"
+    },
+    "nominal_predictions": {
+      "path": "external archive supplied with --predictions-csv/all_predictions.csv",
+      "sha256": "df460f23521069618e223dc1a827a05a09c3a4b6351009a7f3bae63c9d7c0bf0"
+    }
+  },
+  "outputs": [
+    "jacobian_bootstrap_summary.json",
+    "conformal_aggregation_audit.csv",
+    "conformal_unit_intervals.csv",
+    "conformal_summary.csv",
+    "execution_metadata.json"
+  ],
+  "checks": {
+    "archived_rows": 180,
+    "prediction_rows": 59700,
+    "scored_prediction_rows": 56670,
+    "evaluation_units": 3450,
+    "maximum_archived_coverage_reproduction_error": 1.1102230246251565e-16,
+    "k_zero_k_rows_scored": 3030,
+    "k_zero_wq_rows_scored": 0,
+    "k_zero_wq_exclusion_pass": true,
+    "headline_definition": "median empirical coverage across 15 model-by-primary-feature rows for random/grouped; median across 60 direction-by-model-by-primary-feature rows for directional",
+    "inferential_limit": "No single binomial CI is assigned to a headline median because rows reuse physical systems across models, features, seeds, and grouped layouts."
+  },
+  "canonical_artifacts_modified": false,
+  "simulation_or_training_performed": false
+}

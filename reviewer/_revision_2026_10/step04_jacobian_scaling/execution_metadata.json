@@ -1,0 +1,21 @@
+{
+  "analysis": "reviewer revision step 04 Jacobian scaling sensitivity",
+  "canonical_outputs_modified": false,
+  "finite_k_point_count": 110,
+  "git_head_before_step04_commit": "0a909a761ec710b15f4f00ada555e59dbb99505c",
+  "inputs": {
+    "artifacts\\kiselev_identifiability_grid\\combined_features.csv": "c04bcab87f65534b4d6e26fbb3cee3aba2f9df05203ac5458ad8c0dc48df5eea",
+    "artifacts\\kiselev_identifiability_grid\\grid_metrics.json": "90e18edae8f04e93c727c45a19b1281e0b977a78ab8232c623194de950fdbe04",
+    "artifacts\\kiselev_identifiability_grid\\jacobian_diagnostics.csv": "f5b99c3b0a6b2f1d2105a62a17ed5235c589a85f4fbd0f76b40c908d417a7b8e",
+    "configs\\kiselev_identifiability_grid.yaml": "b4659b6fae92c2d8cc5ffe113a4fd063b0a2d03c0926196c4b35371e1259a050",
+    "src\\bhhairml\\validation\\kiselev_identifiability_grid.py": "9fe17e0ea35559f6c151636d194cd19ebdb72df2a92dad62947a970aecf3165f"
+  },
+  "outputs": [
+    "scaling_definitions.json",
+    "pointwise_scaling_sensitivity.csv",
+    "scaling_summary.csv",
+    "execution_metadata.json"
+  ],
+  "physical_simulation_or_model_training_run": false,
+  "point_count": 121
+}

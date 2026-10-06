@@ -24,9 +24,12 @@ def test_final_plot_label_sources_encode_requested_layout() -> None:
 def test_arrival_legends_and_residual_notation_are_outside_data() -> None:
     source = (ROOT / "src/bhhairml/validation/manuscript_arrival_validation.py").read_text()
     assert 'bbox_to_anchor=(.5, 1.02)' in source
-    assert 'top.text(' not in source
+    assert 'top.text(.015, .96, "A. Arrival time"' in source
+    assert 'residual.text(.015, .96, "B. Validation residuals"' in source
     assert 'residual.legend(' not in source
-    assert 'direct $-$ integrated' in source and '$w_q$ difference' in source
+    assert 'timing-method residual' in source
+    assert '$k=0$ $w_q$-invariance residual' in source
+    assert 'A. Arrival time' in source and 'B. Validation residuals' in source
     assert r"[$\times 10^{-3}$]" in source
     assert 'fig.align_ylabels(axs)' in source
     assert source.count('ax.yaxis.set_label_coords(-.15, .5)') == 1

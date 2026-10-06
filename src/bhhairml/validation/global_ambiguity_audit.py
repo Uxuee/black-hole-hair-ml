@@ -162,12 +162,18 @@ def make_figures(pairs, nearest, distant, output: Path):
     fig,axs=plt.subplots(1,2,figsize=(8.2,3.3),sharex=True,sharey=True)
     for ax,name,title in zip(axs,names,titles):
         col=f"d_O_{name}"; ax.scatter(finite.d_theta,finite[col],s=7,alpha=.22,color="#3569a8",rasterized=True,label="finite-k pairs")
-        ax.scatter(k0.d_theta,k0[col],s=12,alpha=.7,color="#777777",label="k=0 positive control")
+        ax.scatter(k0.d_theta,k0[col],s=12,alpha=.7,color="#777777",label="k=0 null control")
         best=distant[(distant.feature_set==name)&np.isclose(distant.d_theta_threshold,.5)].iloc[0]
         ax.scatter(best.minimum_d_theta,best.minimum_distance,s=55,marker="*",color="#d65f35",zorder=5,label="closest pair, dθ≥0.5")
         ax.set(title=title,xlabel=r"normalized parameter distance $d_\theta$"); ax.grid(axis="y",alpha=.18)
     axs[0].set_ylabel("standardized RMS observable distance")
-    axs[1].legend(frameon=False,fontsize=7,loc="upper left"); fig.tight_layout()
+    fig.subplots_adjust(left=.10,right=.98,top=.88,bottom=.25,wspace=.12)
+    fig.canvas.draw()
+    positions=[ax.get_position() for ax in axs]
+    legend_center_x=(min(p.x0 for p in positions)+max(p.x1 for p in positions))/2
+    handles,labels=axs[1].get_legend_handles_labels()
+    fig.legend(handles,labels,frameon=False,fontsize=7,ncol=3,loc="lower center",
+               bbox_to_anchor=(legend_center_x,.02),bbox_transform=fig.transFigure)
     fig.savefig(output/"finite_domain_global_ambiguity.pdf",bbox_inches="tight"); fig.savefig(output/"finite_domain_global_ambiguity.png",dpi=320,bbox_inches="tight"); plt.close(fig)
     fig,ax=plt.subplots(figsize=(5.4,3.3))
     for name,color in zip(names,["#3569a8","#d65f35"]):

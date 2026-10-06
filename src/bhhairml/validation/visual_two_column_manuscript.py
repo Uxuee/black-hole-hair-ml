@@ -54,11 +54,10 @@ def build_estimator_figure(output: Path) -> None:
             ax.yaxis.set_major_formatter(formatter)
             ax.set_yticks([0, .0005, .0010, .0015])
             ax.yaxis.get_offset_text().set_fontsize(7)
-    fig.suptitle("Estimator sensitivity after 161-to-321 forward convergence", fontsize=10)
     fig.text(.5, .012,
              "MLP audit: 410 catastrophic records; 409 predate phase substitution; 63 iteration-limit cases.",
              ha="center", fontsize=7)
-    fig.tight_layout(rect=(0, .10, 1, .92), w_pad=.65)
+    fig.tight_layout(rect=(0, .10, 1, 1), w_pad=.65)
     fig.savefig(output / "targeted_estimator_robustness_compact.pdf",
                 bbox_inches="tight", pad_inches=.08)
     fig.savefig(output / "targeted_estimator_robustness_compact.png", dpi=320,
@@ -113,7 +112,6 @@ def build_local_sensitivity_figure(output: Path) -> None:
     axes[0].set_xscale("log")
     axes[0].set_xlabel("Standardized singular value")
     axes[0].set_title(r"Strongest $\sigma_{\max}$ / weakest $\sigma_{\min}$")
-    axes[0].legend(frameon=False, fontsize=9)
     axes[1].scatter(LOCAL_ANGLE, y, s=58, color="#6f4ca1")
     axes[1].axvline(180, color="#555555", linestyle="--", linewidth=1)
     axes[1].set_xlim(155, 181)
@@ -127,11 +125,14 @@ def build_local_sensitivity_figure(output: Path) -> None:
         ax.set_yticks(y, LOCAL_NAMES)
         ax.grid(axis="x", alpha=0.25, linewidth=0.7)
         ax.invert_yaxis()
-    fig.suptitle(
-        r"Representative finite-difference response anchored at $k=10^{-3},\ w_q=-0.5$",
-        fontsize=12,
-    )
-    fig.tight_layout()
+    fig.subplots_adjust(left=.18, right=.98, top=.91, bottom=.25, wspace=.30)
+    fig.canvas.draw()
+    position = axes[0].get_position()
+    legend_center_x = (position.x0 + position.x1) / 2
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=9, ncol=2,
+               loc="lower center", bbox_to_anchor=(legend_center_x, .025),
+               bbox_transform=fig.transFigure)
     fig.savefig(output / "physical_local_sensitivity_comparison.pdf", bbox_inches="tight")
     fig.savefig(output / "physical_local_sensitivity_comparison.png", dpi=320, bbox_inches="tight")
     plt.close(fig)

@@ -43,6 +43,8 @@ def build(source_root: Path, output: Path) -> None:
     )
     for values, color, linestyle, label in styles:
         top.plot(phi, values, color=color, linestyle=linestyle, linewidth=1.45, label=label)
+    top.text(.015, .96, "A. Arrival time", transform=top.transAxes,
+             ha="left", va="top", fontsize=9)
     top.set_ylabel(r"relative arrival time / $M$", labelpad=14)
     top.legend(loc="lower center", bbox_to_anchor=(.5, 1.02), frameon=False,
                fontsize=8.5, ncol=2, columnspacing=1.2, handlelength=2.3,
@@ -51,17 +53,19 @@ def build(source_root: Path, output: Path) -> None:
     residual.axhline(0.0, color="0.55", linewidth=.7)
     residual.plot(phi, direct_integrated * 1e3, color="#dc7f2a", linewidth=1.25)
     residual.plot(phi, wq_direct * 1e3, color="#3267a8", linestyle="--", linewidth=1.25)
+    residual.text(.015, .96, "B. Validation residuals", transform=residual.transAxes,
+                  ha="left", va="top", fontsize=9)
     residual.set_xlim(phi.min(), 9.85)
     label_effect = [pe.withStroke(linewidth=2, foreground="white")]
     orange_label = residual.annotate(
-        r"direct $-$ integrated",
+        "timing-method residual",
         xy=(9.72, direct_integrated[-1] * 1e3),
         xytext=(-4, 5), textcoords="offset points",
         ha="right", va="bottom", color="#dc7f2a", fontsize=8.3,
     )
     orange_label.set_path_effects(label_effect)
     blue_label = residual.annotate(
-        r"$w_q$ difference",
+        r"$k=0$ $w_q$-invariance residual",
         xy=(9.72, 0.0),
         xytext=(-4, 4), textcoords="offset points",
         ha="right", va="bottom", color="#3267a8", fontsize=8.3,

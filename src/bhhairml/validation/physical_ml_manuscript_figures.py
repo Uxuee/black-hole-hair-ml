@@ -10,7 +10,6 @@ import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 
@@ -67,7 +66,7 @@ def figure_protocol(summary: pd.DataFrame, folds: pd.DataFrame, path: Path) -> N
     fig, axes = plt.subplots(1, 2, figsize=(12.2, 4.8), sharey=True)
     colors = ["#4477AA", "#EE6677", "#228833"]
     y = np.arange(len(PRIMARY)); offsets = [-.23, 0, .23]
-    for ax, target, title in zip(axes, ["k", "wq"], [r"$k$", r"identifiable $w_q$"]):
+    for ax, target, title in zip(axes, ["k", "wq"], [r"A. $k$", r"B. identifiable $w_q$"]):
         for protocol, color, off in zip(PROTOCOLS, colors, offsets):
             q = c[(c.target == target) & (c.protocol == protocol)].set_index("feature_set").reindex(PRIMARY)
             v = q.central_nmae.to_numpy(); lo = v-q.q25.to_numpy(); hi=q.q75.to_numpy()-v
@@ -76,11 +75,14 @@ def figure_protocol(summary: pd.DataFrame, folds: pd.DataFrame, path: Path) -> N
         ax.set_title(title); ax.set_xlabel("Median normalized MAE (lower is better)")
         ax.grid(axis="x", alpha=.25)
     axes[0].set_yticks(y, [DISPLAY[x] for x in PRIMARY]); axes[0].invert_yaxis()
+    fig.subplots_adjust(left=.23, right=.98, top=.94, bottom=.20, wspace=.18)
+    fig.canvas.draw()
+    positions = [ax.get_position() for ax in axes]
+    legend_center_x = (min(p.x0 for p in positions) + max(p.x1 for p in positions)) / 2
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, frameon=False, loc="lower center", ncol=3,
-               bbox_to_anchor=(.5, .01))
-    fig.suptitle("Validation protocol comparison (fold/seed/model/direction IQR)")
-    fig.subplots_adjust(left=.23, right=.98, top=.86, bottom=.18, wspace=.18)
+               bbox_to_anchor=(legend_center_x, .015),
+               bbox_transform=fig.transFigure)
     _save(fig, path)
 
 
@@ -122,12 +124,12 @@ def figure_sigma_maps(jac: pd.DataFrame, path: Path) -> None:
         boundary=g[g.k==0]
         ax.scatter(boundary.k,boundary.wq,color="0.72",marker="x",s=38,
                    linewidths=.9)
-        ax.set_title(DISPLAY[name],fontsize=9); ax.set_xlabel(r"$k$"); ax.set_ylabel(r"$w_q$")
+        ax.set_title(DISPLAY[name],fontsize=9)
+        ax.set_xticks(np.arange(0.0, 0.0025001, 0.0005))
+        ax.set_xticklabels(["0", "0.5", "1.0", "1.5", "2.0", "2.5"])
+        ax.set_xlabel(r"$k\ [10^{-3}]$"); ax.set_ylabel(r"$w_q$")
     cb=fig.colorbar(mappable,ax=axes.ravel().tolist(),shrink=.88)
     cb.set_label(r"$\log_{10}(\sigma_{\min})$ (shared finite $k>0$ scale)")
-    fig.legend(handles=[Line2D([], [], color="0.55", marker="x", linestyle="None",
-                              label=r"exact structural rank loss ($k=0$)")],
-               loc="lower center",frameon=False)
     _save(fig,path)
 
 
