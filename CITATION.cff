@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite the repository and the preferred manuscript citation."
-title: "Learning When Black-Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity"
+title: "Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity"
 type: software
 authors:
   - given-names: "Ariadna Uxue"
@@ -10,7 +10,7 @@ repository-code: "https://github.com/Uxuee/black-hole-hair-ml"
 license: MIT
 preferred-citation:
   type: article
-  title: "Learning When Black-Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity"
+  title: "Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity"
   authors:
     - given-names: "Ariadna Uxue"
       family-names: "Palomino Ylla"
