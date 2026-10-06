@@ -6,6 +6,10 @@ This secondary analysis deliberately uses two resolution layers, consistently wi
 
 Registered train/calibration/test memberships are unchanged. Point identifiers are sorted before conversion to row indices so estimator row order and nearest-neighbor tie handling are deterministic. Two clean runs with different Python hash seeds produced identical numerical-table hashes.
 
+### Row-order provenance audit
+
+The initial reviewer implementation converted registered role sets directly to row indices, making their order process-dependent even though membership was correct. A 115-specification audit confirmed identical train, calibration, and test membership in all 345 role comparisons. Controlled sorted-versus-reversed fits showed HGB to be invariant to numerical precision, while RF and MLP predictions were row-order sensitive under the current scikit-learn implementation. The corrected journal implementation sorts point identifiers before fitting and is therefore canonical. Jacobian tables are unchanged, nearest-model aggregate summaries agree to floating precision, and no headline feature-set ordering changes. Full comparisons are recorded in `artifacts/observation_facing_sensitivity/provenance_audit/` and `reports/observation_facing_order_provenance_audit.md`.
+
 The restricted ringdown subset retains only $\Omega$ and $\lambda$. Redshift retains its nine phase summaries; sky retains the 18 signed $\alpha$/$\beta$ summaries. $\Delta r$, $r_{\rm ph}$, impact parameter, orbital, and timing features are excluded.
 
 ## Results
