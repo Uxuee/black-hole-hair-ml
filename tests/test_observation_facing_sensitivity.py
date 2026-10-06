@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import hashlib
 import json
 
@@ -39,7 +39,9 @@ def test_outputs_preserve_splits_scoring_and_canonical_hashes():
     assert metadata["canonical_sources_unchanged"] is True
     assert metadata["resolution_layers"]["combined_as_common_table"] is False
     for relative, expected in metadata["source_files"].items():
-        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
+        # Handle both Windows backslash and POSIX forward slash paths for robustness
+        path = ROOT.joinpath(*PureWindowsPath(relative).parts)
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == expected
     metrics = pd.read_csv(OUTPUT / "inverse_model_fold_metrics.csv")
     assert set(metrics.protocol) == {"random_interpolation", "grouped_physical_interpolation", "directional_extrapolation"}
     assert (metrics.loc[metrics.target.eq("wq"), "n_scored"] > 0).all()
