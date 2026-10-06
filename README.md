@@ -1,17 +1,17 @@
-# Learning When Black-Hole Hair Is Observable
+# Learning When Black Hole Hair Is Observable
 
-> Physical identifiability, generalization, and observable complementarity in a controlled Kiselev black-hole inverse problem.
+> Physical identifiability, generalization, and observable complementarity in a controlled Kiselev black hole inverse problem.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.1-F7931E?logo=scikitlearn&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Status](https://img.shields.io/badge/status-journal%20manuscript-blueviolet)
 
-This repository supports the manuscript **“Learning When Black-Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
+This repository supports the manuscript **“Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
 
-The study asks a simple question: when a black-hole model has more than one physical parameter, do the observables actually contain enough independent information to distinguish them? The benchmark combines a validated timelike emitter, three-dimensional direct null-geodesic shooting, Jacobian identifiability diagnostics, leakage-aware inverse learning, non-learned baselines, and numerical-resolution audits.
+The study asks a simple question: when a black hole model has more than one physical parameter, do the observables actually contain enough independent information to distinguish them? The benchmark combines a validated timelike emitter, three-dimensional direct null-geodesic shooting, Jacobian identifiability diagnostics, leakage-aware inverse learning, non-learned baselines, and numerical-resolution audits.
 
-**This is a theoretical identifiability benchmark, not an observational constraint on black-hole hair.**
+**This is a theoretical identifiability benchmark, not an observational constraint on black hole hair.**
 
 [Read the current manuscript](paper/current_study/manuscript/manuscript.pdf)
 
