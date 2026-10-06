@@ -1,177 +1,248 @@
 # Learning When Black-Hole Hair Is Observable
 
-A controlled Kiselev black-hole inverse-learning benchmark for physical
-identifiability, observable complementarity, distribution shift, numerical
-convergence, and inverse-estimator robustness. The study combines timelike
-emitter evolution, three-dimensional direct null-geodesic shooting, local and
-finite-domain identifiability diagnostics, and leakage-aware inverse learning.
-It uses simulated theoretical data and does not claim an observational
-constraint on black-hole hair.
+> Physical identifiability, generalization, and observable complementarity in a controlled Kiselev black-hole inverse problem.
 
-## Paper
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.1-F7931E?logo=scikitlearn&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-journal%20manuscript-blueviolet)
 
-- **Title:** *Learning When Black-Hole Hair Is Observable: Physical
-  Identifiability, Generalization, and Observable Complementarity*
-- **Author:** Ariadna Uxue Palomino Ylla
-- **Status:** journal manuscript; preparing for a Physical Review D submission
-- **PDF:** [`paper/current_study/manuscript/manuscript.pdf`](paper/current_study/manuscript/manuscript.pdf)
-- **Source:** [`paper/current_study/manuscript/main.tex`](paper/current_study/manuscript/main.tex)
+This repository supports the manuscript **“Learning When Black-Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
 
-## Main scientific findings
+The study asks a simple question: when a black-hole model has more than one physical parameter, do the observables actually contain enough independent information to distinguish them? The benchmark combines a validated timelike emitter, three-dimensional direct null-geodesic shooting, Jacobian identifiability diagnostics, leakage-aware inverse learning, non-learned baselines, and numerical-resolution audits.
 
-- At exactly `k = 0`, the metric is independent of `w_q`; this is an exact
-  structural non-identifiability boundary, not merely a difficult regression
-  region.
-- Ringdown alone leaves `w_q` comparatively difficult to recover. Redshift and
-  photon geometry provide complementary parameter information.
-- A restricted observation-facing sensitivity check retains only `Omega` and
-  `lambda` from ringdown and signed sky coordinates `alpha` and `beta` from the
-  ray calculation. Redshift and signed sky coordinates preserve the qualitative
-  complementarity after latent photon-orbit quantities are removed. These sky
-  coordinates remain idealized ray-level quantities, not detector observables.
-- Forward-feature convergence does not guarantee robustness of frozen inverse
-  estimators: tree-based tail shifts remain important under the targeted
-  161-to-321-phase audit.
-- Random interpolation is more optimistic than grouped physical interpolation
-  and directional extrapolation.
+**This is a theoretical identifiability benchmark, not an observational constraint on black-hole hair.**
 
-The primary physical comparison finds a 4.54-fold increase in the grid-median
-minimum singular value when photon geometry is added to ringdown. These results
-apply to the predefined finite Kiselev grid and tested normalizations; they do
-not establish an observational constraint or continuous global injectivity.
+[Read the current manuscript](paper/current_study/manuscript/manuscript.pdf)
 
-## Physical geodesic shooting
+---
 
-The physical pipeline evolves an orbiting timelike emitter and shoots direct
-null geodesics to a static observer. The image below is a phase-coloured
-geodesic diagnostic, not an observational image.
+## Physical setup
 
-![Phase-coloured physical photon shooting](artifacts/shooting_visualizations/refined/phase_coloured_photon_shooting_with_inset.png)
+![Validated direct photon shooting](paper/current_study/figures/phase_coloured_photon_shooting_horizontal.png)
 
-## Repository layout
+For each point on an 11×11 Kiselev grid, the pipeline evolves one timelike emitter with $r_p=8M$ and $r_a=12M$, then solves the two launch angles of the direct photon branch so that the null ray reaches a static observer at $(0,0,-80M)$.
 
-### Current study
+At each successful phase the calculation records redshift, impact parameter, signed observer-sky coordinates, and timing quantities. The nominal physical archive uses 81 phase samples; 161- and targeted 321-phase calculations are used as numerical audits.
 
-| Path | Purpose |
-|---|---|
-| `src/bhhairml/shooting/` | Timelike-emitter and Cartesian null-geodesic solvers |
-| `src/bhhairml/validation/` | Physical-grid, identifiability, convergence, robustness, and ambiguity audits |
-| `src/bhhairml/workflows/reproduce_current_study.py` | Lightweight reproduction of headline aggregations from tracked results |
-| `configs/` | Versioned simulation and analysis settings |
-| `paper/current_study/` | Current manuscript, compact data package, figures, metadata, and audit documentation |
-| `artifacts/kiselev_identifiability_grid/` | Nominal 81-phase physical feature and Jacobian archive |
-| `artifacts/journal_phase_convergence/` | Validated 161/321-phase representations and fixed split assignments |
-| `artifacts/observation_facing_sensitivity/` | Restricted-feature Jacobian, inverse-model, nearest-model, and figure outputs |
-| `scripts/observation_facing_sensitivity.py` | Deterministic observation-facing sensitivity analysis |
-| `scripts/audit_observation_facing_order_provenance.py` | Row-order and split-membership provenance audit |
-| `experiments/traditional_inverse_baselines/` | Non-learned nearest-model and local-Jacobian baselines |
-| `audits/` | Independent physical-shooting implementation and walkthrough |
+The Kiselev metric is
 
-### Historical and legacy material
+$$
+f(r)=1-\frac{2M}{r}-\frac{k}{r^{1+3w_q}}.
+$$
 
-The repository retains the earlier dense synthetic benchmark, proxy-geodesic
-experiments, conference/workshop manuscripts, poster assets, and reviewer-only
-revision records. They document the development of the project but are not
-substitutes for the current physical-shooting results. In particular,
-`reviewer/_revision_2026_10/` is provenance material, while historical proxy
-workflows remain under the older experiment, report, and paper directories.
+Here $k$ controls deformation strength and $w_q$ controls its radial dependence.
 
-## Reproduction
+At $k=0$, the deformation disappears and the spacetime is Schwarzschild for every nominal $w_q$. That exact structural degeneracy provides a known null control for the identifiability analysis.
 
-Python 3.10 is required by the pinned project metadata.
+---
 
-### Install
+## Observable complementarity
 
-```bash
-python -m pip install -e .
-```
+![Physical observable complementarity](paper/current_study/figures/physical_observable_complementarity.png)
 
-For development and tests:
+The main physical result is that **large response is not the same as identifiability**.
+
+Ringdown alone leaves a weak parameter direction. Adding independent observables rotates and strengthens the response geometry:
+
+| Feature set | median $\sigma_{\min}$ | median $\kappa(J)$ | grouped identifiable-$w_q$ NMAE | directional identifiable-$w_q$ NMAE |
+|---|---:|---:|---:|---:|
+| Ringdown | 0.2782 | 6.6112 | 0.3093 | 0.3011 |
+| Ringdown + redshift | 0.9459 | 3.6107 | 0.0991 | 0.1922 |
+| Ringdown + photon geometry | 1.2326 | 4.0731 | 0.0865 | 0.2048 |
+
+Relative to ringdown alone, ringdown + photon geometry gives a median pointwise **4.54×** gain in minimum singular value and a **2.28×** improvement in condition number on the nominal finite-$k$ grid.
+
+Redshift is more directly connected to a measurable spectroscopic quantity, while the photon-geometry variables used here remain idealized ray-level outputs.
+
+---
+
+## Observation-facing sensitivity
+
+![Observation-facing sensitivity](artifacts/observation_facing_sensitivity/observation_facing_feature_sensitivity.png)
+
+To test whether the complementarity result depends on latent geometric descriptors, a secondary analysis removes the photon-orbit radius shift $\Delta r$, the photon-sphere radius $r_{\rm ph}$, and impact parameter $b$.
+
+The restricted ringdown set keeps only $\{\Omega,\lambda\}$. Redshift keeps its nine phase summaries, and the sky channel keeps only the signed $\alpha,\beta$ summaries.
+
+| Restricted feature set | median $\sigma_{\min}$ | median $\kappa(J)$ | grouped $w_q$ NMAE | directional $w_q$ NMAE |
+|---|---:|---:|---:|---:|
+| $\{\Omega,\lambda\}$ | 0.0097 | 136.69 | 0.3886 | 0.4239 |
+| + redshift | 0.6215 | 4.47 | 0.0985 | 0.1750 |
+| + signed sky $\alpha,\beta$ | 0.6999 | 4.89 | 0.0904 | 0.2179 |
+| + redshift + sky | 0.7310 | 5.59 | 0.0807 | 0.1949 |
+
+The latent photon-orbit quantities substantially strengthen ringdown-only identifiability, but the qualitative redshift and sky-coordinate complementarity **persists after they are removed**.
+
+The sky coordinates are still idealized ray-level quantities; this is not detector-level imaging or astrometry.
+
+---
+
+## Inverse learning under distribution shift
+
+![Inverse-learning protocols](paper/current_study/figures/protocol_results_161.png)
+
+Each physical system contributes one supervised sample: one feature vector built from its complete phase-resolved simulation, with target $(k,w_q)$.
+
+Three estimator families are used: Histogram Gradient Boosting (HGB), Random Forest (RF), and a target-scaled multilayer perceptron (MLP).
+
+They are tested under increasingly difficult protocols: random interpolation, grouped physical holdouts, and directional extrapolation.
+
+Random splits are optimistic. Grouped holdouts are harder, and directional extrapolation is harder still. Split-conformal coverage also degrades under distribution shift.
+
+At $k=0$, systems still contribute to $k$ scoring, but ordinary $w_q$ scoring excludes them because $w_q$ is exactly non-identifiable there.
+
+---
+
+## Non-learned baselines
+
+The study also evaluates a **nearest physical model** baseline using training-only standardization and a **local Jacobian inverse** using a training-only local linear forward map.
+
+These checks help separate information in the physical forward representation from behavior specific to HGB, RF, or MLP.
+
+For the primary nearest-model grouped comparison, identifiable-$w_q$ NMAE improves from **0.2208** with ringdown to **0.1585** with redshift and **0.1481** with photon geometry.
+
+---
+
+## Numerical convergence and estimator robustness
+
+The forward calculation and inverse estimator are audited separately.
+
+- **81 → 161 phases:** all 121 physical systems complete.
+- **161 → 321 phases:** 35 systems selected before reading the 321-phase outcomes all complete and satisfy the forward convergence criteria.
+- The refined forward features converge, but frozen HGB/RF predictions still show tail sensitivity.
+- MLP directional failures largely predate the higher-resolution substitution.
+
+The methodological conclusion is:
+
+> **A converged forward simulator does not guarantee a robust inverse estimator.**
+
+---
+
+## Observer-sky geometry
+
+![Observer sky track and residuals](paper/current_study/figures/observer_sky_track_with_residuals.png)
+
+The signed sky coordinates are constructed in the static observer tetrad. The full tracks nearly overlap for the small deformations used here, so the manuscript also reports actual-scale matched-phase residuals.
+
+These are idealized ray-level sky coordinates, not detector-reconstructed images.
+
+---
+
+## Current vs historical material
+
+### Current journal study
+
+The publication-facing analysis is centered on:
+
+- `paper/current_study/`
+- `artifacts/kiselev_identifiability_grid/`
+- `artifacts/journal_phase_convergence/`
+- `artifacts/observation_facing_sensitivity/`
+- `src/bhhairml/shooting/`
+- `src/bhhairml/validation/`
+- `experiments/traditional_inverse_baselines/`
+- `scripts/observation_facing_sensitivity.py`
+
+### Historical / exploratory
+
+Earlier dense synthetic, PCA, proxy-geodesic, waveform, and GW150914 experiments remain in the repository for provenance and development history. They are **not** the primary evidence for the current journal manuscript.
+
+---
+
+## Reproduce the tracked results
+
+Python 3.10 is the tested CI environment.
+
+Install:
 
 ```bash
 python -m pip install -e ".[dev]"
 ```
 
-### Reproduce headline aggregations without rerunning the physical grid
-
-```bash
-python -m bhhairml.workflows.reproduce_current_study
-```
-
-This validates the tracked machine-readable archive and rebuilds the compact
-claim tables under `paper/current_study/metadata/`. It does not launch the
-expensive geodesic-shooting campaign.
-
-### Rerun the observation-facing sensitivity analysis
+Run the observation-facing sensitivity analysis from the tracked 81- and 161-phase inputs:
 
 ```bash
 python scripts/observation_facing_sensitivity.py
 ```
 
-This reads the tracked nominal 81-phase Jacobian features, validated 161-phase
-inverse representation, and predefined splits. It regenerates
-`artifacts/observation_facing_sensitivity/` without rerunning geodesics.
-Physical point identifiers are sorted before row-index conversion so RF/MLP
-fitting and nearest-neighbor tie handling are deterministic across Python hash
-seeds.
+Run the relevant tests:
 
-### Build the manuscript
+```bash
+python -m pytest tests/test_observation_facing_sensitivity.py
+python -m pytest tests/test_observation_facing_manuscript_integration.py
+python -m pytest tests/test_observation_facing_order_provenance.py
+```
 
-With [Tectonic](https://tectonic-typesetting.github.io/) installed:
+Run the full non-smoke suite used in GitHub Actions:
+
+```bash
+python -m pytest -m "not smoke"
+```
+
+Build the manuscript with Tectonic:
 
 ```bash
 cd paper/current_study/manuscript
 tectonic main.tex
 ```
 
-The tracked publication PDF is `paper/current_study/manuscript/manuscript.pdf`.
+The repository includes machine-readable derived results, predefined split assignments, observation-facing outputs, provenance metadata, and source-file SHA256 hashes used by the manuscript.
 
-### Tests
+Full bitwise replay of the frozen-estimator resolution audit additionally requires 5,520 serialized estimators (~822 MB); those files are not stored in this repository.
 
-```bash
-python -m pytest -q
-```
+---
 
-Focused observation-facing and provenance checks can be run with:
+## Repository layout
 
-```bash
-python -m pytest -q \
-  tests/test_observation_facing_sensitivity.py \
-  tests/test_observation_facing_manuscript_integration.py \
-  tests/test_observation_facing_order_provenance.py
-```
+| Path | Purpose |
+|---|---|
+| `paper/current_study/` | Current manuscript, figures, and publication-facing data |
+| `artifacts/kiselev_identifiability_grid/` | Nominal 81-phase physical grid and Jacobian diagnostics |
+| `artifacts/journal_phase_convergence/` | Validated 161-phase representation, fixed splits, predictions, and convergence outputs |
+| `artifacts/observation_facing_sensitivity/` | Restricted observation-facing sensitivity tables, figures, and metadata |
+| `src/bhhairml/shooting/` | Timelike-emitter and direct null-geodesic integration |
+| `src/bhhairml/validation/` | Physical-grid, identifiability, convergence, and robustness audits |
+| `experiments/traditional_inverse_baselines/` | Nearest-model and local-Jacobian inverse baselines |
+| `scripts/observation_facing_sensitivity.py` | Observation-facing sensitivity analysis |
+| `reports/` | Reproducibility and audit reports |
+| `tests/` | Scientific and repository-level regression tests |
 
-Full forward regeneration is intentionally separate and substantially more
-expensive:
+---
 
-```bash
-python -m bhhairml.validation.kiselev_identifiability_grid \
-  --config configs/kiselev_identifiability_grid.yaml
-```
+## Limitations
 
-## Data and reproducibility
+The current study:
 
-- All study data are simulated theoretical data; no observational data are
-  used in the current identifiability analysis.
-- Machine-readable derived results, the 115 predefined split specifications,
-  and canonical source-file SHA256 hashes are tracked in the repository.
-- The Jacobian analysis uses the nominal 81-phase archive; inverse-learning
-  sensitivity tests use the separately validated 161-phase representation.
-- The public tables reproduce the reported headline aggregations without
-  rerunning the full physical grid.
-- Full bitwise replay of the frozen 321-phase prediction audit additionally
-  requires 5,520 serialized estimators (approximately 822 MB). They are not in
-  Git and are available from the author upon reasonable request.
-- No Zenodo DOI has been minted yet.
+- uses one static spherical Kiselev family;
+- uses a leading-eikonal ringdown description rather than a dedicated finite-$\ell$ perturbative spectrum;
+- models only the direct photon branch;
+- uses a point emitter and point observer;
+- does not include radiative transfer, detector response, secondary images, strain likelihoods, calibration error, or an observational noise model;
+- does not establish continuous global injectivity between sampled grid points;
+- does not make an observational constraint or detection claim.
+
+A natural next step is to replace idealized ray-level sky variables with detector-level imaging or astrometric observables and realistic likelihoods, while retaining redshift as a directly interpretable spectroscopic channel.
+
+---
+
+## Related physics work
+
+This repository builds on the leading-eikonal QNM/geodesic framework in:
+
+**Ariadna Uxue Palomino Ylla, Kosuke Makino, Akane Tanaka, Akihiro Ishibashi, and Chul-Moon Yoo, _Ringdown waves from hairy black holes_, JCAP 2026(09), 046 (2026).**
+
+[DOI: 10.1088/1475-7516/2026/09/046](https://doi.org/10.1088/1475-7516/2026/09/046)
+
+---
 
 ## Citation
 
-Please use [`CITATION.cff`](CITATION.cff) for the software/repository citation.
-The related published ringdown framework is:
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-> A. U. Palomino Ylla *et al.*, "Ringdown waves from hairy black holes,"
-> *Journal of Cosmology and Astroparticle Physics* **2026**(09), 046 (2026),
-> <https://doi.org/10.1088/1475-7516/2026/09/046>.
+A versioned archival DOI for this repository will be added for the journal release.
+
+---
 
 ## License
 
