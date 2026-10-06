@@ -40,7 +40,7 @@ showing that the gain is not confined to the tested learned architectures. A uni
 161-phase audit gives a typical normalized prediction shift of
 $9.48\times10^{-4}$ but exposes catastrophic extrapolation tails. A subsequent
 targeted 321-phase audit resolves the remaining forward-feature comparisons,
-yet frozen HGB and random-forest tail shifts exceed predeclared robustness
+yet frozen HGB and random-forest tail shifts exceed prespecified robustness
 thresholds. Thus the physical complementarity result is supported, but inverse
 estimator robustness remains conditional. This study is a theoretical
 identifiability benchmark, not an observational constraint.
@@ -306,7 +306,7 @@ for the combined set are
 $\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
 $\smin=1.5312$ and $\kappaJ=4.4974$: adding more responsive summaries can raise
 $\smin$ without producing the best conditioning.
-The same archived comparison shows that redshift supplies genuine
+The same comparison shows that redshift supplies genuine
 complementarity beyond ringdown: ringdown plus redshift has grid medians
 $\smin=0.9459$ and $\kappaJ=3.6107$, with median pointwise improvements of
 $3.29\times$ and $2.27\times$, respectively. Photon geometry gives the larger
@@ -440,7 +440,7 @@ extrapolation.
 \centering\includegraphics[width=.84\textwidth]{physical_ml_protocol_comparison.png}
 \caption{NMAE for the five primary feature sets under random, grouped physical
 interpolation, and directional extrapolation. Each dot preserves the predefined
-table statistic: the median of archived summary-row medians. To expose
+table statistic: the median of stored summary-row medians. To expose
 lower-level dispersion rather than suppress it through that hierarchy, each
 horizontal bar spans the 25th--75th percentile of the underlying NMAE records
 across the applicable folds, seeds, models, and, for extrapolation, directions.
@@ -551,14 +551,14 @@ For feature $i$ at resolutions $N_1$ and $N_2$, the frozen comparison is
 \begin{equation}
  \delta_i=\frac{|F_i^{(N_2)}-F_i^{(N_1)}|}{\max(s_i,10^{-12})},
 \end{equation}
-where $s_i$ is the global q95--q05 scale computed on the archived 81-phase
+where $s_i$ is the global q95--q05 scale computed on the nominal 81-phase
 training domain. The floor prevents division by numerical zero and is not
 fitted to either higher-resolution result. A feature--point comparison is
 classified as converged for $\delta_i\leq0.01$, marginal for
 $0.01<\delta_i\leq0.05$, and unresolved for $\delta_i>0.05$; non-finite,
 missing, or schema-mismatched values are also unresolved by protocol. Here
-``unresolved'' denotes failure of this predeclared numerical-resolution
-criterion, not a failed physical shooting phase.
+``unresolved'' denotes failure of this numerical-resolution criterion, which
+was fixed before evaluation, rather than a failed physical shooting phase.
 
 The uniform 161-phase study completes all 121 physical points. From 9317
 feature--point comparisons, 240 exceed the 0.05 normalized-change threshold
@@ -584,8 +584,8 @@ complete. Median and 95th-percentile normalized 161-to-321 feature changes are
 $1.963\times10^{-4}$ and $7.234\times10^{-3}$; no comparison remains
 unresolved, ringdown is exactly unchanged, no systematic family-wide trend is
 found, and Jacobian rank is preserved. The targeted forward audit therefore
-passes its predeclared criteria. This is not a uniform 321-phase proof over the
-full 121-point grid.
+passes the criteria specified in advance. This is not a uniform 321-phase proof
+over the full 121-point grid.
 
 Within the selected 35-system set, the earlier resolution ranking was strongly
 preserved: the point-level maximum changes had Spearman $\rho=1.000$, while the
@@ -608,7 +608,7 @@ forward map has converged. Figure~\ref{fig:estimator-robustness} applies those
 frozen estimators to the refined features; no model is retrained.
 
 Forward acceptance and inverse-estimator acceptance are separate. For HGB and
-RF individually, the predeclared inverse criteria require median normalized
+RF individually, the prespecified inverse criteria require median normalized
 prediction shift below 0.005, 95th-percentile shift below 0.03, maximum
 identifiable-$\wq$ shift below 0.1, aggregate NMAE change below 0.02, and
 unchanged grouped complementarity. The written protocol permits an
@@ -619,7 +619,7 @@ that caveat does not relax the criterion here.
 Frozen trees remain tail-sensitive: HGB and RF 95th-percentile normalized
 shifts are 0.08122 and 0.08509, and their largest identifiable-$\wq$ shifts are
 0.30593 and 0.27053. Their median shifts are zero because many tree predictions do
-not cross a split threshold. The predeclared perturbation ensembles and fixed
+not cross a split threshold. The fixed perturbation ensembles and fixed
 Extra Trees smoother do not pass all stability and grouped-performance
 criteria. Of 410 catastrophic MLP records, 409 are already catastrophic at 161
 phases, none is materially worsened by the 321-phase substitution, 63 reach the
@@ -672,9 +672,10 @@ $\kappaJ=136.69$. Nevertheless, adding redshift or the signed sky coordinates
 raises the median $\smin$ to 0.6215 or 0.6999 and lowers the median $\kappaJ$
 to 4.47 or 4.89. Grouped and directional inverse tests, together with the
 non-learned nearest-model baseline, independently support the same qualitative
-conclusion: the latent photon-orbit quantities strengthen ringdown-only
-identifiability, but the central complementarity result does not depend on
-them. We call these features observation-facing, not detector-level;
+conclusion: the latent photon-orbit quantities substantially strengthen
+ringdown-only identifiability, whereas the qualitative redshift and
+sky-coordinate complementarity persists after they are removed. These features
+are observation-facing, not detector-level;
 $\alpha$ and $\beta$ remain idealized ray-level observer-sky coordinates.
 Appendix~\ref{app:observation-facing} gives the definitions, resolution
 provenance, scaling checks, and complete secondary results.
@@ -771,10 +772,9 @@ the frozen-estimator audit additionally requires 5,520 serialized estimators
 (approximately 822 MB), which are not included in the repository
 and do not yet have a permanent public archive; they are available from the
 author upon reasonable request.
-The secondary observation-facing sensitivity tables, model-specific metrics,
-figure, script, and canonical-input SHA256 hashes are included under
-\texttt{artifacts/observation\_facing\_sensitivity/} and
-\texttt{scripts/observation\_facing\_sensitivity.py}.
+The repository includes the observation-facing sensitivity tables,
+model-specific metrics, figure source data, analysis script, and input-file
+SHA256 hashes.
 
 \FloatBarrier
 \appendix
@@ -872,20 +872,22 @@ set, denoted RD$_{\rm obs}$, contains only $\Omega$ and $\lambda$; it excludes
 $\Delta r$ and $r_{\rm ph}$. The redshift addition contains all nine existing
 phase summaries of $z$. The sky addition contains the nine summaries of signed
 $\alpha$ and the nine summaries of signed $\beta$, while excluding all impact-
-parameter summaries. The optional union contains redshift and sky together.
-Orbital and timing features are absent from every restricted set. These names
-describe observation-facing information only: $\Omega$ and $\lambda$ remain
-leading-eikonal quantities, and $\alpha$ and $\beta$ remain idealized ray-level
-observer-sky coordinates rather than detector-level measurements.
+parameter summaries. We also examine the combined redshift-plus-sky set.
+Orbital and timing features are excluded throughout. We use
+``observation-facing'' only to distinguish these quantities from latent
+geometric descriptors: $\Omega$ and $\lambda$ remain leading-eikonal
+quantities, while $\alpha$ and $\beta$ are idealized ray-level sky coordinates
+rather than detector-level measurements.
 
-The two numerical layers deliberately follow the primary manuscript protocol.
-The Jacobian columns in Table~\ref{tab:observation-facing} use the canonical
-nominal 81-phase archive, q95--q05 feature scaling, unchanged parameter spans
+The two numerical layers follow the same protocol as the primary analysis.
+The Jacobian columns in Table~\ref{tab:observation-facing} use the nominal
+81-phase feature set, q95--q05 feature scaling, unchanged parameter spans
 and finite-difference stencils, and analytic $k=0$ null handling. The inverse
-columns use the separately validated matched 161-phase representation and the
+columns use the separately validated 161-phase representation and the
 same 115 predefined train/calibration/test splits, seeds, training-only
 preprocessing, model hyperparameters, and identifiable-$\wq$ scoring rule.
-They are not quantities extracted from one common-resolution feature table.
+Accordingly, the Jacobian and inverse-learning columns refer to their respective
+validated resolutions rather than to a single common-resolution feature table.
 
 \begin{center}
 \begin{minipage}{.99\textwidth}
@@ -983,8 +985,7 @@ reconstruction, a point-spread function, a detector likelihood, or an
 observational noise model. It therefore supports robustness of the theoretical
 complementarity conclusion, not an observational constraint. Complete
 model-specific, nearest-model, pointwise-Jacobian, scaling, and provenance
-tables are stored in
-\texttt{artifacts/observation\_facing\_sensitivity/}.
+tables are provided with the repository.
 
 \section{Pointwise Finite-Grid Identifiability Maps}
 \label{app:grid-maps}
@@ -1026,11 +1027,11 @@ distribution shift.
 Table~\ref{tab:uncertainty-summary} reports uncertainty summaries for
 the finite analysis grid. The Jacobian percentile intervals use 10,000 paired
 physical-system bootstrap resamples (seed 20261002). Coverage entries are the
-median [IQR] across the archived rows that define the manuscript headline; the
+median [IQR] across the stored rows that define the manuscript headline; the
 evaluation-unit count is given in parentheses. At the lower level, each unit is
 a single fold/seed/model/feature/target evaluation on distinct held-out systems.
 Its covered numerator, eligible denominator, and 95\% Wilson interval are
-archived machine-readably. Units overlap across models, features, seeds, and
+stored in machine-readable form. Units overlap across models, features, seeds, and
 layouts, so their Wilson intervals are diagnostics rather than ingredients of
 a falsely pooled confidence interval.
 
@@ -1064,7 +1065,7 @@ $\kappaJ$: 2.2819 [1.8382, 2.6254] ($n=110$)} \\
 The 11 nominal $k=0$ rows have different nominal $\wq$ labels but identical
 values for all 77 predefined physical features. Their maximum absolute and
 q95--q05-standardized feature differences are both exactly zero in the
-archived table. Because the predefined splits treat nominal rows separately,
+feature table. Because the predefined splits treat nominal rows separately,
 physically equivalent Schwarzschild records cross train/test in 45 of 115
 split specifications and train/calibration in 96. This is nominal-record
 separation but not physical-equivalence separation.
@@ -1168,7 +1169,7 @@ bootstrap intervals. Associations are descriptive and do not imply causation.}
 \section{Numerical Validation and Reproducibility}
 \label{app:numerical-thresholds}
 \subsection{Numerical-validation thresholds}
-The frozen resolution protocol uses the archived 81-phase q95--q05 feature
+The frozen resolution protocol uses the nominal 81-phase q95--q05 feature
 scales and the $10^{-12}$ denominator floor defined in Section~7. Its
 feature-level boundaries are 0.01 (converged) and 0.05 (marginal); values above
 0.05 are unresolved. Targeted forward acceptance uses median/p95 boundaries of
@@ -1197,7 +1198,7 @@ separates the visually overlapping phase-resolved series from their actual-scale
 
 \subsection{Jacobian normalization sensitivity}
 \label{app:scaling-sensitivity}
-The nominal 81-phase Jacobian was recomputed from the archived
+The nominal 81-phase Jacobian was recomputed from the corresponding
 feature grid using unchanged finite-difference stencils and parameter spans.
 Table~\ref{tab:scaling-sensitivity} reports medians of pointwise finite-$k$
 ratios with their interquartile ranges; exact $k=0$ rank-loss points are kept as
@@ -1306,7 +1307,7 @@ d_\theta(i,j)=\sqrt{\left(\frac{k_i-k_j}{\Delta k}\right)^2+
 \left(\frac{w_{q,i}-w_{q,j}}{\Delta w_q}\right)^2},
 \end{equation}
 where both spans are taken from the analysis domain. Observable
-differences use the archived grid-wide q95--q05 feature scales. The primary
+differences use the nominal grid-wide q95--q05 feature scales. The primary
 cross-set distance is the RMS of standardized feature differences rather than
 a raw Euclidean norm, because the combined set has 31 dimensions while
 ringdown has four.

@@ -16,8 +16,9 @@ def test_secondary_analysis_is_integrated_without_replacing_primary_results():
     assert "observation-facing, not detector-level" in text
     assert "idealized ray-level observer-sky coordinates" in text
     assert "nominal 81-phase archive" in text
-    assert "validated matched 161-phase representation" in text
-    assert "not quantities extracted from one common-resolution feature table" in text
+    assert "validated 161-phase representation" in text
+    assert "refer to their respective" in text
+    assert "rather than to a single common-resolution feature table" in text
     assert "ringdown plus photon geometry gives a median pointwise $\\smin$ gain of\n$4.54\\times$" in text
 
 
@@ -44,5 +45,6 @@ def test_appendix_values_and_figure_match_machine_readable_summary():
 
 def test_data_availability_points_to_durable_artifacts():
     text = TEX.read_text(encoding="utf-8")
-    assert r"\texttt{artifacts/observation\_facing\_sensitivity/}" in text
-    assert r"\texttt{scripts/observation\_facing\_sensitivity.py}" in text
+    assert "The repository includes the observation-facing sensitivity tables" in text
+    assert "figure source data, analysis script, and input-file" in text
+    assert "SHA256 hashes" in text

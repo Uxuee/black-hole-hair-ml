@@ -49,7 +49,7 @@ def test_canonical_headline_values_and_manuscript_rounding(feature_set, grouped,
 def test_resolution_layers_and_observation_facing_limitation_remain_explicit():
     manuscript = MANUSCRIPT.read_text(encoding="utf-8")
     normalized = " ".join(manuscript.split())
-    assert "canonical nominal 81-phase archive" in normalized
-    assert "validated matched 161-phase representation" in normalized
+    assert "nominal 81-phase feature set" in normalized
+    assert "validated 161-phase representation" in normalized
     assert "not detector-level" in normalized
     assert "idealized ray-level observer-sky coordinates" in normalized
