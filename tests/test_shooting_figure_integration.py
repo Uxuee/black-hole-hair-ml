@@ -108,7 +108,7 @@ def test_manuscript_labels_references_and_physical_language() -> None:
 
 
 def test_readme_graphical_abstract_and_compilation() -> None:
-    readme = (ROOT / "README.md").read_text()
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
     image = "paper/current_study/figures/phase_coloured_photon_shooting_horizontal.png"
     assert image in readme and (ROOT / image).exists()
     assert "not an observational constraint on black hole hair" in readme

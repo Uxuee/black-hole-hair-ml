@@ -19,7 +19,8 @@ def test_secondary_analysis_is_integrated_without_replacing_primary_results():
     assert "validated 161-phase representation" in text
     assert "refer to their respective" in text
     assert "rather than to a single common-resolution feature table" in text
-    assert "ringdown plus photon geometry gives a median pointwise $\\smin$ gain of\n$4.54\\times$" in text
+    normalized = " ".join(text.split())
+    assert "adding photon geometry to ringdown raises the median pointwise minimum singular value by $4.54\\times$" in normalized
 
 
 def test_appendix_values_and_figure_match_machine_readable_summary():

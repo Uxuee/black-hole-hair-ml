@@ -1,17 +1,25 @@
 # Current physical-identifiability study
 
-This package supports the September 2026 manuscript *Learning When Black-Hole
-Hair Is Observable: Physical Identifiability, Generalization, and Observable
-Complementarity*. It studies when Kiselev parameters are distinguishable from
-simulated ringdown and photon observables. It is a theoretical identifiability
-benchmark, not an observational constraint on black-hole hair.
+This package supports the **current revised manuscript**
+*Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity*.
+
+The study asks when Kiselev parameters are distinguishable from simulated
+ringdown and photon observables. It is a controlled theoretical identifiability
+benchmark, not an observational constraint on black hole hair.
 
 The forward calculation evolves a timelike emitter from apocentre at physical
 phase `phi = pi`, shoots direct three-dimensional null geodesics to a static
 observer, and extracts orbital, photon-geometry, redshift, and timing features.
 Local Jacobians, finite-domain pair distances, registered inverse-learning
-splits, traditional non-learned baselines, and 161/321-phase audits then test
-identifiability and numerical robustness.
+splits, traditional non-learned baselines, observation-facing sensitivity
+tests, and 161/321-phase audits then test identifiability and numerical
+robustness.
+
+A secondary observation-facing analysis removes latent geometric descriptors
+and retains only leading-eikonal $\Omega$ and $\lambda$, redshift, and signed
+sky coordinates. The qualitative complementarity result persists under this
+restriction, while the analysis remains observation-facing rather than
+detector-level.
 
 ## Reproduce without rerunning shooting
 
@@ -27,8 +35,9 @@ The workflow reads archived CSV/JSON files and writes
 `metadata/reproduced_claims.csv` and `metadata/reproduction_results.json`. It
 reproduces the headline aggregations from the public machine-readable
 predictions and derived results; it does **not** run the expensive physical
-grid. Full forward regeneration is an
-explicit, separate operation:
+grid.
+
+Full forward regeneration is an explicit, separate operation:
 
 ```bash
 python -m bhhairml.validation.kiselev_identifiability_grid --config configs/kiselev_identifiability_grid.yaml
@@ -36,12 +45,12 @@ python -m bhhairml.validation.kiselev_identifiability_grid --config configs/kise
 
 The archived inverse-ML study took about 406 s in its recorded environment;
 the uniform 161-phase and targeted 321-phase forward audits took about 4,473 s
-and 5,318 s respectively. Hardware metadata was not archived, so these timings
+and 5,318 s respectively. Hardware metadata were not archived, so these timings
 are indicative.
 
 ## Layout
 
-- `manuscript/`: journal source, bibliography, and compiled 30-page PDF.
+- `manuscript/`: current revised manuscript source, bibliography, figures, and compiled 30-page PDF.
 - `data/`: compact physical-grid, feature, split, Jacobian, ML, baseline,
   robustness, and finite-domain tables.
 - `figures/`: publication figures in PDF and PNG.
@@ -54,9 +63,11 @@ not copied into this package. Canonical archived copies already tracked under
 `artifacts/` are referenced by the data dictionary and workflow.
 
 Full bitwise replay of every frozen 321-phase prediction is a distinct,
-stronger task. It requires 5,520 serialized frozen estimators (approximately
-822 MB), which are not tracked in the public Git repository. They are a large
-optional reproducibility artifact and should be deposited in a versioned
-external archive such as Zenodo rather than ordinary Git history. Without that
-archive, a fresh clone can reproduce the reported aggregations from the public
-prediction tables, but cannot replay every frozen estimator without retraining.
+stronger task. It requires 5,520 serialized frozen estimators, approximately
+822 MB, which are not tracked in the public Git repository and do not currently
+have a permanent public archive. They are available from the author upon
+reasonable request.
+
+Without that archive, a fresh clone can reproduce the reported aggregations
+from the public prediction tables, but cannot replay every frozen estimator
+without retraining.

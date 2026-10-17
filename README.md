@@ -18,6 +18,16 @@ The original arXiv version was withdrawn. The manuscript and publication-facing 
 
 [Read the current manuscript](paper/current_study/manuscript/manuscript.pdf)
 
+The [current-study reproducibility package](paper/current_study/README.md)
+contains the manuscript source and compiled PDF, compact machine-readable data,
+figures, claim provenance, procedure and aggregation audits, and reproduction
+documentation. Useful audit entry points are:
+
+- [Data dictionary](paper/current_study/data/DATA_DICTIONARY.md)
+- [Claim provenance](paper/current_study/metadata/claim_provenance.csv)
+- [Procedure audit](paper/current_study/metadata/current_study_procedure_audit.md)
+- [Figure 5 aggregation audit](paper/current_study/metadata/figure5_aggregation_audit.md)
+
 ---
 
 ## Key findings
