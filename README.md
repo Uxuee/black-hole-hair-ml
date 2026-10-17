@@ -5,15 +5,28 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.1-F7931E?logo=scikitlearn&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-journal%20manuscript-blueviolet)
+![Status](https://img.shields.io/badge/status-revised%20manuscript-blueviolet)
+[![Zenodo archive v1.0.0](https://img.shields.io/badge/Zenodo-v1.0.0-blue.svg)](https://doi.org/10.5281/zenodo.23191840)
 
-This repository supports the manuscript **“Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
+This repository supports the revised manuscript **“Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
 
 The study asks a simple question: when a black hole model has more than one physical parameter, do the observables actually contain enough independent information to distinguish them? The benchmark combines a validated timelike emitter, three-dimensional direct null-geodesic shooting, Jacobian identifiability diagnostics, leakage-aware inverse learning, non-learned baselines, and numerical-resolution audits.
 
 **This is a theoretical identifiability benchmark, not an observational constraint on black hole hair.**
 
+The original arXiv version was withdrawn. The manuscript and publication-facing material maintained here represent the current revised research version.
+
 [Read the current manuscript](paper/current_study/manuscript/manuscript.pdf)
+
+---
+
+## Key findings
+
+- **Observable complementarity:** leading-eikonal ringdown alone leaves a weakly constrained parameter direction, while photon geometry and redshift add independent parameter information and substantially improve identifiable $w_q$ recovery under grouped physical holdouts.
+- **Ground-truth null control:** at $k=0$, the Kiselev deformation vanishes and the spacetime is exactly Schwarzschild, so $w_q$ is structurally non-identifiable. This provides a known check against spurious inverse recovery.
+- **Observation-facing robustness:** the qualitative complementarity persists after latent geometric descriptors are removed. A restricted analysis using only $\Omega$, $\lambda$, redshift, and signed sky coordinates still improves identifiability and inverse recovery.
+- **Non-learned verification:** nearest-model and local Jacobian inversions show that the complementarity belongs to the physical forward map rather than to one particular machine-learning architecture.
+- **Forward versus inverse robustness:** targeted forward convergence can pass even when frozen estimators retain tail sensitivity or directional extrapolation failures.
 
 ---
 
@@ -31,7 +44,7 @@ $$
 f(r)=1-\frac{2M}{r}-\frac{k}{r^{1+3w_q}}.
 $$
 
-Here $k$ controls deformation strength and $w_q$ controls its radial dependence.
+Here $k$ sets the overall amplitude of the deviation from Schwarzschild, while $w_q$ controls how that deformation scales with radius.
 
 At $k=0$, the deformation disappears and the spacetime is Schwarzschild for every nominal $w_q$. That exact structural degeneracy provides a known null control for the identifiability analysis.
 
@@ -131,7 +144,7 @@ These are idealized ray-level sky coordinates, not detector-reconstructed images
 
 ## Current vs historical material
 
-### Current journal study
+### Current revised study
 
 The publication-facing analysis is centered on:
 
@@ -146,7 +159,7 @@ The publication-facing analysis is centered on:
 
 ### Historical / exploratory
 
-Earlier dense synthetic, PCA, proxy-geodesic, waveform, and GW150914 experiments remain in the repository for provenance and development history. They are **not** the primary evidence for the current journal manuscript.
+Earlier dense synthetic, PCA, proxy-geodesic, waveform, and GW150914 experiments remain in the repository for provenance and development history. They are **not** the primary evidence for the current revised manuscript.
 
 ---
 
@@ -189,7 +202,7 @@ tectonic main.tex
 
 The repository includes machine-readable derived results, predefined split assignments, observation-facing outputs, provenance metadata, and source-file SHA256 hashes used by the manuscript.
 
-Full bitwise replay of the frozen-estimator resolution audit additionally requires 5,520 serialized estimators (~822 MB); those files are not stored in this repository.
+Full bitwise replay of the frozen-estimator resolution audit additionally requires 5,520 serialized estimators (approximately 822 MB). These files are not stored in this repository and do not currently have a permanent public archive; they are available from the author upon reasonable request.
 
 ---
 
@@ -240,7 +253,31 @@ This repository builds on the leading-eikonal QNM/geodesic framework in:
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-Archived on Zenodo: [https://doi.org/10.5281/zenodo.23191840](https://doi.org/10.5281/zenodo.23191840)
+Archived reproducibility materials: [https://doi.org/10.5281/zenodo.23191840](https://doi.org/10.5281/zenodo.23191840)
+
+For the current revised manuscript:
+
+```bibtex
+@misc{PalominoYlla2026Observable,
+  author = {Palomino Ylla, Ariadna Uxue},
+  title  = {Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity},
+  year   = {2026},
+  note   = {Revised manuscript}
+}
+```
+
+For the archived software and reproducibility materials:
+
+```bibtex
+@software{PalominoYlla2026Zenodo,
+  author    = {Palomino Ylla, Ariadna Uxue},
+  title     = {Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity},
+  version   = {v1.0.0},
+  publisher = {Zenodo},
+  year      = {2026},
+  doi       = {10.5281/zenodo.23191840}
+}
+```
 
 ---
 
