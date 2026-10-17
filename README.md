@@ -1,263 +1,295 @@
-# Physical identifiability and inverse learning of black-hole hair
+# Learning When Black Hole Hair Is Observable
 
-> A theoretical benchmark combining timelike-emitter evolution, three-dimensional null-geodesic shooting, physical observables, Jacobian identifiability, and leakage-aware inverse learning.
+> Physical identifiability, generalization, and observable complementarity in a controlled Kiselev black hole inverse problem.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-numerics-013243?logo=numpy&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.1-F7931E?logo=scikitlearn&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-research%20prototype-blueviolet)
+![Status](https://img.shields.io/badge/status-revised%20manuscript-blueviolet)
+[![Zenodo archive v1.0.0](https://img.shields.io/badge/Zenodo-v1.0.0-blue.svg)](https://doi.org/10.5281/zenodo.23191840)
 
-![Pipeline overview](docs/images/pipeline_schematic.png)
+This repository supports the revised manuscript **“Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity.”**
 
-*The mature workflow evaluates a 121-point physical Kiselev grid using validated direct photon shooting, local and finite-domain identifiability diagnostics, registered random/grouped/directional splits, traditional inverse baselines, and 161/321-phase robustness audits. Historical proxy experiments remain available but are not substituted for the physical results.*
+The study asks a simple question: when a black hole model has more than one physical parameter, do the observables actually contain enough independent information to distinguish them? The benchmark combines a validated timelike emitter, three-dimensional direct null-geodesic shooting, Jacobian identifiability diagnostics, leakage-aware inverse learning, non-learned baselines, and numerical-resolution audits.
 
-## Physical geodesic shooting
+**This is a theoretical identifiability benchmark, not an observational constraint on black hole hair.**
 
-![Phase-coloured physical photon shooting with near-hole inset](artifacts/shooting_visualizations/refined/phase_coloured_photon_shooting_with_inset.png)
+The original arXiv version was withdrawn. The manuscript and publication-facing material maintained here represent the current revised research version.
 
-The shooting solver starts a timelike emitter at apocentre, $\phi=\pi$, on an
-$r_p=8M$, $r_a=12M$ orbit and adjusts each direct-branch photon launch direction
-until it reaches the observer at $(0,0,-80M)$. The representative image uses
-$M=1$, $k=10^{-3}$, and $w_q=-0.5$; every plotted path is re-integrated from an
-archived converged launch angle. See the
-[physical visualization validation report](reports/shooting_visualization_validation.md)
-for constraint and hit-error checks. This is a controlled theoretical benchmark,
-not an observational image of a real black hole or a ray-traced accretion flow.
-The shooting algorithm adjusts two initial photon angles at each emitter phase
-until the direct null geodesic reaches the observer. These trajectories generate
-the physical photon-geometry, redshift, and timing observables used in the
-identifiability analysis.
+[Read the current manuscript](paper/current_study/manuscript/manuscript.pdf)
 
-## Main scientific takeaway
+The [current-study reproducibility package](paper/current_study/README.md)
+contains the manuscript source and compiled PDF, compact machine-readable data,
+figures, claim provenance, procedure and aggregation audits, and reproduction
+documentation. Useful audit entry points are:
 
-The main result is that black-hole-hair inference is an identifiability problem, not merely an ML prediction problem. The exact \(k=0\) boundary is structurally rank deficient because \(w_q\) disappears from the metric. Away from that boundary, physical photon geometry complements ringdown: adding it improves the grid-median minimum singular value by **4.54×** and the median condition number by **2.28×**.
+- [Data dictionary](paper/current_study/data/DATA_DICTIONARY.md)
+- [Claim provenance](paper/current_study/metadata/claim_provenance.csv)
+- [Procedure audit](paper/current_study/metadata/current_study_procedure_audit.md)
+- [Figure 5 aggregation audit](paper/current_study/metadata/figure5_aggregation_audit.md)
 
-A training-only nearest-physical-model baseline confirms that this benefit is not specific to a learned architecture. Adding photon geometry improves identifiable-\(w_q\) NMAE by **30.1%** under random interpolation, **32.9%** under grouped interpolation, and **23.3%** under directional extrapolation. Forward-feature convergence does not, however, guarantee inverse-estimator robustness; frozen-estimator tail shifts remain a separate diagnostic.
+---
 
-Across the sampled 121-point physical grid, no unresolved distant finite-$k$
-observable collisions are found at the tested numerical resolution; this does
-not constitute a proof of continuous global injectivity. Photon geometry
-reduces distant sampled ambiguities while rearranging some local neighbor
-orderings.
+## Key findings
 
-## What this project does
+- **Observable complementarity:** leading-eikonal ringdown alone leaves a weakly constrained parameter direction, while photon geometry and redshift add independent parameter information and substantially improve identifiable $w_q$ recovery under grouped physical holdouts.
+- **Ground-truth null control:** at $k=0$, the Kiselev deformation vanishes and the spacetime is exactly Schwarzschild, so $w_q$ is structurally non-identifiable. This provides a known check against spurious inverse recovery.
+- **Observation-facing robustness:** the qualitative complementarity persists after latent geometric descriptors are removed. A restricted analysis using only $\Omega$, $\lambda$, redshift, and signed sky coordinates still improves identifiability and inverse recovery.
+- **Non-learned verification:** nearest-model and local Jacobian inversions show that the complementarity belongs to the physical forward map rather than to one particular machine-learning architecture.
+- **Forward versus inverse robustness:** targeted forward convergence can pass even when frozen estimators retain tail sensitivity or directional extrapolation failures.
 
-- Generates synthetic leading-eikonal observables for Schwarzschild, Bardeen, Hayward, and Kiselev spacetimes.
-- Compresses illustrative ringdown curves using PCA.
-- Trains inverse regressors, a forward surrogate, and model-family classifiers.
-- Uses grouped physical splits to prevent repeated \((\ell,n)\) observations from leaking across train and test.
-- Computes numerical Jacobians, singular values, and condition maps for local identifiability.
-- Integrates timelike emitter orbits and shoots direct null geodesics in Cartesian coordinates to a static observer.
-- Extracts photon geometry, redshift, propagation-delay, and arrival-time observables with explicit failure accounting.
-- Evaluates registered random, grouped, and directional inverse-learning protocols with training-only preprocessing.
-- Compares learned estimators with nearest-physical-model and local-Jacobian inverse baselines.
-- Audits exact rank loss, finite-domain observable collisions, and 81/161/321-phase numerical robustness.
-- Optionally propagates public GW150914 posterior samples through a Kerr QNM baseline.
+---
 
-## What this project does **not** do
+## Physical setup
 
-- It does **not** detect black-hole hair.
-- It does **not** fit raw gravitational-wave strain.
-- It is **not** a full gravitational QNM solver.
-- It is a theoretical identifiability benchmark, not an observational constraint on black-hole hair.
-- Direct-branch photon shooting is not a complete imaging or detector-likelihood pipeline.
-- The GW150914 branch propagates a GR posterior; it is not a modified-gravity constraint or non-GR likelihood.
+![Validated direct photon shooting](paper/current_study/figures/phase_coloured_photon_shooting_horizontal.png)
 
-## Key results
+For each point on an 11×11 Kiselev grid, the pipeline evolves one timelike emitter with $r_p=8M$ and $r_a=12M$, then solves the two launch angles of the direct photon branch so that the null ray reaches a static observer at $(0,0,-80M)$.
 
-| Study | Result |
-|---|---|
-| Dense Kiselev grouped CV | \(R^2(k)=0.992\pm0.001\), \(R^2(w_q)=0.994\pm0.002\) |
-| Analytic sensitivity | Local ill-conditioning is strongest near the zero-hair limit \(k\approx0\) |
-| Physical observable complementarity | Grid-median \(\sigma_{\min}\) improves 4.54×; median condition number improves 2.28× |
-| Nearest-physical-model baseline | Identifiable-\(w_q\) NMAE improves 30.1% random, 32.9% grouped, and 23.3% directional |
-| Numerical audits | Uniform 161-phase grid: 121/121 complete; targeted 321-phase audit: 35/35 complete |
-| Finite-domain audit | No unresolved distant finite-\(k\) collision found on the sampled grid at the tested resolution |
-| GW150914 scale check | \(f_\mathrm{RD}=252.52\) Hz and \(\tau_\mathrm{RD}=4.065\) ms posterior medians |
+At each successful phase the calculation records redshift, impact parameter, signed observer-sky coordinates, and timing quantities. The nominal physical archive uses 81 phase samples; 161- and targeted 321-phase calculations are used as numerical audits.
 
-### Dense Kiselev identifiability
+The Kiselev metric is
 
-![Kiselev condition map](docs/images/kiselev_condition_map.png)
+$$
+f(r)=1-\frac{2M}{r}-\frac{k}{r^{1+3w_q}}.
+$$
 
-*Dense grouped validation shows learnability on the sampled synthetic benchmark, but the Jacobian becomes ill-conditioned near the zero-hair limit \(k\approx0\).*
+Here $k$ sets the overall amplitude of the deviation from Schwarzschild, while $w_q$ controls how that deformation scales with radius.
 
-### Feature realism
+At $k=0$, the deformation disappears and the spacetime is Schwarzschild for every nominal $w_q$. That exact structural degeneracy provides a known null control for the identifiability analysis.
 
-![Feature comparison](docs/images/feature_comparison.png)
+---
 
-*PCA waveform coefficients do not add independent physics information because the illustrative waveform is deterministic in \(\Omega\), \(\lambda\), \(\ell\), and \(n\); the independent scalar \(\delta r\) is more informative.*
+## Observable complementarity
 
-### Synthetic geodesic-proxy extension
+![Physical observable complementarity](paper/current_study/figures/physical_observable_complementarity.png)
 
-![Geodesic proxy improvement](docs/images/geodesic_proxy_improvement.png)
+The main physical result is that **large response is not the same as identifiability**.
 
-*Adding synthetic geodesic-observable proxies improves conditioning for small nonzero \(k\), but the exact \(k=0\) rank loss remains fundamental. These are not physical ray-tracing results.*
+Ringdown alone leaves a weak parameter direction. Adding independent observables rotates and strengthens the response geometry:
 
-### Public-event posterior scale
+| Feature set | median $\sigma_{\min}$ | median $\kappa(J)$ | grouped identifiable-$w_q$ NMAE | directional identifiable-$w_q$ NMAE |
+|---|---:|---:|---:|---:|
+| Ringdown | 0.2782 | 6.6112 | 0.3093 | 0.3011 |
+| Ringdown + redshift | 0.9459 | 3.6107 | 0.0991 | 0.1922 |
+| Ringdown + photon geometry | 1.2326 | 4.0731 | 0.0865 | 0.2048 |
 
-![GW150914 Kerr QNM posterior](docs/images/gw150914_qnm_posterior.png)
+Relative to ringdown alone, ringdown + photon geometry gives a median pointwise **4.54×** gain in minimum singular value and a **2.28×** improvement in condition number on the nominal finite-$k$ grid.
 
-*GW150914 is used only as a posterior-scale comparison, not as a non-GR strain-level analysis or a hair detection.*
+Redshift is more directly connected to a measurable spectroscopic quantity, while the photon-geometry variables used here remain idealized ray-level outputs.
 
-## Quick start
+---
 
-Python 3.10 or newer is recommended.
+## Observation-facing sensitivity
 
-```bash
-python -m pip install -e .
-python -m bhhairml.workflows.reproduce_ai4s2026 --config configs/ai4s2026.yaml
-```
+![Observation-facing sensitivity](artifacts/observation_facing_sensitivity/observation_facing_feature_sensitivity.png)
 
-The second command is the paper workflow: it regenerates the identifiability,
-geodesic-proxy, and waveform experiments in a new timestamped
-`artifacts/ai4s2026/` directory, validates every headline number against
-`paper/ai4s2026/claims.json`, prepares the paper workspace, and compiles it
-when `pdflatex` and `bibtex` are available. Existing report outputs are not
-overwritten.
+To test whether the complementarity result depends on latent geometric descriptors, a secondary analysis removes the photon-orbit radius shift $\Delta r$, the photon-sphere radius $r_{\rm ph}$, and impact parameter $b$.
 
-Individual experiment entry points remain available:
+The restricted ringdown set keeps only $\{\Omega,\lambda\}$. Redshift keeps its nine phase summaries, and the sky channel keeps only the signed $\alpha,\beta$ summaries.
 
-```bash
-python -m bhhairml.experiments.run_all_experiments
-python -m bhhairml.experiments.scientific_audit
-python -m bhhairml.experiments.geodesic_extension \
-  --identifiability-config configs/third_pass_identifiability.yaml \
-  --geodesic-config configs/geodesic_observables.yaml
-```
+| Restricted feature set | median $\sigma_{\min}$ | median $\kappa(J)$ | grouped $w_q$ NMAE | directional $w_q$ NMAE |
+|---|---:|---:|---:|---:|
+| $\{\Omega,\lambda\}$ | 0.0097 | 136.69 | 0.3886 | 0.4239 |
+| + redshift | 0.6215 | 4.47 | 0.0985 | 0.1750 |
+| + signed sky $\alpha,\beta$ | 0.6999 | 4.89 | 0.0904 | 0.2179 |
+| + redshift + sky | 0.7310 | 5.59 | 0.0807 | 0.1949 |
 
-The first identifiability-paper milestone uses genuinely contiguous
-parameter-space blocks and a Jacobian standardized only with training-domain
-scales:
+The latent photon-orbit quantities substantially strengthen ringdown-only identifiability, but the qualitative redshift and sky-coordinate complementarity **persists after they are removed**.
 
-```bash
-python -m bhhairml.experiments.identifiability_milestone
-```
+The sky coordinates are still idealized ray-level quantities; this is not detector-level imaging or astrometry.
 
-It writes validation tables, out-of-fold predictions, the standardized
-Jacobian grid, and a composite Kiselev diagnostic to
-`artifacts/identifiability_milestone/`.
+---
 
-The next controlled experiment separates sparse sampling from physical
-ill-conditioning using matched random and spatially blocked cross-validation
-on nested coarse, medium, and dense Kiselev grids:
+## Inverse learning under distribution shift
 
-```bash
-python -m bhhairml.experiments.sampling_density_study
-```
+![Inverse-learning protocols](paper/current_study/figures/protocol_results_161.png)
 
-It records the nearest-training-point distance for every out-of-fold
-prediction and fits a descriptive joint error model using conditioning,
-training coverage, and grid spacing.
+Each physical system contributes one supervised sample: one feature vector built from its complete phase-resolved simulation, with target $(k,w_q)$.
 
-![Sampling density versus physical identifiability](reports/figures/sampling_density_study/sampling_density_identifiability.png)
+Three estimator families are used: Histogram Gradient Boosting (HGB), Random Forest (RF), and a target-scaled multilayer perceptron (MLP).
 
-See the [sampling-density study report](reports/sampling_density_study.md) for
-the matched validation results and interpretation.
+They are tested under increasingly difficult protocols: random interpolation, grouped physical holdouts, and directional extrapolation.
 
-Directional extrapolation is evaluated separately with a histogram-boosted
-tree ensemble and a scaled MLP:
+Random splits are optimistic. Grouped holdouts are harder, and directional extrapolation is harder still. Split-conformal coverage also degrades under distribution shift.
 
-```bash
-python -m bhhairml.experiments.extrapolation_study
-```
+At $k=0$, systems still contribute to $k$ scoring, but ordinary $w_q$ scoring excludes them because $w_q$ is exactly non-identifiable there.
 
-The experiment holds out the upper or lower 20%, 30%, and 40% of each Kiselev
-parameter axis and compares performance with a size-matched random control and
-the nearest-training-boundary baseline.
+---
 
-![Directional extrapolation results](reports/figures/extrapolation_study/directional_extrapolation.png)
+## Non-learned baselines
 
-See the [directional extrapolation report](reports/extrapolation_study.md) for
-the protocol, numerical results, and limitations.
+The study also evaluates a **nearest physical model** baseline using training-only standardization and a **local Jacobian inverse** using a training-only local linear forward map.
 
-Observable complementarity near the exact `k=0` degeneracy is tested with
-matched spatial-block folds:
+These checks help separate information in the physical forward representation from behavior specific to HGB, RF, or MLP.
 
-```bash
-python -m bhhairml.experiments.observable_complementarity
-```
+For the primary nearest-model grouped comparison, identifiable-$w_q$ NMAE improves from **0.2208** with ringdown to **0.1585** with redshift and **0.1481** with photon geometry.
 
-![Observable complementarity](reports/figures/observable_complementarity/observable_complementarity.png)
+---
 
-See the [observable-complementarity report](reports/observable_complementarity.md)
-for the feature ranking and the exact structural rank-loss result.
+## Numerical convergence and estimator robustness
 
-Windows PowerShell:
+The forward calculation and inverse estimator are audited separately.
 
-```powershell
-python -m bhhairml.experiments.geodesic_extension `
-  --identifiability-config configs/third_pass_identifiability.yaml `
-  --geodesic-config configs/geodesic_observables.yaml
-```
+- **81 → 161 phases:** all 121 physical systems complete.
+- **161 → 321 phases:** 35 systems selected before reading the 321-phase outcomes all complete and satisfy the forward convergence criteria.
+- The refined forward features converge, but frozen HGB/RF predictions still show tail sensitivity.
+- MLP directional failures largely predate the higher-resolution substitution.
 
-### Optional real-data demo
+The methodological conclusion is:
+
+> **A converged forward simulator does not guarantee a robust inverse estimator.**
+
+---
+
+## Observer-sky geometry
+
+![Observer sky track and residuals](paper/current_study/figures/observer_sky_track_with_residuals.png)
+
+The signed sky coordinates are constructed in the static observer tetrad. The full tracks nearly overlap for the small deformations used here, so the manuscript also reports actual-scale matched-phase residuals.
+
+These are idealized ray-level sky coordinates, not detector-reconstructed images.
+
+---
+
+## Current vs historical material
+
+### Current revised study
+
+The publication-facing analysis is centered on:
+
+- `paper/current_study/`
+- `artifacts/kiselev_identifiability_grid/`
+- `artifacts/journal_phase_convergence/`
+- `artifacts/observation_facing_sensitivity/`
+- `src/bhhairml/shooting/`
+- `src/bhhairml/validation/`
+- `experiments/traditional_inverse_baselines/`
+- `scripts/observation_facing_sensitivity.py`
+
+### Historical / exploratory
+
+Earlier dense synthetic, PCA, proxy-geodesic, waveform, and GW150914 experiments remain in the repository for provenance and development history. They are **not** the primary evidence for the current revised manuscript.
+
+---
+
+## Reproduce the tracked results
+
+Python 3.10 is the tested CI environment.
+
+Install:
 
 ```bash
-python -m bhhairml.realdata.run_realdata_demo --event GW150914 --config configs/realdata_config.yaml
+python -m pip install -e ".[dev]"
 ```
 
-This command may download public GWOSC/LVK posterior data. Large posterior files are cached under `data/real/gwosc/` and intentionally ignored by Git.
+Run the observation-facing sensitivity analysis from the tracked 81- and 161-phase inputs:
 
-## Repository structure
+```bash
+python scripts/observation_facing_sensitivity.py
+```
+
+Run the relevant tests:
+
+```bash
+python -m pytest tests/test_observation_facing_sensitivity.py
+python -m pytest tests/test_observation_facing_manuscript_integration.py
+python -m pytest tests/test_observation_facing_order_provenance.py
+```
+
+Run the full non-smoke suite used in GitHub Actions:
+
+```bash
+python -m pytest -m "not smoke"
+```
+
+Build the manuscript with Tectonic:
+
+```bash
+cd paper/current_study/manuscript
+tectonic main.tex
+```
+
+The repository includes machine-readable derived results, predefined split assignments, observation-facing outputs, provenance metadata, and source-file SHA256 hashes used by the manuscript.
+
+Full bitwise replay of the frozen-estimator resolution audit additionally requires 5,520 serialized estimators (approximately 822 MB). These files are not stored in this repository and do not currently have a permanent public archive; they are available from the author upon reasonable request.
+
+---
+
+## Repository layout
 
 | Path | Purpose |
 |---|---|
-| `src/bhhairml/physics/` | Static analytic models, QNM mapping, and waveform generation |
-| `src/bhhairml/features/` | Leakage-safe PCA and feature construction |
-| `src/bhhairml/models/` | Forward, inverse, and classification estimators |
-| `src/bhhairml/experiments/` | Static MVP, grouped audits, identifiability, and proxy studies |
-| `src/bhhairml/shooting/` | Timelike-emitter and Cartesian null-geodesic integration |
-| `src/bhhairml/geodesic_observables/` | Backward-compatible proxy and physical shooting-CSV interfaces |
-| `src/bhhairml/validation/` | Physical-grid, robustness, independent-check, and ambiguity audits |
+| `paper/current_study/` | Current manuscript, figures, and publication-facing data |
+| `artifacts/kiselev_identifiability_grid/` | Nominal 81-phase physical grid and Jacobian diagnostics |
+| `artifacts/journal_phase_convergence/` | Validated 161-phase representation, fixed splits, predictions, and convergence outputs |
+| `artifacts/observation_facing_sensitivity/` | Restricted observation-facing sensitivity tables, figures, and metadata |
+| `src/bhhairml/shooting/` | Timelike-emitter and direct null-geodesic integration |
+| `src/bhhairml/validation/` | Physical-grid, identifiability, convergence, and robustness audits |
 | `experiments/traditional_inverse_baselines/` | Nearest-model and local-Jacobian inverse baselines |
-| `audits/` | Independent physical-shooting reference implementation and walkthrough |
-| `src/bhhairml/realdata/` | GWOSC download, posterior parsing, Kerr baseline, and toy tolerances |
-| `configs/` | Reproducible dataset and experiment settings |
-| `reports/` | Selected manuscript and poster outputs |
-| `docs/images/` | Curated web-friendly figures used in this README |
+| `scripts/observation_facing_sensitivity.py` | Observation-facing sensitivity analysis |
+| `reports/` | Reproducibility and audit reports |
+| `tests/` | Scientific and repository-level regression tests |
 
-## Poster-ready outputs
-
-- [Poster abstract](docs/poster_abstract.md)
-- [Project summary](docs/project_summary.md)
-- [Detailed poster text](reports/poster_summary.md)
-- [Preliminary manuscript](reports/manuscript.pdf)
-
-### Poster-grade physics figures
-
-```bash
-python -m bhhairml.plots.poster_physics_figures
-```
-
-This creates paired PNG/PDF illustrations in
-`reports/figures/Illustrations/` and web-ready PNG copies in
-[`docs/images/Illustrations/`](docs/images/Illustrations/). The ray paths are
-analytic static-metric illustrations, and the geodesic improvement uses
-synthetic proxies—not full physical ray tracing or detector-level inference.
-
-Research-grade theoretical identifiability benchmark. **Not an observational analysis or constraint on black-hole hair.**
+---
 
 ## Limitations
 
-- Leading-eikonal/geodesic approximation only.
-- Synthetic analytic formulas, not detector-level inference.
-- The physical study uses the validated direct shooting branch; secondary photon branches and detector response are not modeled.
-- The GW150914 branch propagates a GR posterior and does not fit strain.
-- The current Kerr fallback is an approximate dominant-mode fitting formula when `qnm` is unavailable.
-- No claim of modified-gravity constraints, exclusions, or hair detection is made.
+The current study:
 
-See [the detailed limitations](docs/limitations.md).
+- uses one static spherical Kiselev family;
+- uses a leading-eikonal ringdown description rather than a dedicated finite-$\ell$ perturbative spectrum;
+- models only the direct photon branch;
+- uses a point emitter and point observer;
+- does not include radiative transfer, detector response, secondary images, strain likelihoods, calibration error, or an observational noise model;
+- does not establish continuous global injectivity between sampled grid points;
+- does not make an observational constraint or detection claim.
 
-## How to cite
+A natural next step is to replace idealized ray-level sky variables with detector-level imaging or astrometric observables and realistic likelihoods, while retaining redshift as a directly interpretable spectroscopic channel.
 
-If you use this research prototype, please cite the repository through [`CITATION.cff`](CITATION.cff) and the associated black-hole ringdown work. No DOI has been assigned.
+---
 
 ## Related physics work
 
-This repository builds on the leading-eikonal QNM/geodesic framework used in *Ringdown waves from hairy black holes* by Ariadna Uxue Palomino Ylla et al.
+This repository builds on the leading-eikonal QNM/geodesic framework in:
 
-[Journal of Cosmology and Astroparticle Physics 2026(09), 046 (2026)](https://doi.org/10.1088/1475-7516/2026/09/046).
+**Ariadna Uxue Palomino Ylla, Kosuke Makino, Akane Tanaka, Akihiro Ishibashi, and Chul-Moon Yoo, _Ringdown waves from hairy black holes_, JCAP 2026(09), 046 (2026).**
+
+[DOI: 10.1088/1475-7516/2026/09/046](https://doi.org/10.1088/1475-7516/2026/09/046)
+
+---
+
+## Citation
+
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
+
+Archived reproducibility materials: [https://doi.org/10.5281/zenodo.23191840](https://doi.org/10.5281/zenodo.23191840)
+
+For the current revised manuscript:
+
+```bibtex
+@misc{PalominoYlla2026Observable,
+  author = {Palomino Ylla, Ariadna Uxue},
+  title  = {Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity},
+  year   = {2026},
+  note   = {Revised manuscript}
+}
+```
+
+For the archived software and reproducibility materials:
+
+```bibtex
+@software{PalominoYlla2026Zenodo,
+  author    = {Palomino Ylla, Ariadna Uxue},
+  title     = {Learning When Black Hole Hair Is Observable: Physical Identifiability, Generalization, and Observable Complementarity},
+  version   = {v1.0.0},
+  publisher = {Zenodo},
+  year      = {2026},
+  doi       = {10.5281/zenodo.23191840}
+}
+```
+
+---
 
 ## License
 

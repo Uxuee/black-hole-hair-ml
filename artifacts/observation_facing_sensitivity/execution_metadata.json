@@ -82,7 +82,7 @@
   },
   "inverse_resolution": 161,
   "jacobian_resolution": 81,
-  "mlp_convergence_warning_count": 77,
+  "mlp_convergence_warning_count": 93,
   "models": [
     "hgb",
     "random_forest",
@@ -96,7 +96,13 @@
     "directional_extrapolation"
   ],
   "registered_split_specifications_used": 115,
-  "runtime_seconds": 340.8144342000014,
+  "registered_role_order": "point identifiers sorted before row-index conversion",
+  "resolution_layers": {
+    "combined_as_common_table": false,
+    "inverse": "validated matched 161-phase representation with predefined splits",
+    "jacobian": "canonical nominal 81-phase archive with registered scaling/stencils"
+  },
+  "runtime_seconds": 371.4756982000108,
   "scaling_schemes": [
     "q95_q05",
     "iqr",

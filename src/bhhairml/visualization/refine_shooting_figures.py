@@ -98,19 +98,23 @@ def phase_bundle_horizontal(frame, trajectories, selected, observer, refined, jo
         ax.scatter(per.x_emit, per.z_emit, s=38, facecolor="white", edgecolor="black", marker="D", zorder=8)
     axes[0].scatter(observer[0], observer[2], marker="*", s=90, color="#56B4E9",
                     edgecolor="black", zorder=8)
-    axes[0].annotate(r"apocentre, $\phi=\pi$", (apo.x_emit, apo.z_emit),
-                     xytext=(-14.5, 13.0), fontsize=7.5,
-                     arrowprops={"arrowstyle": "->", "lw": 0.7})
-    axes[0].annotate(fr"pericentre, $\phi={per.phi:.2f}$", (per.x_emit, per.z_emit),
-                     xytext=(-14.5, 6.0), fontsize=7.5,
-                     arrowprops={"arrowstyle": "->", "lw": 0.7})
     axes[0].annotate("observer", (observer[0], observer[2]), xytext=(4.0, -73.0),
                      fontsize=7.5, arrowprops={"arrowstyle": "->", "lw": 0.7})
     axes[0].set(xlim=(-17, 17), ylim=(-85, 17))
-    axes[0].set_title("A  Full geometry", fontsize=9, pad=4)
+    axes[0].set_title("A. Full geometry", fontsize=9, pad=5)
     axes[1].set(xlim=(-15, 15), ylim=(-15, 15),
                 )
-    axes[1].set_title(r"B  Near-hole view: $x,z\in[-15,15]M$", fontsize=9, pad=4)
+    axes[1].set_title(r"B. Near-hole view: $x,z\in[-15,15]M$", fontsize=9, pad=5)
+    axes[1].annotate("pericentre\n" + fr"$\phi = {per.phi:.2f}$",
+                     (per.x_emit, per.z_emit), xytext=(10.3, 5.6),
+                     ha="left", va="center", fontsize=7.5,
+                     arrowprops={"arrowstyle": "->", "lw": 0.7,
+                                 "connectionstyle": "arc3,rad=-0.18"})
+    axes[1].annotate("apocentre\n" + r"$\phi = \pi$",
+                     (apo.x_emit, apo.z_emit), xytext=(10.3, -3.3),
+                     ha="left", va="center", fontsize=7.5,
+                     arrowprops={"arrowstyle": "->", "lw": 0.7,
+                                 "connectionstyle": "arc3,rad=0.12"})
     colorbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=axes,
                             location="right", pad=.025, fraction=.045)
     colorbar.set_label(r"physical emission phase $\phi$")
@@ -285,6 +289,15 @@ def generate(config_path: Path) -> None:
     selected=list(map(int,config["selected_phase_indices"])); observer=np.array([physical["observer_x"],physical["observer_y"],physical["observer_z"]],float); dpi=int(config["png_dpi"])
     phase_bundle_with_inset(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
     phase_bundle_horizontal(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
+    current_figures = root/"paper/current_study/figures"
+    current_manuscript_figures = root/"paper/current_study/manuscript/figures/shooting"
+    current_figures.mkdir(parents=True, exist_ok=True)
+    current_manuscript_figures.mkdir(parents=True, exist_ok=True)
+    horizontal = "phase_coloured_photon_shooting_horizontal"
+    for suffix in ("pdf", "png"):
+        shutil.copy2(refined/f"{horizontal}.{suffix}", current_figures/f"{horizontal}.{suffix}")
+    shutil.copy2(refined/f"{horizontal}.pdf",
+                 current_manuscript_figures/f"{horizontal}.pdf")
     geometry_overview_clean(frames["kiselev_wq_m05"],trajectories,selected,observer,refined,journal,dpi)
     sky_with_residuals(frames,refined,journal,dpi); observables_refined(frames,refined,journal,dpi)
     pipeline_clean(refined,journal,dpi); graphical_abstract(frames,trajectories,selected,observer,refined,journal,dpi)

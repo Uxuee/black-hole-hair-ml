@@ -1,18 +1,18 @@
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import hashlib
 import json
 
 import pandas as pd
 import numpy as np
 
-from scripts.reviewer_revision_observation_facing_sensitivity import observation_feature_sets
+from scripts.observation_facing_sensitivity import observation_feature_sets
 from experiments.traditional_inverse_baselines.evaluate_nearest_baseline import registered_split_specs
 from experiments.traditional_inverse_baselines.nearest_physical_model import NearestPhysicalModel
 
 
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES = ROOT / "artifacts/journal_phase_convergence/ml_ready_features_161.csv"
-OUTPUT = ROOT / "reviewer/_revision_2026_10/observation_facing_sensitivity"
+OUTPUT = ROOT / "artifacts/observation_facing_sensitivity"
 
 
 def test_restricted_feature_membership_and_dimensions():
@@ -35,9 +35,13 @@ def test_restricted_feature_membership_and_dimensions():
 def test_outputs_preserve_splits_scoring_and_canonical_hashes():
     metadata = json.loads((OUTPUT / "execution_metadata.json").read_text(encoding="utf-8"))
     assert metadata["registered_split_specifications_used"] == 115
+    assert metadata["registered_role_order"] == "point identifiers sorted before row-index conversion"
     assert metadata["canonical_sources_unchanged"] is True
+    assert metadata["resolution_layers"]["combined_as_common_table"] is False
     for relative, expected in metadata["source_files"].items():
-        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
+        # Handle both Windows backslash and POSIX forward slash paths for robustness
+        path = ROOT.joinpath(*PureWindowsPath(relative).parts)
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == expected
     metrics = pd.read_csv(OUTPUT / "inverse_model_fold_metrics.csv")
     assert set(metrics.protocol) == {"random_interpolation", "grouped_physical_interpolation", "directional_extrapolation"}
     assert (metrics.loc[metrics.target.eq("wq"), "n_scored"] > 0).all()
@@ -60,7 +64,7 @@ def test_nearest_model_standardizer_is_fit_on_training_rows_only():
     protocol, direction, fold, seed, roles = registered_split_specs(assignments)[0]
     ids = np.asarray([f"k{r.k:.8f}_wq{r.wq:.8f}" for r in frame.itertuples()])
     lookup = {point_id: index for index, point_id in enumerate(ids)}
-    train = np.asarray([lookup[p] for p in roles["train"]], dtype=int)
+    train = np.asarray([lookup[p] for p in sorted(roles["train"])], dtype=int)
     columns = observation_feature_sets(frame)["rd_obs_redshift"]
     X = frame[columns].to_numpy(float)
     estimator = NearestPhysicalModel().fit(X[train], frame[["k", "wq"]].to_numpy(float)[train])

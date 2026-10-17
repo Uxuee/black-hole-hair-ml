@@ -10,7 +10,7 @@
 \newcommand{\wq}{w_q}
 \newcommand{\smin}{\sigma_{\min}}
 \newcommand{\kappaJ}{\kappa(J)}
-\title{Learning When Black-Hole Hair Is Observable:\\Physical Identifiability, Generalization, and Observable Complementarity}
+\title{Learning When Black Hole Hair Is Observable:\\Physical Identifiability, Generalization, and Observable Complementarity}
 \author{Ariadna Uxue Palomino Ylla\\Nagoya University, Nagoya, Japan\\\texttt{ariadnaepy@gmail.com}}
 \date{September 2026}
 
@@ -18,75 +18,76 @@
 \maketitle
 
 \begin{abstract}
-High interpolation accuracy does not establish that physical parameters are
-identifiable. We study this distinction in a controlled Kiselev black-hole
-benchmark with a validated timelike-emitter and three-dimensional null-geodesic
-shooting calculation. Its exact $k=0$ non-identifiable boundary provides an
-analytically known null control for the identifiability analysis. The forward
-analysis shows that ringdown is informative
-for the deformation amplitude $k$, whereas photon geometry supplies an
-independent response direction that resolves much of the state-parameter
-$\wq$ degeneracy. Relative to ringdown alone, ringdown plus photon geometry
-gives a median pointwise $4.54\times$ gain in minimum singular value and a
-median pointwise $2.28\times$ improvement in Jacobian condition number. In
-grouped physical interpolation, these normalization-dependent Jacobian gains
-retain their qualitative ordering under the tested alternative scalings, and
-the corresponding identifiable-$\wq$ normalized mean absolute error decreases
-from 0.309 for ringdown to 0.087 for the combined features. Random splitting is
-more optimistic, while four directional extrapolation tests are substantially
-harder and split-conformal coverage falls under distribution shift. Photon
-geometry also improves recovery under a non-learned nearest-model inverse,
-showing that the gain is not confined to the tested learned architectures. A uniform
-161-phase audit gives a typical normalized prediction shift of
-$9.48\times10^{-4}$ but exposes catastrophic extrapolation tails. A subsequent
-targeted 321-phase audit resolves the remaining forward-feature comparisons,
-yet frozen HGB and random-forest tail shifts exceed predeclared robustness
-thresholds. Thus the physical complementarity result is supported, but inverse
-estimator robustness remains conditional. This study is a theoretical
-identifiability benchmark, not an observational constraint.
+Black hole spectroscopy seeks to infer spacetime parameters from observable signals, but accurate recovery on simulations does not guarantee that those parameters are physically distinguishable. We study this problem in a two-parameter Kiselev spacetime, whose Schwarzschild limit at $k=0$ provides an exact non-identifiable control. Across an $11\times11$ physical grid, we combine leading-eikonal ringdown quantities with redshift, timing, and photon-geometry features from timelike trajectories and three-dimensional null-geodesic shooting. Adding photon geometry increases the median minimum Jacobian singular value by $4.54\times$ under the declared normalization; redshift also supplies complementary parameter information. In grouped tests, the normalized mean absolute error for identifiable $w_q$ decreases from $0.309$ for ringdown alone to $0.087$ with photon geometry. A non-learned inverse baseline supports the qualitative improvement. Importantly, the complementarity persists when the analysis is restricted to observation-facing quantities, using only leading-eikonal $\Omega$ and $\lambda$, redshift, and signed sky coordinates, without latent photon-orbit descriptors as inputs. The forward calculation passes targeted convergence tests, but tree estimators remain sensitive in their prediction tails and the MLP is unstable under directional extrapolation. These findings establish observable complementarity in a controlled theoretical benchmark, not detector-level parameter constraints.
 \end{abstract}
 
 \section{Introduction}
-Scientific inverse models can predict accurately for the wrong reason. Repeated
-realizations of one physical system can leak across random partitions;
-parameters can be locally degenerate even when observables respond strongly;
-and a model can interpolate well while failing under extrapolation or small
-numerical perturbations. These distinctions matter in black-hole spectroscopy,
-where quasinormal frequencies encode compact-object properties but resolving
-multiple physical effects remains difficult \cite{dreyer2004spectroscopy,berti2006spectroscopy,bhagwat2019overtones}.
+Black hole spectroscopy aims to infer properties of a compact object's
+spacetime from observable signals, such as quasinormal-mode frequencies and
+damping rates
+\cite{dreyer2004spectroscopy,berti2006spectroscopy,bhagwat2019overtones}.
+In practice, however, accurate recovery of model parameters from simulated
+data does not necessarily mean that those parameters are physically
+distinguishable. Different parameter combinations can produce nearly identical
+observables, and random data partitions can further obscure this problem by
+mixing closely related physical systems between training and test sets.
 
-Kiselev spacetimes provide a controlled two-parameter setting. They do not
-stand in for a detector likelihood or a generic beyond-Kerr theory. Their value
-here is methodological. Most inverse problems do not supply an exact known
-degeneracy against which to check the identifiability diagnostic; here the loss
-of $\wq$ dependence at $k=0$ supplies precisely that null case. It tests whether
-the diagnostic recovers the analytically required rank-deficient boundary
-before any inverse model is fitted, while nonzero $k$ permits direct comparison
-of forward Jacobian geometry and inverse-learning behavior
-\cite{kiselev2003quintessence}. This control validates the diagnostic on the
-present benchmark, not inverse-learning systems in general.
+We study this issue in a two-parameter Kiselev spacetime
+\cite{kiselev2003quintessence}. In the metric considered here, $k$ sets the
+overall amplitude of the deviation from Schwarzschild, while $\wq$ controls
+how that deformation scales with radius. When $k=0$, the deformation vanishes
+entirely and the spacetime reduces exactly to Schwarzschild. In that limit, all
+dependence on $\wq$ disappears, so no physical observable can contain
+information about $\wq$. This provides an analytically known case of exact
+non-identifiability against which the inference procedure can be tested.
 
-The study complements rapid gravitational-wave inference based on neural
-posterior estimation and normalizing flows
-\cite{dax2021realtime,green2020autoregressive,gabbard2022cvae,cranmer2020frontier,papamakarios2021normalizing,pacilio2024ringdown}.
-Those methods address posterior computation; the present question is whether
-the selected forward observables distinguish the parameters in the first
-place. This distinction parallels structural and practical identifiability
-analysis in dynamical inverse problems \cite{raue2009identifiability,villaverde2019identifiability}.
+Away from the Schwarzschild limit, the central question is whether the
+available observables respond to $k$ and $\wq$ in sufficiently different ways
+to separate them. We therefore combine leading-eikonal ringdown quantities
+with observables obtained from timelike emitter motion and three-dimensional
+null-geodesic shooting. These include photon redshift, timing information,
+impact parameters, and signed observer-sky coordinates. The aim is not simply
+to ask whether these quantities change when the spacetime changes, but whether
+they provide independent parameter information.
 
-We ask whether physically computed photon-geometric observables improve the
-identifiability and out-of-sample recovery of $(k,\wq)$, and whether that
-conclusion survives numerical-resolution tests. We answer this by combining
-validated timelike and null Kiselev geodesics with Jacobian diagnostics,
-leakage-aware random, grouped, and directional evaluation, non-learned inverse
-baselines, and frozen-estimator resolution audits.
+We quantify this using the Jacobian of the forward observable map. Its singular
+values measure how strongly different parameter directions are resolved
+locally, while its condition number diagnoses how easily finite perturbations
+can be amplified in the inverse problem. We complement this local analysis
+with machine-learning and non-learned inverse models evaluated under random
+interpolation, grouped physical holdouts, and directional extrapolation. Each
+physical spacetime contributes one inference sample, so repeated phase samples
+from the same system never cross training and test partitions.
 
-The hairy-black-hole and ringdown framework follows
-Ref.~\cite{palominoylla2026ringdown}. The present work adds timelike-emitter
-evolution, three-dimensional null-geodesic shooting, photon-geometry
-observables, Jacobian identifiability analysis, leakage-aware random, grouped,
-and directional evaluation, non-learned inverse baselines, numerical-resolution
-audits, and frozen-estimator robustness tests.
+Our main result is that leading-eikonal ringdown alone leaves a weakly
+constrained parameter direction, whereas photon geometry and redshift provide
+complementary information. Photon geometry gives the larger improvement in the
+weakest local Jacobian direction, and both channels substantially improve
+recovery of identifiable $\wq$ values under grouped physical holdouts.
+Importantly, this improvement persists when latent geometric descriptors are
+removed: a restricted analysis using only $\Omega$, $\lambda$, redshift, and
+signed sky coordinates still yields substantially better identifiability and
+inverse recovery. These gains are also reproduced by a non-learned
+nearest-model inverse, showing that they are not specific to a particular
+machine-learning architecture.
+
+This study is therefore a controlled identifiability benchmark rather than a
+detector-level inference analysis. The goal is to determine what information
+the forward observables contain before optimizing an inverse estimator. We
+distinguish structural non-identifiability, where different parameter values
+are physically indistinguishable, from practical identifiability, where the
+parameters are formally distinct but difficult to recover at finite precision.
+This distinction also connects to identifiability analysis in dynamical inverse
+problems \cite{raue2009identifiability,villaverde2019identifiability}.
+
+The study complements neural posterior-estimation approaches
+\cite{dax2021realtime,green2020autoregressive,gabbard2022cvae,cranmer2020frontier,papamakarios2021normalizing,pacilio2024ringdown}
+by asking what information the selected forward observables contain before an
+inverse estimator is chosen. The ringdown framework builds on
+Ref.~\cite{palominoylla2026ringdown}; the new elements here are the
+geodesic-shooting observables, local identifiability diagnostics, leakage-aware
+learning protocols, non-learned baselines, observation-facing sensitivity
+tests, and numerical robustness audits.
 
 \section{Physical Model and Identifiability Framework}
 The static spherical line element is
@@ -94,8 +95,9 @@ The static spherical line element is
  ds^2&=-f(r)dt^2+\frac{dr^2}{f(r)}+r^2d\Omega^2,\\
  f(r)&=1-\frac{2M}{r}-\frac{k}{r^{1+3\wq}}.
 \end{align}
-Here $k$ controls the deformation strength and $\wq$ its radial dependence; we
-use geometrized units with $M=1$. Leading-eikonal ringdown features use the
+Here $k$ sets the overall amplitude of the deviation from Schwarzschild, while
+$\wq$ controls how that deviation scales with radius; we use geometrized units
+with $M=1$. Leading-eikonal ringdown features use the
 unstable circular null orbit, with the limitations of the geodesic--QNM
 correspondence kept explicit
 \cite{cardoso2009geodesic,konoplya2017correspondence,palominoylla2026ringdown}.
@@ -278,14 +280,10 @@ that anchor, while the $\wq$ response uses $-0.5\to-2/3$ at fixed $k=10^{-3}$.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.78\textwidth]{physical_local_sensitivity_comparison.pdf}
-\caption{Representative finite-difference response and separation diagnostics anchored at
-$(k,\wq)=(10^{-3},-0.5)$ with the finite-difference stencil described in the
-text. Timing has a
-large response but an angle of $178.76^\circ$ and condition number 1275.5;
-photon geometry rotates the response to $159.37^\circ$ and lowers the condition
-number to 81.4. Higher $\sigma_{\min}$, angles farther from $0^\circ$ or
-$180^\circ$, and lower condition number are favorable; magnitude alone is not
-identifiability.}
+\caption{Local parameter-response diagnostics at $(k,\wq)=(10^{-3},-0.5)$.
+Timing is strongly responsive but poorly conditioned ($\kappaJ=1275.5$);
+photon geometry improves conditioning ($\kappaJ=81.4$). The finite-difference
+stencil is defined in the text.}
 \label{fig:local}
 \end{figure}
 
@@ -293,44 +291,25 @@ The full observer tracks nearly overlap for these small deformations, but their
 matched-phase differences are numerically resolved; the actual-scale tracks
 and residuals are provided in Appendix~\ref{app:numerical-thresholds}.
 
-Using the nominal 81-phase Jacobian archive across the accepted physical grid,
-ringdown plus photon geometry gives a median pointwise $\smin$ gain of
-$4.54\times$ (finite-grid bootstrap 95\% interval $[4.28,4.94]$) and a median
-pointwise condition-number improvement of $2.28\times$ ($[1.84,2.63]$)
-relative to ringdown alone. These are medians of pointwise improvement ratios,
-not ratios of the displayed grid medians. The intervals resample the 110
-eligible finite-$k$ physical systems and quantify stability of this finite-grid
-summary; they are not observational or astrophysical-population
-confidence intervals. The grid medians
-for the combined set are
-$\smin=1.2326$ and $\kappaJ=4.0731$. Ringdown plus all shooting has
-$\smin=1.5312$ and $\kappaJ=4.4974$: adding more responsive summaries can raise
-$\smin$ without producing the best conditioning.
-The same archived comparison shows that redshift supplies genuine
-complementarity beyond ringdown: ringdown plus redshift has grid medians
-$\smin=0.9459$ and $\kappaJ=3.6107$, with median pointwise improvements of
-$3.29\times$ and $2.27\times$, respectively. Photon geometry gives the larger
-weakest-direction gain ($4.54\times$), while redshift alone gives a slightly
-lower median condition number. These independently motivated observable
-families therefore add different information to ringdown, and no single local
-Jacobian statistic fully determines inverse-learning performance. Unlike the
-idealized ray-level photon-geometry variables used here, redshift is more
-directly connected to a measurable spectroscopic quantity, although the
-present calculation remains synthetic and includes neither an observational
-likelihood nor a detector-level noise model.
-For ringdown plus photon geometry and ringdown plus all shooting, the separate
-161-phase resolution audit gives, respectively,
-$(\smin,\kappaJ)=(1.2326,4.0733)$ and $(1.5319,4.4957)$, showing that the
-nominal-resolution summaries are numerically stable under phase refinement.
-As expected for non-uniform observable rescaling, the gain magnitudes change
-under alternative normalizations. Nevertheless, the median $\smin$/conditioning
-improvements remain above one for IQR scaling ($5.88/1.87$),
-population-standard-deviation scaling ($3.76/2.40$), and a secondary feature-family-count-balanced
-stress test ($2.95/2.22$). Every finite-$k$ point has $\smin$ gain above one;
-conditioning improves pointwise for 68.2--89.1\% of points across the tested
-schemes, and no numerical rank changes. Appendix~\ref{app:scaling-sensitivity}
-gives the complete sensitivity summary. Thus the qualitative median ordering
-is stable, but the numerical factors are not scale invariant.
+Across the 110 finite-$k$ systems, adding photon geometry to ringdown raises
+the median pointwise minimum singular value by $4.54\times$ and improves the
+median pointwise condition number by $2.28\times$. Redshift independently
+improves these quantities by $3.29\times$ and $2.27\times$, respectively.
+Thus photon geometry produces the larger gain in the weakest identifiable
+direction, while redshift achieves slightly better median conditioning.
+The combined-grid medians are $(\smin,\kappaJ)=(1.2326,4.0731)$ for photon
+geometry and $(0.9459,3.6107)$ for redshift. These gains are pointwise ratio
+medians, not ratios of grid medians.
+
+The qualitative complementarity survives alternative observable scalings,
+although the numerical gain factors depend on normalization. The finite-grid
+bootstrap intervals, scaling comparisons, all-shooting results, and 161-phase
+cross-checks are documented in Appendix~\ref{app:scaling-sensitivity} and
+Appendix~\ref{app:numerical-thresholds}. Redshift is closer to a directly
+measurable spectroscopic channel than the idealized photon-geometry variables;
+however, the present calculation remains synthetic. This distinction matters
+when translating the benchmark into an observational model.
+
 Does the representative complementarity seen at the reference point persist across the
 physical parameter grid? Figure~\ref{fig:complementarity} gives the primary
 grid-wide comparison. The pointwise maps show that complementarity varies
@@ -440,7 +419,7 @@ extrapolation.
 \centering\includegraphics[width=.84\textwidth]{physical_ml_protocol_comparison.png}
 \caption{NMAE for the five primary feature sets under random, grouped physical
 interpolation, and directional extrapolation. Each dot preserves the predefined
-table statistic: the median of archived summary-row medians. To expose
+table statistic: the median of stored summary-row medians. To expose
 lower-level dispersion rather than suppress it through that hierarchy, each
 horizontal bar spans the 25th--75th percentile of the underlying NMAE records
 across the applicable folds, seeds, models, and, for extrapolation, directions.
@@ -508,31 +487,13 @@ read with the unclipped out-of-domain diagnostic reported in the text.}
 \label{fig:mljac}
 \end{figure}
 
-Nominal 90\% conformal coverage is 0.892/0.965 for random $k/\wq$, but falls to
-0.722/0.851 under grouped interpolation and 0.509/0.660 under extrapolation.
-Each value is the median of archived model--feature-set coverage rows (15 rows
-for random and grouped protocols; 60 direction--model--feature-set rows for
-extrapolation), after each row pools its fixed fold/seed prediction
-indicators. The corresponding row-level IQRs are 0.833--0.908/0.951--0.973,
-0.676--0.747/0.840--0.863, and 0.311--0.689/0.585--0.844. Because models,
-features, seeds, and layouts reuse physical systems, these rows are not
-independent Bernoulli trials and no single pooled binomial interval is assigned
-to their median. Wilson intervals for each individual evaluation unit and all
-four directional summaries are retained in Appendix~\ref{app:conformal-uncertainty}.
-Shifted coverage remains empirical, not a retained finite-sample guarantee.
-Figure~\ref{fig:coverage} separates coverage by target and protocol.
-
-In the collapsed-equivalence check, the 11 identical Schwarzschild rows are
-replaced by one class without a nominal $\wq$ target, while all finite-$k$
-assignments remain unchanged. Across learned model--feature summaries, random,
-grouped, and directional $k$ NMAE changes from 0.0471/0.0528/0.1714 to
-0.0387/0.0594/0.1567; identifiable-$\wq$ NMAE changes only from
-0.0621/0.0875/0.2038 to 0.0623/0.0859/0.2032. Coverage is more sensitive:
-identifiable-$\wq$ values become 0.929/0.763/0.509. Thus the primary qualitative
-recovery and complementarity conclusions are stable under this sensitivity
-analysis, while conformal coverage is more sensitive to the representation of
-the $k=0$ equivalence class. The collapsed analysis is treated as a sensitivity
-analysis rather than as a replacement for the primary analysis.
+Nominal 90\% conformal coverage is near its target under random interpolation
+(0.892/0.965 for $k$/identifiable $\wq$), but deteriorates under grouped
+(0.722/0.851) and directional evaluation (0.509/0.660). This degradation
+shows that calibration on one distribution does not ensure coverage after a
+physical holdout or directional shift. The detailed coverage distributions,
+evaluation-unit dependence, and $k=0$ equivalence-class sensitivity are
+reported in Appendix~\ref{app:conformal-uncertainty}.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.82\textwidth]{physical_ml_uncertainty_calibration.png}
@@ -545,54 +506,17 @@ guaranteed under distribution shift.}
 \FloatBarrier
 
 \section{Numerical Convergence and Estimator Robustness}
-We first ask whether the physical forward calculation converges as phase
-resolution increases. Figure~\ref{fig:resolution} addresses that question.
-For feature $i$ at resolutions $N_1$ and $N_2$, the frozen comparison is
-\begin{equation}
- \delta_i=\frac{|F_i^{(N_2)}-F_i^{(N_1)}|}{\max(s_i,10^{-12})},
-\end{equation}
-where $s_i$ is the global q95--q05 scale computed on the archived 81-phase
-training domain. The floor prevents division by numerical zero and is not
-fitted to either higher-resolution result. A feature--point comparison is
-classified as converged for $\delta_i\leq0.01$, marginal for
-$0.01<\delta_i\leq0.05$, and unresolved for $\delta_i>0.05$; non-finite,
-missing, or schema-mismatched values are also unresolved by protocol. Here
-``unresolved'' denotes failure of this predeclared numerical-resolution
-criterion, not a failed physical shooting phase.
+The physical forward features converge as the phase resolution increases,
+although the uniform 81-to-161-phase comparison leaves a small number of
+feature--point differences above the predefined tolerance. The targeted
+161-to-321-phase audit resolves those differences on all 35 preselected
+systems: its median normalized feature change is $1.963\times10^{-4}$, and
+its 95th percentile is $7.234\times10^{-3}$. The ringdown features and
+Jacobian rank behavior remain unchanged. Figure~\ref{fig:resolution}
+shows the reduction in feature changes. The selection protocol, acceptance
+thresholds, full-grid results, and ranking checks are documented in
+Appendix~\ref{app:numerical-thresholds}.
 
-The uniform 161-phase study completes all 121 physical points. From 9317
-feature--point comparisons, 240 exceed the 0.05 normalized-change threshold
-and are therefore unresolved under the frozen criterion; no failed physical
-point is implied. The median normalized feature change is
-$7.908\times10^{-4}$ and the maximum is
-0.08069. Across frozen scored predictions, the median normalized shift is
-$9.482\times10^{-4}$ and the 95th percentile is 0.02606. The median aggregate
-NMAE change is $6.880\times10^{-4}$, but the maximum is 16.8497 because of
-unclipped MLP directional extrapolation outliers.
-
-The targeted 321-phase audit selects 35 points deterministically before reading
-their 321-phase outcomes. The selection is the deduplicated union of pre-321
-signals: the four largest 81-to-161 shifts in each of the feature, HGB, and RF
-rankings; the eight largest MLP shifts; fixed boundary and center points; four
-directional representatives; three points at each conditioning extreme; and one
-representative from each of nine grouped blocks. Its forward acceptance
-conditions, recorded before any 321-phase trajectory was evaluated, require
-median normalized change below
-0.001, 95th-percentile change below 0.01, unchanged ringdown, no systematic
-family-wide trend, and unchanged Jacobian rank behavior. All selected points
-complete. Median and 95th-percentile normalized 161-to-321 feature changes are
-$1.963\times10^{-4}$ and $7.234\times10^{-3}$; no comparison remains
-unresolved, ringdown is exactly unchanged, no systematic family-wide trend is
-found, and Jacobian rank is preserved. The targeted forward audit therefore
-passes its predeclared criteria. This is not a uniform 321-phase proof over the
-full 121-point grid.
-
-Within the selected 35-system set, the earlier resolution ranking was strongly
-preserved: the point-level maximum changes had Spearman $\rho=1.000$, while the
-point-level 95th-percentile changes had $\rho=0.997$. All top-five and top-ten
-systems were retained under the later maximum-change ranking. Because
-321-phase values exist only for these 35 systems, this does not establish that
-they contain the largest changes over the full grid.
 \begin{center}
 \begin{minipage}{.86\textwidth}
 \centering\includegraphics[width=.91\linewidth]{resolution_robustness_compact.pdf}
@@ -603,38 +527,16 @@ criterion but does not by itself certify inverse estimators.}
 \end{minipage}
 \end{center}
 
-We next ask whether the previously trained estimators remain stable after the
-forward map has converged. Figure~\ref{fig:estimator-robustness} applies those
-frozen estimators to the refined features; no model is retrained.
-
-Forward acceptance and inverse-estimator acceptance are separate. For HGB and
-RF individually, the predeclared inverse criteria require median normalized
-prediction shift below 0.005, 95th-percentile shift below 0.03, maximum
-identifiable-$\wq$ shift below 0.1, aggregate NMAE change below 0.02, and
-unchanged grouped complementarity. The written protocol permits an
-identifiable-$\wq$ exceedance of the 0.1 scale only when it is traced to an
-unresolved feature; because no targeted feature comparison remains unresolved,
-that caveat does not relax the criterion here.
-
-Frozen trees remain tail-sensitive: HGB and RF 95th-percentile normalized
-shifts are 0.08122 and 0.08509, and their largest identifiable-$\wq$ shifts are
-0.30593 and 0.27053. Their median shifts are zero because many tree predictions do
-not cross a split threshold. The predeclared perturbation ensembles and fixed
-Extra Trees smoother do not pass all stability and grouped-performance
-criteria. Of 410 catastrophic MLP records, 409 are already catastrophic at 161
-phases, none is materially worsened by the 321-phase substitution, 63 reach the
-iteration limit, and no numerical overflow is detected. Thus, the forward map
-satisfies the convergence criterion, whereas the frozen estimators do not
-satisfy all robustness criteria.
-
-Typical predictions are stable, but the tails are not. The earlier MLP maxima
-are not representative of every estimator, while the targeted tree failures
-show that the remaining issue also cannot be attributed solely to the MLP.
-Figure~\ref{fig:estimator-robustness} separates the estimator mechanisms. Tree
-medians remain exactly unchanged because most perturbations do not cross a
-split, yet their tails do. The MLP reacts more smoothly to phase substitution,
-while its catastrophic directional records overwhelmingly predate that
-substitution.
+Forward convergence does not imply inverse-estimator stability. We
+therefore evaluate the previously trained HGB, RF, and MLP estimators on
+refined features without retraining. The trees have unchanged median
+predictions but sensitive tails: the HGB and RF 95th-percentile normalized
+prediction shifts are 0.08122 and 0.08509, exceeding their prespecified
+stability tolerance. The MLP's catastrophic directional predictions largely
+predate the higher-resolution substitution. Thus the targeted forward audit
+passes, but the frozen estimators do not satisfy every robustness criterion.
+Figure~\ref{fig:estimator-robustness} contrasts these failure mechanisms;
+full thresholds and counts are given in Appendix~\ref{app:numerical-thresholds}.
 
 \begin{figure}[tbp]
 \centering\includegraphics[width=.78\textwidth]{targeted_estimator_robustness_compact.pdf}
@@ -648,58 +550,48 @@ failure diagnostics. No predictions are clipped.}
 \FloatBarrier
 
 \section{Discussion}
-To distinguish improved physical observability from architecture-specific
-learning effects, we also evaluate non-learned nearest-model and local-linear
-inverse baselines under the same physical holdout protocols. The nearest-model
-improvement confirms an estimator-independent geometric contribution. Changes
-in local conditioning, however, do not consistently predict pointwise recovery
-across all models and protocols: Spearman associations have mixed signs and
-broad bootstrap intervals. Jacobian conditioning diagnoses local physical
-distinguishability, but it is not a complete predictor of finite-data error or
-behavior under distribution shift, and no causal relationship is inferred.
-The redshift comparison sharpens this distinction: redshift is more directly
-connected to a measurable spectroscopic quantity than the idealized ray-level
-photon-geometry variables used here, but the present synthetic benchmark has no
-detector likelihood, radiative-transfer model, or observational noise model.
+The central lesson is that inverse-model design should begin with the
+information carried by the observables, not with a regression score. In this
+Kiselev test, leading-eikonal ringdown leaves a weak parameter direction;
+photon geometry and redshift add complementary information that makes
+identifiable $\wq$ substantially easier to recover under grouped physical
+holdouts. The gain is also found with a non-learned nearest-model inverse,
+so it cannot be attributed solely to the trained architectures.
 
-Jacobian conditioning answers whether nearby parameter directions are separated
-by the chosen observables. Training distance answers whether a fitted estimator
-has support where it is evaluated. Neither statistic subsumes the other.
-Consequently, $\smin$ can predict broad observable-set ordering without ranking
-every empirical model or protocol.
+The exact $k=0$ boundary provides an unusually clear control: $\wq$ becomes
+physically indistinguishable there, independently of the inverse estimator.
+At finite $k$, the Jacobian diagnoses local parameter separation, but its
+conditioning does not reliably rank every prediction error. Training support,
+model architecture, and distribution shift matter in addition to local rank.
+The finite-grid collision audit finds no unresolved distant finite-$k$
+collision at its tested resolution, without establishing continuous global
+injectivity (Appendix~\ref{app:ambiguity}).
 
-The Jacobian SVD magnitudes also depend on the declared observable and parameter
-normalizations. The nominal q95--q05/full-span convention remains the
-primary analysis; IQR, population-standard-deviation, and feature-count-balanced
-checks preserve the median ringdown-plus-photon-geometry ordering but alter its
-magnitude. Pointwise conditioning is spatially nonuniform under every scheme,
-so this sensitivity check supports qualitative complementarity rather than a
-scale-invariant gain factor.
+The observation-facing sensitivity analysis tests whether useful inverse
+recovery requires access to latent geometric descriptors. It does not.
+Restricting ringdown to $\Omega$ and $\lambda$ and the sky channel to signed
+$\alpha$ and $\beta$ weakens ringdown-only identifiability, but adding
+redshift or signed sky coordinates still improves the weakest parameter
+direction. These channels have different routes toward observational use:
+redshift is spectroscopic, whereas the sky coordinates here describe idealized
+rays. Definitions, normalization checks, and the numerical comparison are given
+in Appendix~\ref{app:observation-facing}.
 
-Tree ensembles are piecewise and can show zero median response followed by
-large split-crossing tails. The MLP is smoother under the targeted feature
-substitution but extrapolates to physically unreasonable values in archived
-directional tests. These mechanisms are estimator-specific manifestations of a
-general scientific-ML risk: a converged forward simulator does not ensure a
-stable inverse surrogate \cite{ovadia2019uncertainty,koh2021wilds,psaros2023uq}.
+The numerical audit identifies a second distinction. The refined forward
+calculation satisfies the targeted convergence criteria, yet frozen tree
+estimators retain split-crossing tail sensitivity and the MLP exhibits
+unstable directional extrapolation. Better forward resolution alone therefore
+does not repair an inverse estimator's response to off-distribution inputs
+\cite{ovadia2019uncertainty,koh2021wilds,psaros2023uq}.
 
-What is specific to Kiselev is the metric deformation and exact $k=0$ loss of
-$\wq$. Methodologically, this boundary is useful because the correct
-identifiability answer is known analytically before any inverse model is fitted:
-the pipeline must return no physical $\wq$ information at $k=0$. Recovering that
-ground-truth null control checks the diagnostic in this controlled benchmark,
-but does not establish universal validity. What may generalize is the workflow:
-establish forward rank, seek complementary observables, partition by physical
-systems, test directional shift, and perturb frozen estimators at independently
-measured numerical scales.
-
-The Jacobian analysis is local by construction. The finite-grid collision
-audit provides a complementary nonlocal check across the sampled parameter
-domain: no unresolved distant finite-$k$ collision is found at the tested
-resolution, although photon geometry rearranges local neighbor ordering.
-Together with the improved nearest-model recovery, this shows that improved
-distant sampled separation need not imply preservation of every local
-observable-space neighborhood.
+These findings suggest an order of operations for future spectroscopy
+studies: first test parameter rank and degeneracies, then choose complementary
+observable channels, and only afterward optimize an inverse estimator under
+physically grouped and shifted evaluation. Extending this sequence to
+finite-multipole waveforms, realistic imaging or astrometry, spectroscopic
+likelihoods, and detector noise would establish how much of the theoretical
+complementarity remains operationally accessible. The limitations of the
+present forward and observation models are specified below.
 
 \section{Limitations}
 The ringdown model is leading-eikonal rather than a dedicated finite-$\ell$
@@ -718,7 +610,9 @@ parameter values. Conformal coverage is sensitive to the representation of the
 exact $k=0$ equivalence class, and the collapsed sensitivity design does not
 separate reduced Schwarzschild multiplicity from removal of non-identifiable
 nominal $\wq$ labels.
-The present photon-geometry variables are idealized ray-level quantities. A
+The present photon-geometry variables are idealized ray-level quantities;
+calling the restricted subset observation-facing does not make it
+detector-level or observational. A
 natural next step is to replace them with detector-level imaging or astrometric
 observables and realistic likelihoods, while retaining redshift as a directly
 interpretable spectroscopic channel.
@@ -726,10 +620,13 @@ interpretable spectroscopic channel.
 \section{Conclusion}
 Physical complementarity is supported: ringdown constrains $k$, while photon
 geometry supplies an independent direction needed for much of the $\wq$
-recovery. Observable complementarity persists under a non-learned inverse
-baseline, while the local Jacobian inverse demonstrates that strong local
-recoverability can coexist with globally unstable predictions in this Kiselev
-benchmark. Random interpolation overstates recoverability relative to grouped
+recovery. Importantly, this conclusion does not require the full latent
+geometric feature set. The restricted observation-facing analysis shows that
+complementary information and useful inverse recovery persist using only
+leading-eikonal $\Omega$ and $\lambda$, redshift, and signed sky coordinates.
+Observable complementarity also persists under a non-learned inverse baseline,
+while the local Jacobian inverse demonstrates that strong local recoverability
+can coexist with globally unstable predictions in this Kiselev benchmark. Random interpolation overstates recoverability relative to grouped
 and directional validation, and shifted conformal coverage is degraded and
 heterogeneous. The exact $k=0$ boundary is structurally
 non-identifiable, whereas small nonzero $k$ can be full-rank but only weakly
@@ -745,13 +642,16 @@ robust inverse methods and broader physical modeling before observational use.
 \section*{Data Availability}
 The analysis code, machine-readable derived results included in the repository, fixed
 split assignments, and reproducibility audits are available in the project
-repository~\cite{palomino2026software}. This work uses simulated theoretical data and no observational
+repository and are archived as version v1.0.0 on Zenodo~\cite{palomino2026software}. This work uses simulated theoretical data and no observational
 data. A standard repository checkout can reproduce the headline aggregations from the included
 prediction tables without rerunning the physical grid. Full bitwise replay of
 the frozen-estimator audit additionally requires 5,520 serialized estimators
 (approximately 822 MB), which are not included in the repository
 and do not yet have a permanent public archive; they are available from the
 author upon reasonable request.
+The repository includes the observation-facing sensitivity tables,
+model-specific metrics, figure source data, analysis script, and input-file
+SHA256 hashes.
 
 \FloatBarrier
 \appendix
@@ -841,6 +741,129 @@ Ringdown + all shooting & union of the corresponding families & combined & 77 \\
 \end{minipage}
 \end{center}
 
+\section{Observation-Facing Feature Sensitivity}
+\label{app:observation-facing}
+This secondary analysis tests whether the complementarity conclusion depends
+on latent theoretical or ray-geometric descriptors. The restricted ringdown
+set, denoted RD$_{\rm obs}$, contains only $\Omega$ and $\lambda$; it excludes
+$\Delta r$ and $r_{\rm ph}$. The redshift addition contains all nine existing
+phase summaries of $z$. The sky addition contains the nine summaries of signed
+$\alpha$ and the nine summaries of signed $\beta$, while excluding all impact-
+parameter summaries. We also examine the combined redshift-plus-sky set.
+Orbital and timing features are excluded throughout. We use
+``observation-facing'' only to distinguish these quantities from latent
+geometric descriptors: $\Omega$ and $\lambda$ remain leading-eikonal
+quantities, while $\alpha$ and $\beta$ are idealized ray-level sky coordinates
+rather than detector-level measurements.
+
+The two numerical layers follow the same protocol as the primary analysis.
+The Jacobian columns in Table~\ref{tab:observation-facing} use the nominal
+81-phase feature set, q95--q05 feature scaling, unchanged parameter spans
+and finite-difference stencils, and analytic $k=0$ null handling. The inverse
+columns use the separately validated 161-phase representation and the
+same 115 predefined train/calibration/test splits, seeds, training-only
+preprocessing, model hyperparameters, and identifiable-$\wq$ scoring rule.
+Accordingly, the Jacobian and inverse-learning columns refer to their respective
+validated resolutions rather than to a single common-resolution feature table.
+
+\begin{center}
+\begin{minipage}{.99\textwidth}
+\captionof{table}{Observation-facing sensitivity summary. Jacobian medians use
+the nominal 81-phase archive; inverse NMAE uses the validated 161-phase
+representation. ``Near.'' is the non-learned nearest-physical-model baseline.
+All $\wq$ scores exclude $k=0$.}
+\label{tab:observation-facing}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{lrrrrrrr}
+Feature set & Dim. & med. $\smin$ & med. $\kappaJ$ & Grouped & Directional & Near. grp. & Near. dir. \\
+\hline
+RD$_{\rm obs}$ & 2 & 0.0097 & 136.69 & 0.3886 & 0.4239 & 0.4238 & 0.4377 \\
++ redshift & 11 & 0.6215 & 4.47 & 0.0985 & 0.1750 & 0.1417 & 0.1932 \\
++ signed sky & 20 & 0.6999 & 4.89 & 0.0904 & 0.2179 & 0.1308 & 0.1950 \\
++ redshift + sky & 29 & 0.7310 & 5.59 & 0.0807 & 0.1949 & 0.1190 & 0.1934 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+Redshift and sky improve $\smin$ at every eligible finite-$k$ grid point under
+the nominal scaling. Their median pointwise $\smin$ gains relative to
+RD$_{\rm obs}$ are $56.80\times$ (paired-bootstrap 95\% interval
+$[43.99,64.10]$) and $72.11\times$ ($[60.54,83.60]$), respectively; these
+ratios are secondary to the absolute values in
+Table~\ref{tab:observation-facing}. The ordering is qualitatively stable under
+IQR and population-standard-deviation scaling, as shown in
+Table~\ref{tab:observation-facing-scaling}. Feature-family balancing is not
+reported because partially selecting the ringdown and photon families makes
+the earlier whole-family weighting convention ambiguous.
+
+\begin{center}
+\begin{minipage}{.84\textwidth}
+\captionof{table}{Scaling sensitivity of median pointwise gains relative to
+RD$_{\rm obs}$. Each entry is $\smin$ gain / conditioning improvement.}
+\label{tab:observation-facing-scaling}
+\centering
+\small
+\begin{tabular}{lcc}
+Scaling & + redshift & + signed sky \\
+\hline
+q95--q05 & 56.80 / 33.10 & 72.11 / 25.47 \\
+IQR & 81.85 / 37.63 & 96.42 / 26.66 \\
+Population standard deviation & 51.50 / 34.09 & 62.49 / 32.27 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+\begin{center}
+\begin{minipage}{.96\textwidth}
+\centering
+\includegraphics[width=.96\linewidth]{../../../artifacts/observation_facing_sensitivity/observation_facing_feature_sensitivity.pdf}
+\captionof{figure}{Observation-facing sensitivity. Panels A and B show nominal
+81-phase finite-$k$ medians and interquartile ranges; the conditioning axis is
+logarithmic to show the large baseline and the two restricted additions
+without compressing the latter. Panels C and D show grouped identifiable-$\wq$
+NMAE from the 161-phase learned-model aggregate and non-learned nearest-model
+baseline. Higher $\smin$ and lower $\kappaJ$/NMAE are favorable.}
+\label{fig:observation-facing}
+\end{minipage}
+\end{center}
+
+The learned-model medians retain the improvement for each architecture, as
+shown in Table~\ref{tab:observation-facing-models}.
+
+\begin{center}
+\begin{minipage}{.74\textwidth}
+\captionof{table}{Model-specific identifiable-$\wq$ NMAE for the three primary
+restricted comparisons.}
+\label{tab:observation-facing-models}
+\centering
+\small
+\begin{tabular}{llccc}
+Protocol & Model & RD$_{\rm obs}$ & + redshift & + signed sky \\
+\hline
+Grouped & HGB & 0.3886 & 0.0985 & 0.0904 \\
+ & RF & 0.4592 & 0.1011 & 0.1108 \\
+ & MLP & 0.3862 & 0.0714 & 0.0710 \\
+Directional & HGB & 0.3935 & 0.1983 & 0.2162 \\
+ & RF & 0.4236 & 0.2023 & 0.2040 \\
+ & MLP & 0.4361 & 0.1655 & 0.2613 \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+The combined redshift-plus-sky set has
+the best grouped aggregate NMAE (0.0807) but not the best directional aggregate
+(0.1949 versus 0.1750 for redshift), reinforcing that more features do not
+universally improve extrapolation.
+
+This sensitivity check does not implement radiative transfer, image
+reconstruction, a point-spread function, a detector likelihood, or an
+observational noise model. It therefore supports robustness of the theoretical
+complementarity conclusion, not an observational constraint. Complete
+model-specific, nearest-model, pointwise-Jacobian, scaling, and provenance
+tables are provided with the repository.
+
 \section{Pointwise Finite-Grid Identifiability Maps}
 \label{app:grid-maps}
 The grid-wide medians and interquartile ranges in the main text summarize the
@@ -860,6 +883,81 @@ interpolated, and all panels use one finite-$k$ color scale.}
 \end{center}
 
 \section{Additional Inverse-Learning Diagnostics}
+\subsection{Additional interpretation and sensitivity checks}
+
+To distinguish improved physical observability from architecture-specific
+learning effects, we also evaluate non-learned nearest-model and local-linear
+inverse baselines under the same physical holdout protocols. The nearest-model
+improvement confirms an estimator-independent geometric contribution. Changes
+in local conditioning, however, do not consistently predict pointwise recovery
+across all models and protocols: Spearman associations have mixed signs and
+broad bootstrap intervals. Jacobian conditioning diagnoses local physical
+distinguishability, but it is not a complete predictor of finite-data error or
+behavior under distribution shift, and no causal relationship is inferred.
+The redshift comparison sharpens this distinction: redshift is more directly
+connected to a measurable spectroscopic quantity than the idealized ray-level
+photon-geometry variables used here, but the present synthetic benchmark has no
+detector likelihood, radiative-transfer model, or observational noise model.
+
+As a secondary observation-facing sensitivity analysis, we repeated the
+comparison after restricting ringdown to the leading-eikonal quantities
+$\Omega$ and $\lambda$, excluding $\Delta r$ and $r_{\rm ph}$, and restricting
+the sky channel to signed $\alpha$ and $\beta$, excluding impact parameter
+$b$. Ringdown-only local identifiability is substantially weaker under this
+restriction: the finite-$k$ grid medians are $\smin=0.0097$ and
+$\kappaJ=136.69$. Nevertheless, adding redshift or the signed sky coordinates
+raises the median $\smin$ to 0.6215 or 0.6999 and lowers the median $\kappaJ$
+to 4.47 or 4.89. Grouped and directional inverse tests, together with the
+non-learned nearest-model baseline, independently support the same qualitative
+conclusion: the latent photon-orbit quantities substantially strengthen
+ringdown-only identifiability, whereas the qualitative redshift and
+sky-coordinate complementarity persists after they are removed. These features
+are observation-facing, not detector-level;
+$\alpha$ and $\beta$ remain idealized ray-level observer-sky coordinates.
+Appendix~\ref{app:observation-facing} gives the definitions, resolution
+provenance, scaling checks, and complete secondary results.
+
+Jacobian conditioning answers whether nearby parameter directions are separated
+by the chosen observables. Training distance answers whether a fitted estimator
+has support where it is evaluated. Neither statistic subsumes the other.
+Consequently, $\smin$ can predict broad observable-set ordering without ranking
+every empirical model or protocol.
+
+The Jacobian SVD magnitudes also depend on the declared observable and parameter
+normalizations. The nominal q95--q05/full-span convention remains the
+primary analysis; IQR, population-standard-deviation, and feature-count-balanced
+checks preserve the median ringdown-plus-photon-geometry ordering but alter its
+magnitude. Pointwise conditioning is spatially nonuniform under every scheme,
+so this sensitivity check supports qualitative complementarity rather than a
+scale-invariant gain factor.
+
+Tree ensembles are piecewise and can show zero median response followed by
+large split-crossing tails. The MLP is smoother under the targeted feature
+substitution but extrapolates to physically unreasonable values in archived
+directional tests. These mechanisms are estimator-specific manifestations of a
+general scientific-ML risk: a converged forward simulator does not ensure a
+stable inverse surrogate \cite{ovadia2019uncertainty,koh2021wilds,psaros2023uq}.
+
+What is specific to Kiselev is the metric deformation and exact $k=0$ loss of
+$\wq$. Methodologically, this boundary is useful because the correct
+identifiability answer is known analytically before any inverse model is fitted:
+the pipeline must return no physical $\wq$ information at $k=0$. Recovering that
+ground-truth null control checks the diagnostic in this controlled benchmark,
+but does not establish universal validity. What may generalize is the workflow:
+establish forward rank, seek complementary observables, partition by physical
+systems, test directional shift, and perturb frozen estimators at independently
+measured numerical scales.
+
+The Jacobian analysis is local by construction. The finite-grid collision
+audit provides a complementary nonlocal check across the sampled parameter
+domain: no unresolved distant finite-$k$ collision is found at the tested
+resolution, although photon geometry rearranges local neighbor ordering.
+Together with the improved nearest-model recovery, this shows that improved
+distant sampled separation need not imply preservation of every local
+observable-space neighborhood.
+
+
+
 \subsection{Additional model-level results}
 HGB and RF reproduce the central grouped photon-geometry improvement for
 identifiable $\wq$. The MLP is retained as a stress test rather than omitted:
@@ -877,15 +975,44 @@ is reported empirically. Rejection curves rank uncertainty but do not repair
 distribution shift.
 
 \subsection{Finite-grid and coverage uncertainty}
+% Detailed main-text coverage and equivalence-class audit retained from previous revision.
+Nominal 90\% conformal coverage is 0.892/0.965 for random $k/\wq$, but falls to
+0.722/0.851 under grouped interpolation and 0.509/0.660 under extrapolation.
+Each value is the median of archived model--feature-set coverage rows (15 rows
+for random and grouped protocols; 60 direction--model--feature-set rows for
+extrapolation), after each row pools its fixed fold/seed prediction
+indicators. The corresponding row-level IQRs are 0.833--0.908/0.951--0.973,
+0.676--0.747/0.840--0.863, and 0.311--0.689/0.585--0.844. Because models,
+features, seeds, and layouts reuse physical systems, these rows are not
+independent Bernoulli trials and no single pooled binomial interval is assigned
+to their median. Wilson intervals for each individual evaluation unit and all
+four directional summaries are retained in Appendix~\ref{app:conformal-uncertainty}.
+Shifted coverage remains empirical, not a retained finite-sample guarantee.
+Figure~\ref{fig:coverage} separates coverage by target and protocol.
+
+In the collapsed-equivalence check, the 11 identical Schwarzschild rows are
+replaced by one class without a nominal $\wq$ target, while all finite-$k$
+assignments remain unchanged. Across learned model--feature summaries, random,
+grouped, and directional $k$ NMAE changes from 0.0471/0.0528/0.1714 to
+0.0387/0.0594/0.1567; identifiable-$\wq$ NMAE changes only from
+0.0621/0.0875/0.2038 to 0.0623/0.0859/0.2032. Coverage is more sensitive:
+identifiable-$\wq$ values become 0.929/0.763/0.509. Thus the primary qualitative
+recovery and complementarity conclusions are stable under this sensitivity
+analysis, while conformal coverage is more sensitive to the representation of
+the $k=0$ equivalence class. The collapsed analysis is treated as a sensitivity
+analysis rather than as a replacement for the primary analysis.
+
+
+
 \label{app:conformal-uncertainty}
 Table~\ref{tab:uncertainty-summary} reports uncertainty summaries for
 the finite analysis grid. The Jacobian percentile intervals use 10,000 paired
 physical-system bootstrap resamples (seed 20261002). Coverage entries are the
-median [IQR] across the archived rows that define the manuscript headline; the
+median [IQR] across the stored rows that define the manuscript headline; the
 evaluation-unit count is given in parentheses. At the lower level, each unit is
 a single fold/seed/model/feature/target evaluation on distinct held-out systems.
 Its covered numerator, eligible denominator, and 95\% Wilson interval are
-archived machine-readably. Units overlap across models, features, seeds, and
+stored in machine-readable form. Units overlap across models, features, seeds, and
 layouts, so their Wilson intervals are diagnostics rather than ingredients of
 a falsely pooled confidence interval.
 
@@ -919,7 +1046,7 @@ $\kappaJ$: 2.2819 [1.8382, 2.6254] ($n=110$)} \\
 The 11 nominal $k=0$ rows have different nominal $\wq$ labels but identical
 values for all 77 predefined physical features. Their maximum absolute and
 q95--q05-standardized feature differences are both exactly zero in the
-archived table. Because the predefined splits treat nominal rows separately,
+feature table. Because the predefined splits treat nominal rows separately,
 physically equivalent Schwarzschild records cross train/test in 45 of 115
 split specifications and train/calibration in 96. This is nominal-record
 separation but not physical-equivalence separation.
@@ -1023,7 +1150,93 @@ bootstrap intervals. Associations are descriptive and do not imply causation.}
 \section{Numerical Validation and Reproducibility}
 \label{app:numerical-thresholds}
 \subsection{Numerical-validation thresholds}
-The frozen resolution protocol uses the archived 81-phase q95--q05 feature
+% Detailed numerical forward and estimator audit retained from previous revision.
+
+We first ask whether the physical forward calculation converges as phase
+resolution increases. Figure~\ref{fig:resolution} addresses that question.
+For feature $i$ at resolutions $N_1$ and $N_2$, the frozen comparison is
+\begin{equation}
+ \delta_i=\frac{|F_i^{(N_2)}-F_i^{(N_1)}|}{\max(s_i,10^{-12})},
+\end{equation}
+where $s_i$ is the global q95--q05 scale computed on the nominal 81-phase
+training domain. The floor prevents division by numerical zero and is not
+fitted to either higher-resolution result. A feature--point comparison is
+classified as converged for $\delta_i\leq0.01$, marginal for
+$0.01<\delta_i\leq0.05$, and unresolved for $\delta_i>0.05$; non-finite,
+missing, or schema-mismatched values are also unresolved by protocol. Here
+``unresolved'' denotes failure of this numerical-resolution criterion, which
+was fixed before evaluation, rather than a failed physical shooting phase.
+
+The uniform 161-phase study completes all 121 physical points. From 9317
+feature--point comparisons, 240 exceed the 0.05 normalized-change threshold
+and are therefore unresolved under the frozen criterion; no failed physical
+point is implied. The median normalized feature change is
+$7.908\times10^{-4}$ and the maximum is
+0.08069. Across frozen scored predictions, the median normalized shift is
+$9.482\times10^{-4}$ and the 95th percentile is 0.02606. The median aggregate
+NMAE change is $6.880\times10^{-4}$, but the maximum is 16.8497 because of
+unclipped MLP directional extrapolation outliers.
+
+The targeted 321-phase audit selects 35 points deterministically before reading
+their 321-phase outcomes. The selection is the deduplicated union of pre-321
+signals: the four largest 81-to-161 shifts in each of the feature, HGB, and RF
+rankings; the eight largest MLP shifts; fixed boundary and center points; four
+directional representatives; three points at each conditioning extreme; and one
+representative from each of nine grouped blocks. Its forward acceptance
+conditions, recorded before any 321-phase trajectory was evaluated, require
+median normalized change below
+0.001, 95th-percentile change below 0.01, unchanged ringdown, no systematic
+family-wide trend, and unchanged Jacobian rank behavior. All selected points
+complete. Median and 95th-percentile normalized 161-to-321 feature changes are
+$1.963\times10^{-4}$ and $7.234\times10^{-3}$; no comparison remains
+unresolved, ringdown is exactly unchanged, no systematic family-wide trend is
+found, and Jacobian rank is preserved. The targeted forward audit therefore
+passes the criteria specified in advance. This is not a uniform 321-phase proof
+over the full 121-point grid.
+
+Within the selected 35-system set, the earlier resolution ranking was strongly
+preserved: the point-level maximum changes had Spearman $\rho=1.000$, while the
+point-level 95th-percentile changes had $\rho=0.997$. All top-five and top-ten
+systems were retained under the later maximum-change ranking. Because
+321-phase values exist only for these 35 systems, this does not establish that
+they contain the largest changes over the full grid.
+
+We next ask whether the previously trained estimators remain stable after the
+forward map has converged. Figure~\ref{fig:estimator-robustness} applies those
+frozen estimators to the refined features; no model is retrained.
+
+Forward acceptance and inverse-estimator acceptance are separate. For HGB and
+RF individually, the prespecified inverse criteria require median normalized
+prediction shift below 0.005, 95th-percentile shift below 0.03, maximum
+identifiable-$\wq$ shift below 0.1, aggregate NMAE change below 0.02, and
+unchanged grouped complementarity. The written protocol permits an
+identifiable-$\wq$ exceedance of the 0.1 scale only when it is traced to an
+unresolved feature; because no targeted feature comparison remains unresolved,
+that caveat does not relax the criterion here.
+
+Frozen trees remain tail-sensitive: HGB and RF 95th-percentile normalized
+shifts are 0.08122 and 0.08509, and their largest identifiable-$\wq$ shifts are
+0.30593 and 0.27053. Their median shifts are zero because many tree predictions do
+not cross a split threshold. The fixed perturbation ensembles and fixed
+Extra Trees smoother do not pass all stability and grouped-performance
+criteria. Of 410 catastrophic MLP records, 409 are already catastrophic at 161
+phases, none is materially worsened by the 321-phase substitution, 63 reach the
+iteration limit, and no numerical overflow is detected. Thus, the forward map
+satisfies the convergence criterion, whereas the frozen estimators do not
+satisfy all robustness criteria.
+
+Typical predictions are stable, but the tails are not. The earlier MLP maxima
+are not representative of every estimator, while the targeted tree failures
+show that the remaining issue also cannot be attributed solely to the MLP.
+Figure~\ref{fig:estimator-robustness} separates the estimator mechanisms. Tree
+medians remain exactly unchanged because most perturbations do not cross a
+split, yet their tails do. The MLP reacts more smoothly to phase substitution,
+while its catastrophic directional records overwhelmingly predate that
+substitution.
+
+
+
+The frozen resolution protocol uses the nominal 81-phase q95--q05 feature
 scales and the $10^{-12}$ denominator floor defined in Section~7. Its
 feature-level boundaries are 0.01 (converged) and 0.05 (marginal); values above
 0.05 are unresolved. Targeted forward acceptance uses median/p95 boundaries of
@@ -1050,9 +1263,26 @@ $7.6214\times10^{-12}$, and $1.7932\times10^{-11}$.
 The Schwarzschild arrival-time comparison in Fig.~\ref{fig:schwarzschild}
 separates the visually overlapping phase-resolved series from their actual-scale residuals.
 
+\subsection{Additional complementarity audit details}
+The nominal 81-phase finite-grid bootstrap 95\% intervals for the median
+pointwise photon-geometry improvements are $[4.28,4.94]$ for $\smin$ and
+$[1.84,2.63]$ for conditioning. They resample the 110 eligible finite-$k$
+systems and are not observational or astrophysical-population confidence
+intervals. Ringdown
+plus all shooting has grid medians $(\smin,\kappaJ)=(1.5312,4.4974)$;
+the corresponding 161-phase results are $(1.5319,4.4957)$, compared with
+$(1.2326,4.0733)$ for ringdown plus photon geometry. The normalization
+stress tests yield median $\smin$/conditioning improvement factors of
+$5.88/1.87$ (IQR), $3.76/2.40$ (population standard deviation), and
+$2.95/2.22$ (feature-family-count balancing). Every finite-$k$ point has a
+$\smin$ gain above one; conditioning improves at 68.2--89.1\% of points
+across these schemes, without a change in numerical rank. Numerical factors
+are therefore normalization-dependent even though the median improvement is
+qualitatively stable.
+
 \subsection{Jacobian normalization sensitivity}
 \label{app:scaling-sensitivity}
-The nominal 81-phase Jacobian was recomputed from the archived
+The nominal 81-phase Jacobian was recomputed from the corresponding
 feature grid using unchanged finite-difference stencils and parameter spans.
 Table~\ref{tab:scaling-sensitivity} reports medians of pointwise finite-$k$
 ratios with their interquartile ranges; exact $k=0$ rank-loss points are kept as
@@ -1161,7 +1391,7 @@ d_\theta(i,j)=\sqrt{\left(\frac{k_i-k_j}{\Delta k}\right)^2+
 \left(\frac{w_{q,i}-w_{q,j}}{\Delta w_q}\right)^2},
 \end{equation}
 where both spans are taken from the analysis domain. Observable
-differences use the archived grid-wide q95--q05 feature scales. The primary
+differences use the nominal grid-wide q95--q05 feature scales. The primary
 cross-set distance is the RMS of standardized feature differences rather than
 a raw Euclidean norm, because the combined set has 31 dimensions while
 ringdown has four.

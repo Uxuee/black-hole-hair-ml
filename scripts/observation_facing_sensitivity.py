@@ -1,7 +1,8 @@
-"""Observation-facing feature sensitivity from frozen 81/161-phase archives.
+"""Journal-facing observation-facing sensitivity from frozen archives.
 
-No geodesics are integrated.  The nominal 81-phase table supplies Jacobians;
-the validated 161-phase table and registered splits supply inverse tests.
+No geodesics are integrated. The canonical nominal 81-phase archive supplies
+Jacobians with its registered scaling and stencils. The deliberately separate
+validated 161-phase representation and predefined splits supply inverse tests.
 """
 from __future__ import annotations
 
@@ -52,7 +53,9 @@ def sha256(path: Path) -> str:
 def atomic_csv(frame: pd.DataFrame, path: Path, *, compression=None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    frame.to_csv(temporary, index=False, compression=compression)
+    compression_options = ({"method": "gzip", "mtime": 0}
+                           if compression == "gzip" else compression)
+    frame.to_csv(temporary, index=False, compression=compression_options)
     temporary.replace(path)
 
 
@@ -179,8 +182,11 @@ def inverse_models(frame: pd.DataFrame, sets: dict[str, list[str]], assignments:
     rows, predictions, convergence = [], [], 0
     specs = [s for s in registered_split_specs(assignments) if s[0] in PROTOCOLS]
     for protocol, direction, fold, seed, roles in specs:
-        train = np.asarray([lookup[p] for p in roles["train"]], int)
-        test = np.asarray([lookup[p] for p in roles["test"]], int)
+        # registered_split_specs validates membership but represents each role
+        # as a set. Sort identifiers so estimator row order and tie-breaking
+        # are reproducible across Python processes.
+        train = np.asarray([lookup[p] for p in sorted(roles["train"])], int)
+        test = np.asarray([lookup[p] for p in sorted(roles["test"])], int)
         for model in MODELS:
             for name, columns in sets.items():
                 X = frame[columns].to_numpy(float)
@@ -230,8 +236,8 @@ def nearest_models(frame: pd.DataFrame, sets: dict[str, list[str]], assignments:
     theta = frame[["k", "wq"]].to_numpy(float); rows = []
     for protocol, direction, fold, seed, roles in registered_split_specs(assignments):
         if protocol not in PROTOCOLS: continue
-        train = np.asarray([lookup[p] for p in roles["train"]], int)
-        test = np.asarray([lookup[p] for p in roles["test"]], int)
+        train = np.asarray([lookup[p] for p in sorted(roles["train"])], int)
+        test = np.asarray([lookup[p] for p in sorted(roles["test"])], int)
         for name, columns in sets.items():
             prediction = NearestPhysicalModel().fit(frame[columns].to_numpy(float)[train], theta[train], ids[train]).predict(frame[columns].to_numpy(float)[test])
             for target, index in (("k", 0), ("wq", 1)):
@@ -267,7 +273,8 @@ def figure(summary: pd.DataFrame, inverse: pd.DataFrame, nearest: pd.DataFrame, 
     axes[0, 0].errorbar(x, shown.median_sigma_min, yerr=[shown.median_sigma_min-shown.sigma_min_q25, shown.sigma_min_q75-shown.median_sigma_min], fmt="o", capsize=4)
     axes[0, 0].set_ylabel(r"median $\sigma_{\min}$ (IQR)"); axes[0, 0].set_title("A. Local identifiability")
     axes[0, 1].errorbar(x, shown.median_kappa, yerr=[shown.median_kappa-shown.kappa_q25, shown.kappa_q75-shown.median_kappa], fmt="o", capsize=4)
-    axes[0, 1].set_ylabel(r"median $\kappa(J)$ (IQR)"); axes[0, 1].set_title("B. Conditioning")
+    axes[0, 1].set_yscale("log")
+    axes[0, 1].set_ylabel(r"median $\kappa(J)$ (IQR; log scale)"); axes[0, 1].set_title("B. Conditioning")
     group = inverse[(inverse.protocol == "grouped_physical_interpolation") & (inverse.target == "wq") & (inverse.model == "all_models")].set_index("feature_set").loc[list(PRIMARY)]
     axes[1, 0].bar(x, group.median_NMAE); axes[1, 0].set_ylabel(r"grouped identifiable-$w_q$ NMAE"); axes[1, 0].set_title("C. Learned inverse")
     near = nearest[(nearest.protocol == "grouped_physical_interpolation") & (nearest.target == "wq")].set_index("feature_set").loc[list(PRIMARY)]
@@ -287,7 +294,7 @@ def write_report(summary: pd.DataFrame, scaling: pd.DataFrame, output: Path) -> 
     red, sky = direction("rd_obs_redshift"), direction("rd_obs_sky")
     outcome = "A" if red and sky else "B" if red and not sky else "C" if not red and not sky else "D"
     lines = ["# Observation-facing feature sensitivity analysis", "", "## Scope and provenance", "",
-             "This secondary analysis uses archived 81-phase features for Jacobians and validated 161-phase features for held-out inverse tests. No geodesic simulation was rerun and no canonical result was overwritten.", "",
+             "This secondary analysis deliberately uses two resolution layers, consistently with the manuscript protocol. Jacobian quantities use the canonical nominal 81-phase archive with its registered scaling and finite-difference stencils. Inverse-learning quantities use the validated matched 161-phase representation and predefined splits. They are not treated as though they came from one common feature table. No geodesic simulation was rerun and no canonical result was overwritten.", "",
              "The restricted ringdown subset retains only $\\Omega$ and $\\lambda$. Redshift retains its nine phase summaries; sky retains the 18 signed $\\alpha$/$\\beta$ summaries. $\\Delta r$, $r_{\\rm ph}$, impact parameter, orbital, and timing features are excluded.", "", "## Results", "",
              "| Feature set | n | median sigma_min | median kappa | grouped wq NMAE | directional wq NMAE | nearest grouped wq NMAE |", "|---|---:|---:|---:|---:|---:|---:|"]
     for name in ALL_SETS:
@@ -300,14 +307,14 @@ def write_report(summary: pd.DataFrame, scaling: pd.DataFrame, output: Path) -> 
               "Jacobian gains and held-out errors are reported separately; neither is inferred from the other. Model-specific HGB, RF, and MLP values and the secondary $k$ checks are in `inverse_model_summary.csv`.", "",
               "The q95-q05, IQR, and population-standard-deviation normalizations preserve the same feature subsets. Family-count balancing was skipped because partially selecting ringdown and photon families makes the earlier whole-family weighting convention ambiguous.", "", "## Recommendation", "",
               "Treat this as an appendix observation-facing sensitivity check. The sky coordinates remain idealized ray-level outputs, not detector-level observables; no radiative transfer, image reconstruction, PSF, detector likelihood, or noise model is included.", "", "## Files", "",
-              "- Compact summary: `reviewer/_revision_2026_10/observation_facing_sensitivity/observation_facing_summary.csv`",
-              "- Model-specific inverse results: `reviewer/_revision_2026_10/observation_facing_sensitivity/inverse_model_summary.csv`",
-              "- Scaling/Jacobian results: `reviewer/_revision_2026_10/observation_facing_sensitivity/jacobian_scaling_summary.csv` and `jacobian_pointwise.csv`",
-              "- Nearest-model results: `reviewer/_revision_2026_10/observation_facing_sensitivity/nearest_model_summary.csv`",
-              "- Figure: `reviewer/_revision_2026_10/observation_facing_sensitivity/observation_facing_feature_sensitivity.{pdf,png}`",
-              "- Provenance and source checksums: `reviewer/_revision_2026_10/observation_facing_sensitivity/execution_metadata.json`",
-              "", "## Reproduction", "", "```text", "python scripts/reviewer_revision_observation_facing_sensitivity.py", "```", ""]
-    text = "\n".join(lines); (output.parent / "observation_facing_feature_sensitivity.md").write_text(text, encoding="utf-8")
+              "- Compact summary: `artifacts/observation_facing_sensitivity/observation_facing_summary.csv`",
+              "- Model-specific inverse results: `artifacts/observation_facing_sensitivity/inverse_model_summary.csv`",
+              "- Scaling/Jacobian results: `artifacts/observation_facing_sensitivity/jacobian_scaling_summary.csv` and `jacobian_pointwise.csv`",
+              "- Nearest-model results: `artifacts/observation_facing_sensitivity/nearest_model_summary.csv`",
+              "- Figure: `artifacts/observation_facing_sensitivity/observation_facing_feature_sensitivity.{pdf,png}`",
+              "- Provenance and source checksums: `artifacts/observation_facing_sensitivity/execution_metadata.json`",
+              "", "## Reproduction", "", "```text", "python scripts/observation_facing_sensitivity.py", "```", ""]
+    text = "\n".join(lines); (output.parents[1] / "reports/observation_facing_sensitivity.md").write_text(text, encoding="utf-8")
     return outcome
 
 
@@ -346,9 +353,15 @@ def run(root: Path, output: Path) -> dict:
     metadata = {
         "status": "completed", "runtime_seconds": time.perf_counter() - started,
         "physics_simulation_ran": False, "canonical_sources_unchanged": True,
+        "resolution_layers": {
+            "jacobian": "canonical nominal 81-phase archive with registered scaling/stencils",
+            "inverse": "validated matched 161-phase representation with predefined splits",
+            "combined_as_common_table": False,
+        },
         "jacobian_resolution": 81, "inverse_resolution": 161,
         "feature_sets": sets, "feature_counts": {k: len(v) for k, v in sets.items()},
         "registered_split_specifications_used": len(registered_split_specs(assignments)),
+        "registered_role_order": "point identifiers sorted before row-index conversion",
         "protocols": list(PROTOCOLS), "models": list(MODELS),
         "mlp_convergence_warning_count": int(convergence), "bootstrap_samples": int(ml_config["bootstrap_samples"]),
         "scaling_schemes": ["q95_q05", "iqr", "population_std"],
@@ -363,7 +376,7 @@ def run(root: Path, output: Path) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path.cwd())
-    parser.add_argument("--output", type=Path, default=Path("reviewer/_revision_2026_10/observation_facing_sensitivity"))
+    parser.add_argument("--output", type=Path, default=Path("artifacts/observation_facing_sensitivity"))
     args = parser.parse_args(); metadata = run(args.root.resolve(), (args.root / args.output).resolve())
     print(json.dumps(metadata, indent=2, sort_keys=True)); return 0
 
